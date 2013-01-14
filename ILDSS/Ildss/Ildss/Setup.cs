@@ -32,6 +32,8 @@ namespace Ildss
                 Properties.Settings.Default.firstrun = false; 
                 Properties.Settings.Default.Save();
 
+                //call the indexer asynchronously
+
                 this.Hide();
                 Ildss ildss = new Ildss();
                 ildss.ShowDialog();

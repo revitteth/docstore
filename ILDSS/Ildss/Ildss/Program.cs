@@ -31,8 +31,6 @@ namespace Ildss
             {
                 // Use ninject to load all classes required on their own threads?
 
-                Indexer indexer = new Indexer();
-                indexer.IndexFiles(Properties.Settings.Default.directory);
 
                 //PUT IT ON A SEPERATE THREAD!!!!!
                 // need to stop this getting garbage collected. also need to make sure it runs first time 

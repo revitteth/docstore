@@ -21,5 +21,25 @@ namespace Ildss
         {
             lblDirectoryOutput.Text = Properties.Settings.Default.directory;
         }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            button1.Enabled = false;
+            await Task.Factory.StartNew(() =>
+            {
+                new Indexer().IndexFiles(Properties.Settings.Default.directory);
+                return "done";
+            });
+
+            //task.Wait();
+            button1.Enabled = true;
+            lblDirectory.Text = "Index Complete";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            lblDirectory.Text = "WORKING BRO";
+        }
+
     }
 }

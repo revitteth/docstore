@@ -51,6 +51,7 @@
             this.txtDirectory.Name = "txtDirectory";
             this.txtDirectory.Size = new System.Drawing.Size(250, 20);
             this.txtDirectory.TabIndex = 1;
+            this.txtDirectory.Text = "F:\\";
             // 
             // btnDirectory
             // 

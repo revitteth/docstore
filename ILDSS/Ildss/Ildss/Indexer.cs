@@ -39,11 +39,11 @@ namespace Ildss
                 IndexDirectory(subdirectory);
         }
 
-        private void IndexFile(string path)
+        public void IndexFile(string path)
         {
             FileInfo fi = new FileInfo(path);
-            Console.WriteLine(fi.Name.ToString());
-
+            Console.WriteLine(fi.FullName);
         }
+
     }
 }
