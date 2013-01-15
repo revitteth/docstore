@@ -79,6 +79,9 @@
       <DependentUpon>FileIndex.tt</DependentUpon>
     </Compile>
     <Compile Include="EventQueue.cs" />
+    <Compile Include="EventQueueBackup.cs">
+      <DependentUpon>FileIndex.tt</DependentUpon>
+    </Compile>
     <Compile Include="FileIndex.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
