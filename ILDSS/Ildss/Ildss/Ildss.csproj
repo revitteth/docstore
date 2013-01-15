@@ -78,6 +78,7 @@
     <Compile Include="Document.cs">
       <DependentUpon>FileIndex.tt</DependentUpon>
     </Compile>
+    <Compile Include="EventQueue.cs" />
     <Compile Include="FileIndex.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -93,7 +94,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FileIndex.edmx</DependentUpon>
     </Compile>
-    <Compile Include="FileWatcher.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="Ildss.cs">
       <SubType>Form</SubType>

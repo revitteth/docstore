@@ -47,8 +47,8 @@ namespace Ildss
             var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
             await foo2(progress);
 
-            button2.Enabled = false;
-            button2.Text = "Monitoring...";
+            btnMonitor.Enabled = false;
+            btnMonitor.Text = "Monitoring...";
         }
 
         private Task foo(IProgress<int> onProgressPercentChanged)

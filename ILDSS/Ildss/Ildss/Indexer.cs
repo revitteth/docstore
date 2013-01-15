@@ -149,5 +149,11 @@ namespace Ildss
 
         }
 
+
+        public void RemoveFromIndex(string path)
+        {
+            // remove this file from the index
+        }
+
     }
 }

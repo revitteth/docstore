@@ -101,6 +101,10 @@
           <Property Type="String" Name="type" Nullable="false" />
           <NavigationProperty Name="Document" Relationship="FileIndex.DocumentDocEvent" FromRole="DocEvent" ToRole="Document" />
           <Property Type="String" Name="DocumentDocumentHash" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="path" Nullable="false" />
+          <Property Type="String" Name="old_path" Nullable="true" />
+          <Property Type="String" Name="name" Nullable="false" />
+          <Property Type="String" Name="old_name" Nullable="true" />
         </EntityType>
         <EntityType Name="DocPath">
           <Key>

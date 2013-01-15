@@ -30,8 +30,7 @@ namespace Ildss
             else
             {
                 // Use ninject to load all classes required on their own threads?
-                var fileWatcher =
-                FileWatcher.ObserveFolderChanges(".", "*.*", TimeSpan.FromSeconds(5)).Subscribe(e);
+
 
                 //PUT IT ON A SEPERATE THREAD!!!!!
                 // need to stop this getting garbage collected. also need to make sure it runs first time 

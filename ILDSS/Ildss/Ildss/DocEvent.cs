@@ -18,6 +18,10 @@ namespace Ildss
         public System.DateTime date_time { get; set; }
         public string type { get; set; }
         public string DocumentDocumentHash { get; set; }
+        public string path { get; set; }
+        public string old_path { get; set; }
+        public string name { get; set; }
+        public string old_name { get; set; }
     
         public virtual Document Document { get; set; }
     }

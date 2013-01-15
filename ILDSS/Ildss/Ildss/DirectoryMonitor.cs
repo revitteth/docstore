@@ -5,76 +5,97 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Security.Permissions;
 using System.Reactive.Linq;
 using System.Reactive;
 
 
 namespace Ildss
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class DirectoryMonitor
     {
-        private FileSystemWatcher watcher;
-        private static string lastCreated;
-
         public DirectoryMonitor(string path)
         {
-            // Set watcher to point to ILDSS directory
-            watcher = new FileSystemWatcher(path);
-            watcher.NotifyFilter = NotifyFilters.LastAccess |
-                                   NotifyFilters.LastWrite |
-                                   NotifyFilters.FileName |
-                                   NotifyFilters.DirectoryName;
-            watcher.IncludeSubdirectories = true;
+            FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
-            // Event Handlers
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Created += new FileSystemEventHandler(OnChanged);
-            watcher.Deleted += new FileSystemEventHandler(OnChanged);
-            watcher.Renamed += new RenamedEventHandler(OnRenamed);
+            fsw = new FileSystemWatcher(path);
+            fsw.IncludeSubdirectories = true;
+            fsw.EnableRaisingEvents = true;
 
-            // Begin watching
-            watcher.EnableRaisingEvents = true;
-
-            // Until thread is killed by program.cs
+            MonitorFileSystem(fsw);
         }
 
-        private static void OnChanged(object source, FileSystemEventArgs e)
+        private static void MonitorFileSystem (FileSystemWatcher fsw)
         {              
             Indexer indexer = new Indexer();
 
-            // work out what has been changed update database accordingly
-            switch (e.ChangeType)
-            {
-                case WatcherChangeTypes.Created:
-                    // fully index the file
-                    indexer.IndexFile(e.FullPath);
-                    lastCreated = e.FullPath;
-                    return;
-                    //break;
-                case WatcherChangeTypes.Changed:
-                    // keep trying every 2 minutes until it works
+            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
+            fswCreated.Subscribe(
+                pattern => {
+                    DocEvent de = new DocEvent() { 
+                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)), 
+                        name = pattern.EventArgs.Name, path = pattern.EventArgs.FullPath, type = WatcherChangeTypes.Changed.ToString() 
+                    };
 
-                    // Add event to existing file
-                    if(e.FullPath != lastCreated)
-                    indexer.RegisterEvent(e);
-                    break;
-                case WatcherChangeTypes.Deleted:
-                    // remove Document entry. And events?
-                    Console.WriteLine("deleted");
-                    break;
-            }
+                    EventQueue.AddEvent(de);
 
+                    indexer.IndexFile(pattern.EventArgs.FullPath);
+                }
+            );
 
-            // REGULAR EXPRESSION TO GET RID OF ~bullshit.tmp
+            IObservable<EventPattern<RenamedEventArgs>> fswRenamed = Observable.FromEventPattern<RenamedEventArgs>(fsw, "Renamed");
+            fswRenamed.Subscribe(
+                pattern =>
+                {
+                    DocEvent de = new DocEvent()
+                    {
+                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                        name = pattern.EventArgs.Name,
+                        old_name = pattern.EventArgs.OldName,
+                        path = pattern.EventArgs.FullPath,
+                        old_path = pattern.EventArgs.OldFullPath,
+                        type = WatcherChangeTypes.Changed.ToString(),
+                        DocumentDocumentHash = new Hash().HashFile(pattern.EventArgs.FullPath)
+                    };
+                    EventQueue.AddEvent(de);
+                }
+            );
 
-            Console.WriteLine(e.FullPath + " " + e.ChangeType + " " + DateTime.Now.ToString());
+            IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
+            fswDeleted.Subscribe(
+                pattern => {
 
+                    // NEED TO DO MORE HERE! DELETE AT LEAST PATH AND IF LAST PATH, DOCUMENT AS WELL
+
+                    DocEvent de = new DocEvent()
+                    {
+                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                        name = pattern.EventArgs.Name,
+                        path = pattern.EventArgs.FullPath,
+                        type = WatcherChangeTypes.Changed.ToString()
+                    };
+                    EventQueue.AddEvent(de);
+                }
+            );
+
+            IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
+            var thingy = fswChanged.Subscribe(
+                pattern => {
+                    DocEvent de = new DocEvent()
+                    {
+                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                        name = pattern.EventArgs.Name,
+                        path = pattern.EventArgs.FullPath,
+                        type = WatcherChangeTypes.Changed.ToString()                         
+                    };
+                    EventQueue.AddEvent(de);
+                }
+            );
         }
 
-        private static void OnRenamed(object source, RenamedEventArgs e)
-        {
-            // update database 
-        }
+
+
 
     }
 }
