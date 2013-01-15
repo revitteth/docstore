@@ -58,22 +58,35 @@ namespace Ildss
                              where documents.DocumentHash == fileHash
                              select documents;
 
-                DocPath dp = new DocPath()
-                {
-                    path = fi.FullName
-                };
-
+               // New Document
                 Document doc = new Document()
                 {
                     DocumentHash = fileHash,
                     size = fi.Length,
                 };
 
-                doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
+                // New Path
+                DocPath dp = new DocPath()
+                {
+                    path = fi.FullName
+                };
 
+                // If Document isn't Duplicate
                 if (result.Count() == 0)
+                {
                     fic.Documents.Add(doc);
-
+                    doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
+                }
+                else 
+                // Document is duplicate
+                {
+                    DocPath d2 = new DocPath()
+                    {
+                        path = fi.FullName,
+                        DocumentDocumentHash = fileHash
+                    };
+                    fic.DocPaths.Add(d2);
+                }
                 fic.SaveChanges();
             }
 
