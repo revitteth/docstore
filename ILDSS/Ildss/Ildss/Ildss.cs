@@ -22,23 +22,37 @@ namespace Ildss
             lblDirectoryOutput.Text = Properties.Settings.Default.directory;
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private async void btnManualIndex_Click(object sender, EventArgs e)
         {
-            button1.Enabled = false;
+            btnManualIndex.Enabled = false;
+            btnManualIndex.Text = "Indexing...";
+
+            // Start thread to do indexing
+            /*
             await Task.Factory.StartNew(() =>
             {
                 new Indexer().IndexFiles(Properties.Settings.Default.directory);
-                return "done";
-            });
+            });*/
+            var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
+            await foo(progress);
+            
 
-            //task.Wait();
-            button1.Enabled = true;
-            lblDirectory.Text = "Index Complete";
+            // Re enable button
+            btnManualIndex.Enabled = true;
+            btnManualIndex.Text = "Index";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             lblDirectory.Text = "WORKING BRO";
+        }
+
+        private Task foo(IProgress<int> onProgressPercentChanged)
+        {
+            return Task.Run(() =>
+            {
+                new Indexer().IndexFiles(Properties.Settings.Default.directory);
+            });
         }
 
     }

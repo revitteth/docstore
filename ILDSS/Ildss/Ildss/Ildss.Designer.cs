@@ -31,7 +31,7 @@
             this.lblDirectory = new System.Windows.Forms.Label();
             this.DirectorySelect = new System.Windows.Forms.FolderBrowserDialog();
             this.lblDirectoryOutput = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnManualIndex = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -58,15 +58,15 @@
             this.lblDirectoryOutput.TabIndex = 1;
             this.lblDirectoryOutput.Text = "...";
             // 
-            // button1
+            // btnManualIndex
             // 
-            this.button1.Location = new System.Drawing.Point(124, 129);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(202, 43);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnManualIndex.Location = new System.Drawing.Point(124, 129);
+            this.btnManualIndex.Name = "btnManualIndex";
+            this.btnManualIndex.Size = new System.Drawing.Size(202, 43);
+            this.btnManualIndex.TabIndex = 2;
+            this.btnManualIndex.Text = "Index Files";
+            this.btnManualIndex.UseVisualStyleBackColor = true;
+            this.btnManualIndex.Click += new System.EventHandler(this.btnManualIndex_Click);
             // 
             // button2
             // 
@@ -84,7 +84,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(401, 261);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnManualIndex);
             this.Controls.Add(this.lblDirectoryOutput);
             this.Controls.Add(this.lblDirectory);
             this.Name = "Ildss";
@@ -100,7 +100,7 @@
         private System.Windows.Forms.Label lblDirectory;
         private System.Windows.Forms.FolderBrowserDialog DirectorySelect;
         private System.Windows.Forms.Label lblDirectoryOutput;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnManualIndex;
         private System.Windows.Forms.Button button2;
     }
 }

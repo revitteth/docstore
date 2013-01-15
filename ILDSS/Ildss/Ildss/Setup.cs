@@ -20,7 +20,14 @@ namespace Ildss
 
         private void Setup_Load(object sender, EventArgs e)
         {
-            txtDirectory.Text = Properties.Settings.Default.directory;
+            if (Properties.Settings.Default.directory != "")
+            {
+                txtDirectory.Text = Properties.Settings.Default.directory;
+            }
+            else
+            {
+                txtDirectory.Text = @"F:\Camera";
+            }
         }
 
         private void btnFinishSetup_Click(object sender, EventArgs e)

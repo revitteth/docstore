@@ -14,8 +14,16 @@ namespace Ildss
 {
     class Indexer
     {
+        private int filesIndexed    { get; set; }
+        private int totalFiles { get; set; }
+
+        
         public void IndexFiles(string path)
         {
+            filesIndexed = 0;
+            totalFiles = System.IO.Directory.GetFileSystemEntries(path, "*", SearchOption.AllDirectories).Count();
+
+
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -42,7 +50,8 @@ namespace Ildss
         public void IndexFile(string path)
         {
             FileInfo fi = new FileInfo(path);
-            Console.WriteLine(fi.FullName);
+            filesIndexed++;
+            Console.WriteLine(fi.FullName + " " + filesIndexed + "/" + totalFiles);//((filesIndexed/totalFiles) * 100) + "%");
         }
 
     }
