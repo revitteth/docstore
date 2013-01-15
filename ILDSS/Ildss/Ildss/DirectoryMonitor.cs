@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reactive.Linq;
+using System.Reactive;
 
 
 namespace Ildss
@@ -11,6 +14,7 @@ namespace Ildss
     class DirectoryMonitor
     {
         private FileSystemWatcher watcher;
+        private static string lastCreated;
 
         public DirectoryMonitor(string path)
         {
@@ -31,7 +35,7 @@ namespace Ildss
             // Begin watching
             watcher.EnableRaisingEvents = true;
 
-            // Until thread is killed by program.cs?
+            // Until thread is killed by program.cs
         }
 
         private static void OnChanged(object source, FileSystemEventArgs e)
@@ -44,11 +48,15 @@ namespace Ildss
                 case WatcherChangeTypes.Created:
                     // fully index the file
                     indexer.IndexFile(e.FullPath);
+                    lastCreated = e.FullPath;
                     return;
                     //break;
                 case WatcherChangeTypes.Changed:
+                    // keep trying every 2 minutes until it works
+
                     // Add event to existing file
-                    WriteDatabase(e);
+                    if(e.FullPath != lastCreated)
+                    indexer.RegisterEvent(e);
                     break;
                 case WatcherChangeTypes.Deleted:
                     // remove Document entry. And events?
@@ -56,11 +64,6 @@ namespace Ildss
                     break;
             }
 
-
-
-   
-
-            //indexer.IndexFile(e.FullPath);
 
             // REGULAR EXPRESSION TO GET RID OF ~bullshit.tmp
 
@@ -73,44 +76,5 @@ namespace Ildss
             // update database 
         }
 
-        private static void WriteDatabase(FileSystemEventArgs e)
-        {
-            var t = DateTime.Now;
-            var time = t.AddTicks(-(t.Ticks % TimeSpan.TicksPerSecond));
-
-
-            using (FileIndexContainer fic = new FileIndexContainer())
-            {
-                var docPaths = from docpaths in fic.DocPaths
-                               where docpaths.path == e.FullPath
-                               select docpaths;
-
-                var docPathDefault = docPaths.FirstOrDefault();
-
-                var doc = from documents in fic.Documents
-                          where documents.DocumentHash == docPathDefault.DocumentDocumentHash
-                          select documents;
-
-                var ev = from events in fic.DocEvents
-                         where events.date_time.CompareTo(time) == 0
-                         select events;
-
-                var docDefault = doc.FirstOrDefault();
-
-                // Event doesn't exist (events have unique times)
-                if (ev.Count() == 0)
-                {
-                    DocEvent de = new DocEvent()
-                    {
-                        date_time = time,
-                        type = e.ChangeType.ToString(),
-                        DocumentDocumentHash = docDefault.DocumentHash
-                    };
-                    fic.DocEvents.Add(de);
-                    fic.SaveChanges();
-                }
-
-            }
-        }
     }
 }

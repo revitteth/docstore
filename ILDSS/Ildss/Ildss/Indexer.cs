@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-
+using System.Timers;
+using System.Threading;
 
 namespace Ildss
 {
@@ -102,6 +103,50 @@ namespace Ildss
             }
 
             Console.WriteLine("Saved " + fi.FullName + " to database");
+        }
+
+
+        public void RegisterEvent(FileSystemEventArgs e)
+        {
+            var t = DateTime.Now;
+            var time = t.AddTicks(-(t.Ticks % TimeSpan.TicksPerSecond));
+
+            Thread.Sleep(2000);
+
+            using (FileIndexContainer fic = new FileIndexContainer())
+            {
+                var docPaths = from docpaths in fic.DocPaths
+                               where docpaths.path == e.FullPath
+                               select docpaths;
+
+                var docPathDefault = docPaths.FirstOrDefault();
+
+                var doc = from documents in fic.Documents
+                          where documents.DocumentHash == docPathDefault.DocumentDocumentHash
+                          select documents;
+
+                var ev = from events in fic.DocEvents
+                         where events.date_time.CompareTo(time) == 0
+                         select events;
+
+                if (docPathDefault != null)
+                {
+
+                    // Event doesn't exist (events have unique times)
+                    if (ev.Count() == 0)
+                    {
+                        DocEvent de = new DocEvent()
+                        {
+                            date_time = time,
+                            type = e.ChangeType.ToString(),
+                            DocumentDocumentHash = docPathDefault.Document.DocumentHash
+                        };
+                        fic.DocEvents.Add(de);
+                        fic.SaveChanges();
+                    }
+                }
+            }
+
         }
 
     }
