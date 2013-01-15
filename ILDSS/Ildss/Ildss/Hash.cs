@@ -31,6 +31,8 @@ namespace Ildss
                 fs.Position = 0;
                 calculatedHash = sha512.ComputeHash(fs);
                 fs.Close();
+                hashString = ByteToString(calculatedHash);
+                return hashString;
             }
             catch (FileNotFoundException)
             {
@@ -42,9 +44,12 @@ namespace Ildss
                 // file could not be accessed
                 Console.WriteLine("error, file not accessible");
             }
+            catch (UnauthorizedAccessException)
+            {
+                // no access permission
+            }
+            return null;
 
-            hashString = ByteToString(calculatedHash);
-            return hashString;
         }
 
         [STAThreadAttribute]

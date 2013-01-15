@@ -9,6 +9,7 @@
     <EntitySet Name="Documents" EntityType="FileIndex.Store.Documents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DocEvents" EntityType="FileIndex.Store.DocEvents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DocPaths" EntityType="FileIndex.Store.DocPaths" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EventQueueBackups" EntityType="FileIndex.Store.EventQueueBackups" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="DocumentDocPath" Association="FileIndex.Store.DocumentDocPath">
       <End Role="Document" EntitySet="Documents" />
       <End Role="DocPath" EntitySet="DocPaths" />
@@ -33,6 +34,10 @@
     <Property Name="date_time" Type="datetime" Nullable="false" />
     <Property Name="type" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
+    <Property Name="path" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="old_path" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="old_name" Type="nvarchar(max)" Nullable="true" />
   </EntityType>
   <EntityType Name="DocPaths">
     <Key>
@@ -41,6 +46,19 @@
     <Property Name="DocPathId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="path" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="EventQueueBackups">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="path" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="old_path" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="old_name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
+    <Property Name="date_time" Type="datetime" Nullable="false" />
   </EntityType>
   <Association Name="DocumentDocPath">
     <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
@@ -174,6 +192,10 @@
           <ScalarProperty Name="date_time" ColumnName="date_time" />
           <ScalarProperty Name="type" ColumnName="type" />
           <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
+          <ScalarProperty Name="path" ColumnName="path" />
+          <ScalarProperty Name="old_path" ColumnName="old_path" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="old_name" ColumnName="old_name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -183,6 +205,20 @@
           <ScalarProperty Name="DocPathId" ColumnName="DocPathId" />
           <ScalarProperty Name="path" ColumnName="path" />
           <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EventQueueBackups">
+      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.EventQueueBackup)">
+        <MappingFragment StoreEntitySet="EventQueueBackups">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="path" ColumnName="path" />
+          <ScalarProperty Name="old_path" ColumnName="old_path" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="old_name" ColumnName="old_name" />
+          <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
+          <ScalarProperty Name="date_time" ColumnName="date_time" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -201,6 +237,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
       </DesignerInfoPropertySet>
     </edmx:Options>
     <!-- Diagram content (shape and connector positions) -->

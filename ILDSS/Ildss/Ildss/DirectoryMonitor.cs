@@ -39,8 +39,12 @@ namespace Ildss
                     };
 
                     EventQueue.AddEvent(de);
-
-                    indexer.IndexFile(pattern.EventArgs.FullPath);
+                    if ((File.GetAttributes(de.path) & FileAttributes.Directory) == FileAttributes.Directory)
+                    {
+                        //do nowt - CURE temp files problem on this one geoff!!!! when making shortcuts.
+                    }
+                    else
+                        indexer.IndexFile(pattern.EventArgs.FullPath);
                 }
             );
 
@@ -93,9 +97,5 @@ namespace Ildss
                 }
             );
         }
-
-
-
-
     }
 }

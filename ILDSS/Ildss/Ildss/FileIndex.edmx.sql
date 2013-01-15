@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/15/2013 05:26:21
--- Generated from EDMX file: F:\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
+-- Date Created: 01/15/2013 22:56:04
+-- Generated from EDMX file: C:\Users\Max\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [ILDSS.FileIndex];
+USE [FileIndexDb];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -17,26 +17,11 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_DocumentDocEvent]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[DocEvents] DROP CONSTRAINT [FK_DocumentDocEvent];
-GO
-IF OBJECT_ID(N'[dbo].[FK_DocumentDocPath]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[DocPaths] DROP CONSTRAINT [FK_DocumentDocPath];
-GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Documents]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Documents];
-GO
-IF OBJECT_ID(N'[dbo].[DocEvents]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[DocEvents];
-GO
-IF OBJECT_ID(N'[dbo].[DocPaths]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[DocPaths];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -54,7 +39,11 @@ CREATE TABLE [dbo].[DocEvents] (
     [DocEventId] int IDENTITY(1,1) NOT NULL,
     [date_time] datetime  NOT NULL,
     [type] nvarchar(max)  NOT NULL,
-    [DocumentDocumentHash] nchar(128)  NOT NULL
+    [DocumentDocumentHash] nchar(128)  NOT NULL,
+    [path] nvarchar(max)  NOT NULL,
+    [old_path] nvarchar(max)  NULL,
+    [name] nvarchar(max)  NOT NULL,
+    [old_name] nvarchar(max)  NULL
 );
 GO
 
@@ -63,6 +52,19 @@ CREATE TABLE [dbo].[DocPaths] (
     [DocPathId] int IDENTITY(1,1) NOT NULL,
     [path] nvarchar(max)  NOT NULL,
     [DocumentDocumentHash] nchar(128)  NOT NULL
+);
+GO
+
+-- Creating table 'EventQueueBackups'
+CREATE TABLE [dbo].[EventQueueBackups] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [type] nvarchar(max)  NOT NULL,
+    [path] nvarchar(max)  NOT NULL,
+    [old_path] nvarchar(max)  NULL,
+    [name] nvarchar(max)  NOT NULL,
+    [old_name] nvarchar(max)  NULL,
+    [DocumentDocumentHash] nchar(128)  NOT NULL,
+    [date_time] datetime  NOT NULL
 );
 GO
 
@@ -86,6 +88,12 @@ GO
 ALTER TABLE [dbo].[DocPaths]
 ADD CONSTRAINT [PK_DocPaths]
     PRIMARY KEY CLUSTERED ([DocPathId] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'EventQueueBackups'
+ALTER TABLE [dbo].[EventQueueBackups]
+ADD CONSTRAINT [PK_EventQueueBackups]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- --------------------------------------------------
