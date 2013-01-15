@@ -82,6 +82,7 @@
             <End Role="Document" EntitySet="Documents" />
             <End Role="DocEvent" EntitySet="DocEvents" />
           </AssociationSet>
+          <EntitySet Name="EventQueueBackups" EntityType="FileIndex.EventQueueBackup" />
         </EntityContainer>
         <EntityType Name="Document">
           <Key>
@@ -139,6 +140,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="EventQueueBackup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="type" Nullable="false" />
+          <Property Type="String" Name="path" Nullable="false" />
+          <Property Type="String" Name="old_path" Nullable="true" />
+          <Property Type="String" Name="name" Nullable="false" />
+          <Property Type="String" Name="old_name" Nullable="true" />
+          <Property Type="String" Name="DocumentDocumentHash" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
+          <Property Type="DateTime" Name="date_time" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

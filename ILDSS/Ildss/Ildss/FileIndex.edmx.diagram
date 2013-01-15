@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="FileIndex.DocPath" Width="1.5" PointX="2.75" PointY="5.375" />
         <AssociationConnector Association="FileIndex.DocumentDocPath" />
         <AssociationConnector Association="FileIndex.DocumentDocEvent" />
+        <EntityTypeShape EntityType="FileIndex.EventQueueBackup" Width="1.5" PointX="9.75" PointY="1.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

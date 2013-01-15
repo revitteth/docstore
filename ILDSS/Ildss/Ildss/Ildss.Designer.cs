@@ -33,6 +33,7 @@
             this.lblDirectoryOutput = new System.Windows.Forms.Label();
             this.btnManualIndex = new System.Windows.Forms.Button();
             this.btnMonitor = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblDirectory
@@ -78,11 +79,22 @@
             this.btnMonitor.UseVisualStyleBackColor = true;
             this.btnMonitor.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(311, 221);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(78, 28);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Print Event Q";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Ildss
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(401, 261);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnMonitor);
             this.Controls.Add(this.btnManualIndex);
             this.Controls.Add(this.lblDirectoryOutput);
@@ -102,6 +114,7 @@
         private System.Windows.Forms.Label lblDirectoryOutput;
         private System.Windows.Forms.Button btnManualIndex;
         private System.Windows.Forms.Button btnMonitor;
+        private System.Windows.Forms.Button button1;
     }
 }
 

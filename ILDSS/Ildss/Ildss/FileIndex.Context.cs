@@ -28,5 +28,6 @@ namespace Ildss
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocEvent> DocEvents { get; set; }
         public DbSet<DocPath> DocPaths { get; set; }
+        public DbSet<EventQueueBackup> EventQueueBackups { get; set; }
     }
 }
