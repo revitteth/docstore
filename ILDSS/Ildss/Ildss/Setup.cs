@@ -26,7 +26,7 @@ namespace Ildss
             }
             else
             {
-                txtDirectory.Text = @"F:\Camera";
+                txtDirectory.Text = @"F:\TestDir";
             }
         }
 

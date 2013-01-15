@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 using System.IO;
 
 
-// TO DO
-// Ensure new files/directories are added to index
-// I.e. create/delete event triggers indexing? THINK ABOUT THIS
-
-
 namespace Ildss
 {
     class DirectoryMonitor
@@ -30,7 +25,7 @@ namespace Ildss
             // Event Handlers
             watcher.Changed += new FileSystemEventHandler(OnChanged);
             watcher.Created += new FileSystemEventHandler(OnChanged);
-            //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+            watcher.Deleted += new FileSystemEventHandler(OnChanged);
             watcher.Renamed += new RenamedEventHandler(OnRenamed);
 
             // Begin watching
@@ -42,16 +37,23 @@ namespace Ildss
         private static void OnChanged(object source, FileSystemEventArgs e)
         {
             // work out what has been changed update database accordingyl
+            switch (e.ChangeType)
+            {
+                case WatcherChangeTypes.Created:
+                    // hash it, add to database
+                    break;
+                case WatcherChangeTypes.Changed:
+                    // update hash, update size.
+                    break;
+                case WatcherChangeTypes.Deleted:
+                    // remove Document entry. And events?
+                    Console.WriteLine("deleted");
+                    break;
+            }
+
+            // REGULAR EXPRESSION TO GET RID OF ~bullshit.tmp
 
             Console.WriteLine(e.FullPath + " " + e.ChangeType + " " + DateTime.Now.ToString());
-            FileIndexContainer index = new FileIndexContainer();
-            string fp = e.FullPath.ToString();
-            File file = index.Files.Single(f => f.path == fp); 
-            // NOT FINDING FILES IN DB NOW SO MAKE THAT BIT
-
-            Event ev = new Event{date_time = DateTime.Now, FileFileId = file.FileId, type = e.ChangeType.ToString()};
-            index.Events.Add(ev);
-            index.SaveChanges();
 
         }
 

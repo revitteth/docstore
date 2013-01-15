@@ -42,16 +42,28 @@ namespace Ildss
             btnManualIndex.Text = "Index";
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
-            lblDirectory.Text = "WORKING BRO";
+            var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
+            await foo2(progress);
+
+            button2.Enabled = false;
+            button2.Text = "Monitoring...";
         }
 
         private Task foo(IProgress<int> onProgressPercentChanged)
         {
-            return Task.Run(() =>
+            return Task.Run( () =>
             {
                 new Indexer().IndexFiles(Properties.Settings.Default.directory);
+            });
+        }
+
+        private Task foo2(IProgress<int> onProgressPercentChanged)
+        {
+            return Task.Run(() =>
+            {
+                new DirectoryMonitor(Properties.Settings.Default.directory);
             });
         }
 

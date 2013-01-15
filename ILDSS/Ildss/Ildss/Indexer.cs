@@ -6,23 +6,17 @@ using System.Threading.Tasks;
 using System.IO;
 
 
-// TODO 
-// Write files/directories to DB.
-// Check if files/directories already exist in DB
-
 namespace Ildss
 {
     class Indexer
     {
         private int filesIndexed    { get; set; }
         private int totalFiles { get; set; }
-
         
         public void IndexFiles(string path)
         {
             filesIndexed = 0;
-            totalFiles = System.IO.Directory.GetFileSystemEntries(path, "*", SearchOption.AllDirectories).Count();
-
+            totalFiles = System.IO.Directory.GetFiles(path, "*", SearchOption.AllDirectories).Count();
 
             if (System.IO.File.Exists(path))
             {
@@ -50,8 +44,40 @@ namespace Ildss
         public void IndexFile(string path)
         {
             FileInfo fi = new FileInfo(path);
-            filesIndexed++;
-            Console.WriteLine(fi.FullName + " " + filesIndexed + "/" + totalFiles);//((filesIndexed/totalFiles) * 100) + "%");
+            ++filesIndexed;
+
+            // Hash File
+            Hash h = new Hash();
+            string fileHash = h.HashFile(fi.FullName);
+
+            // Insert File into Index Database
+            using (FileIndexContainer fic = new FileIndexContainer())
+            {
+
+                var result = from documents in fic.Documents
+                             where documents.DocumentHash == fileHash
+                             select documents;
+
+                DocPath dp = new DocPath()
+                {
+                    path = fi.FullName
+                };
+
+                Document doc = new Document()
+                {
+                    DocumentHash = fileHash,
+                    size = fi.Length,
+                };
+
+                doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
+
+                if (result.Count() == 0)
+                    fic.Documents.Add(doc);
+
+                fic.SaveChanges();
+            }
+
+            Console.WriteLine("Saved " + fi.FullName + " to database");
         }
 
     }

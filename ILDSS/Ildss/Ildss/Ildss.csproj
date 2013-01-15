@@ -56,14 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Directory.cs">
-      <DependentUpon>FileIndex.tt</DependentUpon>
-    </Compile>
     <Compile Include="DirectoryMonitor.cs" />
-    <Compile Include="Event.cs">
+    <Compile Include="DocEvent.cs">
       <DependentUpon>FileIndex.tt</DependentUpon>
     </Compile>
-    <Compile Include="File.cs">
+    <Compile Include="DocPath.cs">
+      <DependentUpon>FileIndex.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Document.cs">
       <DependentUpon>FileIndex.tt</DependentUpon>
     </Compile>
     <Compile Include="FileIndex.Context.cs">
@@ -81,6 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FileIndex.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Hash.cs" />
     <Compile Include="Ildss.cs">
       <SubType>Form</SubType>
     </Compile>

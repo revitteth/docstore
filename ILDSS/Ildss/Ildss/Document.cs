@@ -12,19 +12,18 @@ namespace Ildss
     using System;
     using System.Collections.Generic;
     
-    public partial class File
+    public partial class Document
     {
-        public File()
+        public Document()
         {
-            this.Events = new HashSet<Event>();
+            this.DocEvents = new HashSet<DocEvent>();
+            this.DocPaths = new HashSet<DocPath>();
         }
     
-        public int FileId { get; set; }
-        public string path { get; set; }
-        public string hash { get; set; }
-        public int DirectoryDirectoryId { get; set; }
+        public string DocumentHash { get; set; }
+        public long size { get; set; }
     
-        public virtual Directory Directory { get; set; }
-        public virtual ICollection<Event> Events { get; set; }
+        public virtual ICollection<DocEvent> DocEvents { get; set; }
+        public virtual ICollection<DocPath> DocPaths { get; set; }
     }
 }

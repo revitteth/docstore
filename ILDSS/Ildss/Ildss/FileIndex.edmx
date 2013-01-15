@@ -6,64 +6,63 @@
     <edmx:StorageModels>
     <Schema Namespace="FileIndex.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityContainer Name="FileIndexStoreContainer">
-    <EntitySet Name="Directories" EntityType="FileIndex.Store.Directories" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Files" EntityType="FileIndex.Store.Files" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Events" EntityType="FileIndex.Store.Events" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="DirectoryFile" Association="FileIndex.Store.DirectoryFile">
-      <End Role="Directory" EntitySet="Directories" />
-      <End Role="File" EntitySet="Files" />
+    <EntitySet Name="Documents" EntityType="FileIndex.Store.Documents" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DocEvents" EntityType="FileIndex.Store.DocEvents" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DocPaths" EntityType="FileIndex.Store.DocPaths" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="DocumentDocEvent" Association="FileIndex.Store.DocumentDocEvent">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="DocEvent" EntitySet="DocEvents" />
     </AssociationSet>
-    <AssociationSet Name="FileEvent" Association="FileIndex.Store.FileEvent">
-      <End Role="File" EntitySet="Files" />
-      <End Role="Event" EntitySet="Events" />
+    <AssociationSet Name="DocumentDocPath" Association="FileIndex.Store.DocumentDocPath">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="DocPath" EntitySet="DocPaths" />
     </AssociationSet>
   </EntityContainer>
-  <EntityType Name="Directories">
+  <EntityType Name="Documents">
     <Key>
-      <PropertyRef Name="DirectoryId" />
+      <PropertyRef Name="DocumentHash" />
     </Key>
-    <Property Name="DirectoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="path" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
+    <Property Name="size" Type="bigint" Nullable="false" />
   </EntityType>
-  <EntityType Name="Files">
+  <EntityType Name="DocEvents">
     <Key>
-      <PropertyRef Name="FileId" />
+      <PropertyRef Name="DocEventId" />
     </Key>
-    <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="path" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="hash" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="DirectoryDirectoryId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Events">
-    <Key>
-      <PropertyRef Name="EventId" />
-    </Key>
-    <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DocEventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DocumentDocumentHash" Type="nvarchar(max)" Nullable="false" />
     <Property Name="date_time" Type="datetime" Nullable="false" />
-    <Property Name="type" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="FileFileId" Type="int" Nullable="false" />
+    <Property Name="DocumentDocumentHash1" Type="nchar" Nullable="false" MaxLength="128" />
   </EntityType>
-  <Association Name="DirectoryFile">
-    <End Role="Directory" Type="FileIndex.Store.Directories" Multiplicity="1" />
-    <End Role="File" Type="FileIndex.Store.Files" Multiplicity="*" />
+  <EntityType Name="DocPaths">
+    <Key>
+      <PropertyRef Name="DocPathId" />
+    </Key>
+    <Property Name="DocPathId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="path" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
+  </EntityType>
+  <Association Name="DocumentDocEvent">
+    <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
+    <End Role="DocEvent" Type="FileIndex.Store.DocEvents" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="Directory">
-        <PropertyRef Name="DirectoryId" />
+      <Principal Role="Document">
+        <PropertyRef Name="DocumentHash" />
       </Principal>
-      <Dependent Role="File">
-        <PropertyRef Name="DirectoryDirectoryId" />
+      <Dependent Role="DocEvent">
+        <PropertyRef Name="DocumentDocumentHash1" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FileEvent">
-    <End Role="File" Type="FileIndex.Store.Files" Multiplicity="1" />
-    <End Role="Event" Type="FileIndex.Store.Events" Multiplicity="*" />
+  <Association Name="DocumentDocPath">
+    <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
+    <End Role="DocPath" Type="FileIndex.Store.DocPaths" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="File">
-        <PropertyRef Name="FileId" />
+      <Principal Role="Document">
+        <PropertyRef Name="DocumentHash" />
       </Principal>
-      <Dependent Role="Event">
-        <PropertyRef Name="FileFileId" />
+      <Dependent Role="DocPath">
+        <PropertyRef Name="DocumentDocumentHash" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -72,68 +71,67 @@
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="FileIndex" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="FileIndexContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Directories" EntityType="FileIndex.Directory" />
-          <EntitySet Name="Files" EntityType="FileIndex.File" />
-          <EntitySet Name="Events" EntityType="FileIndex.Event" />
-          <AssociationSet Name="DirectoryFile" Association="FileIndex.DirectoryFile">
-            <End Role="Directory" EntitySet="Directories" />
-            <End Role="File" EntitySet="Files" />
+          <EntitySet Name="Documents" EntityType="FileIndex.Document" />
+          <EntitySet Name="DocEvents" EntityType="FileIndex.DocEvent" />
+          <AssociationSet Name="DocumentDocEvent" Association="FileIndex.DocumentDocEvent">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="DocEvent" EntitySet="DocEvents" />
           </AssociationSet>
-          <AssociationSet Name="FileEvent" Association="FileIndex.FileEvent">
-            <End Role="File" EntitySet="Files" />
-            <End Role="Event" EntitySet="Events" />
+          <EntitySet Name="DocPaths" EntityType="FileIndex.DocPath" />
+          <AssociationSet Name="DocumentDocPath" Association="FileIndex.DocumentDocPath">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="DocPath" EntitySet="DocPaths" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Directory">
+        <EntityType Name="Document">
           <Key>
-            <PropertyRef Name="DirectoryId" />
+            <PropertyRef Name="DocumentHash" />
           </Key>
-          <Property Type="Int32" Name="DirectoryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="path" Nullable="false" />
-          <NavigationProperty Name="Files" Relationship="FileIndex.DirectoryFile" FromRole="Directory" ToRole="File" />
+          <Property Type="String" Name="DocumentHash" Nullable="false" annotation:StoreGeneratedPattern="None" Unicode="true" MaxLength="128" FixedLength="true" />
+          <NavigationProperty Name="DocEvents" Relationship="FileIndex.DocumentDocEvent" FromRole="Document" ToRole="DocEvent" />
+          <Property Type="Int64" Name="size" Nullable="false" />
+          <NavigationProperty Name="DocPaths" Relationship="FileIndex.DocumentDocPath" FromRole="Document" ToRole="DocPath" />
         </EntityType>
-        <EntityType Name="File">
+        <EntityType Name="DocEvent">
           <Key>
-            <PropertyRef Name="FileId" />
+            <PropertyRef Name="DocEventId" />
           </Key>
-          <Property Type="Int32" Name="FileId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="path" Nullable="false" />
-          <Property Type="String" Name="hash" Nullable="false" />
-          <NavigationProperty Name="Directory" Relationship="FileIndex.DirectoryFile" FromRole="File" ToRole="Directory" />
-          <Property Type="Int32" Name="DirectoryDirectoryId" Nullable="false" />
-          <NavigationProperty Name="Events" Relationship="FileIndex.FileEvent" FromRole="File" ToRole="Event" />
-        </EntityType>
-        <EntityType Name="Event">
-          <Key>
-            <PropertyRef Name="EventId" />
-          </Key>
-          <Property Type="Int32" Name="EventId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="DocEventId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="DocumentDocumentHash" Nullable="false" />
           <Property Type="DateTime" Name="date_time" Nullable="false" />
-          <Property Type="String" Name="type" Nullable="false" />
-          <NavigationProperty Name="File" Relationship="FileIndex.FileEvent" FromRole="Event" ToRole="File" />
-          <Property Type="Int32" Name="FileFileId" Nullable="false" />
+          <NavigationProperty Name="Document" Relationship="FileIndex.DocumentDocEvent" FromRole="DocEvent" ToRole="Document" />
+          <Property Type="String" Name="DocumentDocumentHash1" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
         </EntityType>
-        <Association Name="DirectoryFile">
-          <End Type="FileIndex.Directory" Role="Directory" Multiplicity="1" />
-          <End Type="FileIndex.File" Role="File" Multiplicity="*" />
+        <Association Name="DocumentDocEvent">
+          <End Type="FileIndex.Document" Role="Document" Multiplicity="1" />
+          <End Type="FileIndex.DocEvent" Role="DocEvent" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Directory">
-              <PropertyRef Name="DirectoryId" />
+            <Principal Role="Document">
+              <PropertyRef Name="DocumentHash" />
             </Principal>
-            <Dependent Role="File">
-              <PropertyRef Name="DirectoryDirectoryId" />
+            <Dependent Role="DocEvent">
+              <PropertyRef Name="DocumentDocumentHash1" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FileEvent">
-          <End Type="FileIndex.File" Role="File" Multiplicity="1" />
-          <End Type="FileIndex.Event" Role="Event" Multiplicity="*" />
+        <EntityType Name="DocPath">
+          <Key>
+            <PropertyRef Name="DocPathId" />
+          </Key>
+          <Property Type="Int32" Name="DocPathId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="path" Nullable="false" />
+          <NavigationProperty Name="Document" Relationship="FileIndex.DocumentDocPath" FromRole="DocPath" ToRole="Document" />
+          <Property Type="String" Name="DocumentDocumentHash" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <Association Name="DocumentDocPath">
+          <End Type="FileIndex.Document" Role="Document" Multiplicity="1" />
+          <End Type="FileIndex.DocPath" Role="DocPath" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="File">
-              <PropertyRef Name="FileId" />
+            <Principal Role="Document">
+              <PropertyRef Name="DocumentHash" />
             </Principal>
-            <Dependent Role="Event">
-              <PropertyRef Name="FileFileId" />
+            <Dependent Role="DocPath">
+              <PropertyRef Name="DocumentDocumentHash" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -143,31 +141,30 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="FileIndexStoreContainer" CdmEntityContainer="FileIndexContainer">
-    <EntitySetMapping Name="Directories">
-      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.Directory)">
-        <MappingFragment StoreEntitySet="Directories">
-          <ScalarProperty Name="DirectoryId" ColumnName="DirectoryId" />
-          <ScalarProperty Name="path" ColumnName="path" />
+    <EntitySetMapping Name="Documents">
+      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.Document)">
+        <MappingFragment StoreEntitySet="Documents">
+          <ScalarProperty Name="DocumentHash" ColumnName="DocumentHash" />
+          <ScalarProperty Name="size" ColumnName="size" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Files">
-      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.File)">
-        <MappingFragment StoreEntitySet="Files">
-          <ScalarProperty Name="FileId" ColumnName="FileId" />
-          <ScalarProperty Name="path" ColumnName="path" />
-          <ScalarProperty Name="hash" ColumnName="hash" />
-          <ScalarProperty Name="DirectoryDirectoryId" ColumnName="DirectoryDirectoryId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Events">
-      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.Event)">
-        <MappingFragment StoreEntitySet="Events">
-          <ScalarProperty Name="EventId" ColumnName="EventId" />
+    <EntitySetMapping Name="DocEvents">
+      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.DocEvent)">
+        <MappingFragment StoreEntitySet="DocEvents">
+          <ScalarProperty Name="DocEventId" ColumnName="DocEventId" />
+          <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
           <ScalarProperty Name="date_time" ColumnName="date_time" />
-          <ScalarProperty Name="type" ColumnName="type" />
-          <ScalarProperty Name="FileFileId" ColumnName="FileFileId" />
+          <ScalarProperty Name="DocumentDocumentHash1" ColumnName="DocumentDocumentHash1" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DocPaths">
+      <EntityTypeMapping TypeName="IsTypeOf(FileIndex.DocPath)">
+        <MappingFragment StoreEntitySet="DocPaths">
+          <ScalarProperty Name="DocPathId" ColumnName="DocPathId" />
+          <ScalarProperty Name="path" ColumnName="path" />
+          <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

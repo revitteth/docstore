@@ -5,11 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="7db951cd16c446e28a041db14cc85abb" Name="Diagram1" >
-        <EntityTypeShape EntityType="FileIndex.Directory" Width="1.5" PointX="0.5" PointY="0.5" />
-        <EntityTypeShape EntityType="FileIndex.File" Width="1.5" PointX="2.625" PointY="2.25" />
-        <EntityTypeShape EntityType="FileIndex.Event" Width="1.5" PointX="4.75" PointY="4" />
-        <AssociationConnector Association="FileIndex.DirectoryFile" />
-        <AssociationConnector Association="FileIndex.FileEvent" />
+        <EntityTypeShape EntityType="FileIndex.Document" Width="1.5" PointX="4" PointY="2.5" />
+        <EntityTypeShape EntityType="FileIndex.DocEvent" Width="1.5" PointX="6.625" PointY="4.625" />
+        <AssociationConnector Association="FileIndex.DocumentDocEvent" />
+        <EntityTypeShape EntityType="FileIndex.DocPath" Width="1.5" PointX="2.75" PointY="5.375" />
+        <AssociationConnector Association="FileIndex.DocumentDocPath" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

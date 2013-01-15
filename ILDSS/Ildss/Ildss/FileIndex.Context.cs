@@ -25,8 +25,8 @@ namespace Ildss
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Directory> Directories { get; set; }
-        public DbSet<File> Files { get; set; }
-        public DbSet<Event> Events { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<DocEvent> DocEvents { get; set; }
+        public DbSet<DocPath> DocPaths { get; set; }
     }
 }

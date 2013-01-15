@@ -12,13 +12,13 @@ namespace Ildss
     using System;
     using System.Collections.Generic;
     
-    public partial class Event
+    public partial class DocEvent
     {
-        public int EventId { get; set; }
+        public int DocEventId { get; set; }
+        public string DocumentDocumentHash { get; set; }
         public System.DateTime date_time { get; set; }
-        public string type { get; set; }
-        public int FileFileId { get; set; }
+        public string DocumentDocumentHash1 { get; set; }
     
-        public virtual File File { get; set; }
+        public virtual Document Document { get; set; }
     }
 }

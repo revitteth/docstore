@@ -12,16 +12,12 @@ namespace Ildss
     using System;
     using System.Collections.Generic;
     
-    public partial class Directory
+    public partial class DocPath
     {
-        public Directory()
-        {
-            this.Files = new HashSet<File>();
-        }
-    
-        public int DirectoryId { get; set; }
+        public int DocPathId { get; set; }
         public string path { get; set; }
+        public string DocumentDocumentHash { get; set; }
     
-        public virtual ICollection<File> Files { get; set; }
+        public virtual Document Document { get; set; }
     }
 }
