@@ -53,22 +53,34 @@ namespace Ildss
             // Insert File into Index Database
             using (FileIndexContainer fic = new FileIndexContainer())
             {
-
+                // Check if document exists in db
                 var result = from documents in fic.Documents
                              where documents.DocumentHash == fileHash
                              select documents;
+
+                // Check if path exists in db
+                var pathResult = from docpaths in fic.DocPaths
+                                 where docpaths.DocumentDocumentHash == fileHash && docpaths.path == path
+                                 select docpaths;
 
                // New Document
                 Document doc = new Document()
                 {
                     DocumentHash = fileHash,
-                    size = fi.Length,
+                    size = fi.Length
                 };
 
-                // New Path
+                // New Path (hash not already in db)
                 DocPath dp = new DocPath()
                 {
                     path = fi.FullName
+                };
+
+                // New Path (hash already in db)
+                DocPath dp2 = new DocPath()
+                {
+                    path = fi.FullName,
+                    DocumentDocumentHash = fileHash
                 };
 
                 // If Document isn't Duplicate
@@ -80,12 +92,11 @@ namespace Ildss
                 else 
                 // Document is duplicate
                 {
-                    DocPath d2 = new DocPath()
+                    // If path not already in database
+                    if (pathResult.Count() == 0)
                     {
-                        path = fi.FullName,
-                        DocumentDocumentHash = fileHash
-                    };
-                    fic.DocPaths.Add(d2);
+                        fic.DocPaths.Add(dp2);                    
+                    }
                 }
                 fic.SaveChanges();
             }

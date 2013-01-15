@@ -15,9 +15,9 @@ namespace Ildss
     public partial class DocEvent
     {
         public int DocEventId { get; set; }
-        public string DocumentDocumentHash { get; set; }
         public System.DateTime date_time { get; set; }
-        public string DocumentDocumentHash1 { get; set; }
+        public string type { get; set; }
+        public string DocumentDocumentHash { get; set; }
     
         public virtual Document Document { get; set; }
     }

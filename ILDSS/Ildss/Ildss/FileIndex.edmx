@@ -9,13 +9,13 @@
     <EntitySet Name="Documents" EntityType="FileIndex.Store.Documents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DocEvents" EntityType="FileIndex.Store.DocEvents" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="DocPaths" EntityType="FileIndex.Store.DocPaths" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="DocumentDocEvent" Association="FileIndex.Store.DocumentDocEvent">
-      <End Role="Document" EntitySet="Documents" />
-      <End Role="DocEvent" EntitySet="DocEvents" />
-    </AssociationSet>
     <AssociationSet Name="DocumentDocPath" Association="FileIndex.Store.DocumentDocPath">
       <End Role="Document" EntitySet="Documents" />
       <End Role="DocPath" EntitySet="DocPaths" />
+    </AssociationSet>
+    <AssociationSet Name="DocumentDocEvent" Association="FileIndex.Store.DocumentDocEvent">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="DocEvent" EntitySet="DocEvents" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Documents">
@@ -30,9 +30,9 @@
       <PropertyRef Name="DocEventId" />
     </Key>
     <Property Name="DocEventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="DocumentDocumentHash" Type="nvarchar(max)" Nullable="false" />
     <Property Name="date_time" Type="datetime" Nullable="false" />
-    <Property Name="DocumentDocumentHash1" Type="nchar" Nullable="false" MaxLength="128" />
+    <Property Name="type" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
   </EntityType>
   <EntityType Name="DocPaths">
     <Key>
@@ -42,18 +42,6 @@
     <Property Name="path" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
   </EntityType>
-  <Association Name="DocumentDocEvent">
-    <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
-    <End Role="DocEvent" Type="FileIndex.Store.DocEvents" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Document">
-        <PropertyRef Name="DocumentHash" />
-      </Principal>
-      <Dependent Role="DocEvent">
-        <PropertyRef Name="DocumentDocumentHash1" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="DocumentDocPath">
     <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
     <End Role="DocPath" Type="FileIndex.Store.DocPaths" Multiplicity="*" />
@@ -66,6 +54,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="DocumentDocEvent">
+    <End Role="Document" Type="FileIndex.Store.Documents" Multiplicity="1" />
+    <End Role="DocEvent" Type="FileIndex.Store.DocEvents" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Document">
+        <PropertyRef Name="DocumentHash" />
+      </Principal>
+      <Dependent Role="DocEvent">
+        <PropertyRef Name="DocumentDocumentHash" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -73,14 +73,14 @@
         <EntityContainer Name="FileIndexContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Documents" EntityType="FileIndex.Document" />
           <EntitySet Name="DocEvents" EntityType="FileIndex.DocEvent" />
-          <AssociationSet Name="DocumentDocEvent" Association="FileIndex.DocumentDocEvent">
-            <End Role="Document" EntitySet="Documents" />
-            <End Role="DocEvent" EntitySet="DocEvents" />
-          </AssociationSet>
           <EntitySet Name="DocPaths" EntityType="FileIndex.DocPath" />
           <AssociationSet Name="DocumentDocPath" Association="FileIndex.DocumentDocPath">
             <End Role="Document" EntitySet="Documents" />
             <End Role="DocPath" EntitySet="DocPaths" />
+          </AssociationSet>
+          <AssociationSet Name="DocumentDocEvent" Association="FileIndex.DocumentDocEvent">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="DocEvent" EntitySet="DocEvents" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Document">
@@ -88,32 +88,20 @@
             <PropertyRef Name="DocumentHash" />
           </Key>
           <Property Type="String" Name="DocumentHash" Nullable="false" annotation:StoreGeneratedPattern="None" Unicode="true" MaxLength="128" FixedLength="true" />
-          <NavigationProperty Name="DocEvents" Relationship="FileIndex.DocumentDocEvent" FromRole="Document" ToRole="DocEvent" />
           <Property Type="Int64" Name="size" Nullable="false" />
           <NavigationProperty Name="DocPaths" Relationship="FileIndex.DocumentDocPath" FromRole="Document" ToRole="DocPath" />
+          <NavigationProperty Name="DocEvents" Relationship="FileIndex.DocumentDocEvent" FromRole="Document" ToRole="DocEvent" />
         </EntityType>
         <EntityType Name="DocEvent">
           <Key>
             <PropertyRef Name="DocEventId" />
           </Key>
           <Property Type="Int32" Name="DocEventId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="DocumentDocumentHash" Nullable="false" />
           <Property Type="DateTime" Name="date_time" Nullable="false" />
+          <Property Type="String" Name="type" Nullable="false" />
           <NavigationProperty Name="Document" Relationship="FileIndex.DocumentDocEvent" FromRole="DocEvent" ToRole="Document" />
-          <Property Type="String" Name="DocumentDocumentHash1" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="DocumentDocumentHash" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
         </EntityType>
-        <Association Name="DocumentDocEvent">
-          <End Type="FileIndex.Document" Role="Document" Multiplicity="1" />
-          <End Type="FileIndex.DocEvent" Role="DocEvent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="DocumentHash" />
-            </Principal>
-            <Dependent Role="DocEvent">
-              <PropertyRef Name="DocumentDocumentHash1" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="DocPath">
           <Key>
             <PropertyRef Name="DocPathId" />
@@ -131,6 +119,18 @@
               <PropertyRef Name="DocumentHash" />
             </Principal>
             <Dependent Role="DocPath">
+              <PropertyRef Name="DocumentDocumentHash" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DocumentDocEvent">
+          <End Type="FileIndex.Document" Role="Document" Multiplicity="1" />
+          <End Type="FileIndex.DocEvent" Role="DocEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="DocumentHash" />
+            </Principal>
+            <Dependent Role="DocEvent">
               <PropertyRef Name="DocumentDocumentHash" />
             </Dependent>
           </ReferentialConstraint>
@@ -153,9 +153,9 @@
       <EntityTypeMapping TypeName="IsTypeOf(FileIndex.DocEvent)">
         <MappingFragment StoreEntitySet="DocEvents">
           <ScalarProperty Name="DocEventId" ColumnName="DocEventId" />
-          <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
           <ScalarProperty Name="date_time" ColumnName="date_time" />
-          <ScalarProperty Name="DocumentDocumentHash1" ColumnName="DocumentDocumentHash1" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

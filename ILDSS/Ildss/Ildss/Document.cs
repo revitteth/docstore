@@ -16,14 +16,14 @@ namespace Ildss
     {
         public Document()
         {
-            this.DocEvents = new HashSet<DocEvent>();
             this.DocPaths = new HashSet<DocPath>();
+            this.DocEvents = new HashSet<DocEvent>();
         }
     
         public string DocumentHash { get; set; }
         public long size { get; set; }
     
-        public virtual ICollection<DocEvent> DocEvents { get; set; }
         public virtual ICollection<DocPath> DocPaths { get; set; }
+        public virtual ICollection<DocEvent> DocEvents { get; set; }
     }
 }

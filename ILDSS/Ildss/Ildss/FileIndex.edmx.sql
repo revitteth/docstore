@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/15/2013 02:30:18
+-- Date Created: 01/15/2013 05:26:21
 -- Generated from EDMX file: F:\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
 -- --------------------------------------------------
 
@@ -20,6 +20,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_DocumentDocEvent]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[DocEvents] DROP CONSTRAINT [FK_DocumentDocEvent];
 GO
+IF OBJECT_ID(N'[dbo].[FK_DocumentDocPath]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DocPaths] DROP CONSTRAINT [FK_DocumentDocPath];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -30,6 +33,9 @@ IF OBJECT_ID(N'[dbo].[Documents]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[DocEvents]', 'U') IS NOT NULL
     DROP TABLE [dbo].[DocEvents];
+GO
+IF OBJECT_ID(N'[dbo].[DocPaths]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DocPaths];
 GO
 
 -- --------------------------------------------------
@@ -46,9 +52,9 @@ GO
 -- Creating table 'DocEvents'
 CREATE TABLE [dbo].[DocEvents] (
     [DocEventId] int IDENTITY(1,1) NOT NULL,
-    [DocumentDocumentHash] nvarchar(max)  NOT NULL,
     [date_time] datetime  NOT NULL,
-    [DocumentDocumentHash1] nchar(128)  NOT NULL
+    [type] nvarchar(max)  NOT NULL,
+    [DocumentDocumentHash] nchar(128)  NOT NULL
 );
 GO
 
@@ -86,20 +92,6 @@ GO
 -- Creating all FOREIGN KEY constraints
 -- --------------------------------------------------
 
--- Creating foreign key on [DocumentDocumentHash1] in table 'DocEvents'
-ALTER TABLE [dbo].[DocEvents]
-ADD CONSTRAINT [FK_DocumentDocEvent]
-    FOREIGN KEY ([DocumentDocumentHash1])
-    REFERENCES [dbo].[Documents]
-        ([DocumentHash])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- Creating non-clustered index for FOREIGN KEY 'FK_DocumentDocEvent'
-CREATE INDEX [IX_FK_DocumentDocEvent]
-ON [dbo].[DocEvents]
-    ([DocumentDocumentHash1]);
-GO
-
 -- Creating foreign key on [DocumentDocumentHash] in table 'DocPaths'
 ALTER TABLE [dbo].[DocPaths]
 ADD CONSTRAINT [FK_DocumentDocPath]
@@ -111,6 +103,20 @@ ADD CONSTRAINT [FK_DocumentDocPath]
 -- Creating non-clustered index for FOREIGN KEY 'FK_DocumentDocPath'
 CREATE INDEX [IX_FK_DocumentDocPath]
 ON [dbo].[DocPaths]
+    ([DocumentDocumentHash]);
+GO
+
+-- Creating foreign key on [DocumentDocumentHash] in table 'DocEvents'
+ALTER TABLE [dbo].[DocEvents]
+ADD CONSTRAINT [FK_DocumentDocEvent]
+    FOREIGN KEY ([DocumentDocumentHash])
+    REFERENCES [dbo].[Documents]
+        ([DocumentHash])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_DocumentDocEvent'
+CREATE INDEX [IX_FK_DocumentDocEvent]
+ON [dbo].[DocEvents]
     ([DocumentDocumentHash]);
 GO
 
