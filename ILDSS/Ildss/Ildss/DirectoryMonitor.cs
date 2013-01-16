@@ -30,21 +30,23 @@ namespace Ildss
         {              
             Indexer indexer = new Indexer();
 
-            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
+            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
             fswCreated.Subscribe(
                 pattern => {
-                    DocEvent de = new DocEvent() { 
-                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)), 
-                        name = pattern.EventArgs.Name, path = pattern.EventArgs.FullPath, type = WatcherChangeTypes.Created.ToString() 
-                    };
-
-                    EventQueue.AddEvent(de);
-                    if ((File.GetAttributes(de.path) & FileAttributes.Directory) == FileAttributes.Directory)
+                    if ((File.GetAttributes(pattern.EventArgs.FullPath) & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         //do nowt - CURE temp files problem on this one geoff!!!! when making shortcuts.
                     }
                     else
                     {
+                        DocEvent de = new DocEvent()
+                        {
+                            date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                            name = pattern.EventArgs.Name,
+                            path = pattern.EventArgs.FullPath,
+                            type = WatcherChangeTypes.Created.ToString()
+                        };
+                        //IldssModule.evQueue.AddEvent(de);
                         //indexer.IndexFile(pattern.EventArgs.FullPath);
                     }
                 }
@@ -54,6 +56,13 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
+                    var hashting = new Hash().HashFile(pattern.EventArgs.FullPath);
+                    FileIndexContainer fic = new FileIndexContainer();
+
+                    Document ddd = fic.Documents.First(i => i.DocumentHash == hashting);
+
+                    //Console.WriteLine(ddd.DocumentHash);
+
                     DocEvent de = new DocEvent()
                     {
                         date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
@@ -62,9 +71,9 @@ namespace Ildss
                         path = pattern.EventArgs.FullPath,
                         old_path = pattern.EventArgs.OldFullPath,
                         type = WatcherChangeTypes.Renamed.ToString(),
-                        DocumentDocumentHash = new Hash().HashFile(pattern.EventArgs.FullPath)
+                        Document = ddd
                     };
-                    EventQueue.AddEvent(de);
+                    //EventQueue.AddEvent(de);
                 }
             );
 
@@ -81,7 +90,7 @@ namespace Ildss
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Deleted.ToString()
                     };
-                    EventQueue.AddEvent(de);
+                    //EventQueue.AddEvent(de);
                 }
             );
 
@@ -95,7 +104,7 @@ namespace Ildss
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Changed.ToString()                         
                     };
-                    EventQueue.AddEvent(de);
+                    //EventQueue.AddEvent(de);
                 }
             );
         }

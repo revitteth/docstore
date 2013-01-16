@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ninject;
+using Ninject.Modules;
 
 namespace Ildss
 {
@@ -20,7 +21,9 @@ namespace Ildss
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Set up ninject
-            IKernel kernel = new StandardKernel();
+            var e = KernelFactory.Instance.Get<IEventQueue>();
+
+            e.PrintEvents();
             
             if (Properties.Settings.Default.firstrun)
             {

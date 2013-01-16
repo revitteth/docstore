@@ -13,15 +13,10 @@ namespace Ildss
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class Indexer
     {
-        private int filesIndexed    { get; set; }
-        private int totalFiles { get; set; }
         private FileInfo fi { get; set; }
         
         public void IndexFiles(string path)
         {
-            filesIndexed = 0;
-            totalFiles = System.IO.Directory.GetFiles(path, "*", SearchOption.AllDirectories).Count();
-
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -48,7 +43,6 @@ namespace Ildss
         public void IndexFile(string path)
         {
             fi = new FileInfo(path);
-            ++filesIndexed;
 
             // Hash File
             Hash h = new Hash();
@@ -58,14 +52,10 @@ namespace Ildss
             using (FileIndexContainer fic = new FileIndexContainer())
             {
                 // Check if document exists in db
-                var result = from documents in fic.Documents
-                                where documents.DocumentHash == fileHash
-                                select documents;
+                Document result = fic.Documents.First(i => i.DocumentHash == fileHash);
 
                 // Check if path exists in db
-                var pathResult = from docpaths in fic.DocPaths
-                                    where docpaths.DocumentDocumentHash == fileHash && docpaths.path == path
-                                    select docpaths;
+                DocPath pathResult = fic.DocPaths.First(i => i.DocumentDocumentHash == fileHash && i.path == path);
 
                 // New Document
                 Document doc = new Document()
@@ -88,7 +78,7 @@ namespace Ildss
                 };
 
                 // If Document isn't Duplicate
-                if (result.Count() == 0)
+                if (result.Equals(new Document()))
                 {
                     fic.Documents.Add(doc);
                     doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
@@ -97,7 +87,7 @@ namespace Ildss
                 // Document is duplicate
                 {
                     // If path not already in database
-                    if (pathResult.Count() == 0)
+                    if (pathResult.Equals(new DocPath()))
                     {
                         fic.DocPaths.Add(dp2);                    
                     }

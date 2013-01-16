@@ -7,19 +7,20 @@ using System.IO;
 
 namespace Ildss
 {
-    public static class EventQueue
+    public class EventQueue : IEventQueue
     {
-        private static List<DocEvent> evQueue = new List<DocEvent>();
+        private List<DocEvent> evQueue = new List<DocEvent>();
 
-        public static void AddEvent(DocEvent de)
+        public void AddEvent(DocEvent de)
         {
             evQueue.Add(de);
             EventQueueToDb();
             PrintEvents();
         }
 
-        public static void PrintEvents()
+        public void PrintEvents()
         {
+            Console.WriteLine("printing events");
             foreach (DocEvent ev in evQueue)
             {
                 Console.WriteLine(ev.name + " was " + ev.type);
@@ -27,7 +28,7 @@ namespace Ildss
         }
 
 
-        public static void DetectOfficeFiles()
+        public void DetectOfficeFiles()
         {
             // look for the patterns associated with office file creation/save/rename
             /*
@@ -51,30 +52,45 @@ namespace Ildss
             */
                     }
 
-        public static void EventQueueToDb()
+        public void EventQueueToDb()
         {
-            try
-            {
-                //try and put shit in db
-                RemoveExtraFiles();
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+                using (FileIndexContainer fic = new FileIndexContainer())
+                {
+                    //try and put shit in db
+                    RemoveExtraFiles();
+                    foreach (DocEvent ev in evQueue)
+                    {
+                        // switch on the type of event
+                        switch (ev.type)
+                        {
+                            case "Renamed":
+                                fic.DocEvents.Add(ev);
+                                fic.SaveChanges();
+                                break;
+                        }
+                    }
+                }
+
+            //}
+            //catch (Exception e)
+            //{
                 // carry on with next one
-            }
-            finally
-            {
+            //}
+           // finally
+           // {
                 // done
-            }
+            //}
         }
 
-        private static void RemoveExtraFiles()
+        private void RemoveExtraFiles()
         {
 
         }
 
 
-        private static bool IsOfficeFile(string name)
+        private bool IsOfficeFile(string name)
         {
             //check to see if from office
             if (name.Contains(".tmp") | !name.Contains("."))
