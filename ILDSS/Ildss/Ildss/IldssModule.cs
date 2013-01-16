@@ -13,7 +13,7 @@ namespace Ildss
         public override void Load()
         {
             Console.WriteLine("im being called");
-            this.Bind<IEventQueue>().To<SillyQueue>();
+            this.Bind<IEventQueue>().To<EventQueue>().InSingletonScope();
         }
     }
 }

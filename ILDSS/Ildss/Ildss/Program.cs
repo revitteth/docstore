@@ -24,6 +24,10 @@ namespace Ildss
             var e = KernelFactory.Instance.Get<IEventQueue>();
 
             e.PrintEvents();
+
+            var d = KernelFactory.Instance.Get<IEventQueue>();
+
+            d.PrintEvents();
             
             if (Properties.Settings.Default.firstrun)
             {
