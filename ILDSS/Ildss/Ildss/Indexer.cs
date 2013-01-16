@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Timers;
 using System.Threading;
+using System.Security.Permissions;
 
 namespace Ildss
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class Indexer
     {
         private int filesIndexed    { get; set; }
         private int totalFiles { get; set; }
+        private FileInfo fi { get; set; }
         
         public void IndexFiles(string path)
         {
@@ -44,7 +47,7 @@ namespace Ildss
 
         public void IndexFile(string path)
         {
-            FileInfo fi = new FileInfo(path);
+            fi = new FileInfo(path);
             ++filesIndexed;
 
             // Hash File
@@ -56,15 +59,15 @@ namespace Ildss
             {
                 // Check if document exists in db
                 var result = from documents in fic.Documents
-                             where documents.DocumentHash == fileHash
-                             select documents;
+                                where documents.DocumentHash == fileHash
+                                select documents;
 
                 // Check if path exists in db
                 var pathResult = from docpaths in fic.DocPaths
-                                 where docpaths.DocumentDocumentHash == fileHash && docpaths.path == path
-                                 select docpaths;
+                                    where docpaths.DocumentDocumentHash == fileHash && docpaths.path == path
+                                    select docpaths;
 
-               // New Document
+                // New Document
                 Document doc = new Document()
                 {
                     DocumentHash = fileHash,

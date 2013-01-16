@@ -30,12 +30,12 @@ namespace Ildss
         {              
             Indexer indexer = new Indexer();
 
-            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
+            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
             fswCreated.Subscribe(
                 pattern => {
                     DocEvent de = new DocEvent() { 
                         date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)), 
-                        name = pattern.EventArgs.Name, path = pattern.EventArgs.FullPath, type = WatcherChangeTypes.Changed.ToString() 
+                        name = pattern.EventArgs.Name, path = pattern.EventArgs.FullPath, type = WatcherChangeTypes.Created.ToString() 
                     };
 
                     EventQueue.AddEvent(de);
@@ -44,7 +44,9 @@ namespace Ildss
                         //do nowt - CURE temp files problem on this one geoff!!!! when making shortcuts.
                     }
                     else
-                        indexer.IndexFile(pattern.EventArgs.FullPath);
+                    {
+                        //indexer.IndexFile(pattern.EventArgs.FullPath);
+                    }
                 }
             );
 
@@ -59,7 +61,7 @@ namespace Ildss
                         old_name = pattern.EventArgs.OldName,
                         path = pattern.EventArgs.FullPath,
                         old_path = pattern.EventArgs.OldFullPath,
-                        type = WatcherChangeTypes.Changed.ToString(),
+                        type = WatcherChangeTypes.Renamed.ToString(),
                         DocumentDocumentHash = new Hash().HashFile(pattern.EventArgs.FullPath)
                     };
                     EventQueue.AddEvent(de);
@@ -77,7 +79,7 @@ namespace Ildss
                         date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                         name = pattern.EventArgs.Name,
                         path = pattern.EventArgs.FullPath,
-                        type = WatcherChangeTypes.Changed.ToString()
+                        type = WatcherChangeTypes.Deleted.ToString()
                     };
                     EventQueue.AddEvent(de);
                 }

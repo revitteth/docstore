@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Ildss
 {
@@ -24,6 +25,8 @@ namespace Ildss
 
         private async void btnManualIndex_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("Please close all open files within the directory " + Properties.Settings.Default.directory + " - Click OK to continue");
+
             btnManualIndex.Enabled = false;
             btnManualIndex.Text = "Indexing...";
 
@@ -35,7 +38,7 @@ namespace Ildss
             });*/
             var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
             await foo(progress);
-            
+
 
             // Re enable button
             btnManualIndex.Enabled = true;

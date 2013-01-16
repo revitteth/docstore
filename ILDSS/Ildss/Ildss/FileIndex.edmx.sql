@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/15/2013 22:56:04
--- Generated from EDMX file: C:\Users\Max\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
+-- Date Created: 01/16/2013 02:03:34
+-- Generated from EDMX file: F:\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [FileIndexDb];
+USE [FileIndex];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -17,11 +17,29 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[FK_DocumentDocPath]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DocPaths] DROP CONSTRAINT [FK_DocumentDocPath];
+GO
+IF OBJECT_ID(N'[dbo].[FK_DocumentDocEvent]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[DocEvents] DROP CONSTRAINT [FK_DocumentDocEvent];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
+IF OBJECT_ID(N'[dbo].[Documents]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Documents];
+GO
+IF OBJECT_ID(N'[dbo].[DocEvents]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DocEvents];
+GO
+IF OBJECT_ID(N'[dbo].[DocPaths]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DocPaths];
+GO
+IF OBJECT_ID(N'[dbo].[EventQueueBackups]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[EventQueueBackups];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables

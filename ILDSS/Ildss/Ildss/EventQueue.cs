@@ -14,7 +14,8 @@ namespace Ildss
         public static void AddEvent(DocEvent de)
         {
             evQueue.Add(de);
-            EventQueueToDb(de);
+            EventQueueToDb();
+            PrintEvents();
         }
 
         public static void PrintEvents()
@@ -50,12 +51,12 @@ namespace Ildss
             */
                     }
 
-        public static void EventQueueToDb(DocEvent de)
+        public static void EventQueueToDb()
         {
             try
             {
                 //try and put shit in db
-                Console.WriteLine("event in db now");
+                RemoveExtraFiles();
             }
             catch (Exception e)
             {
@@ -65,6 +66,11 @@ namespace Ildss
             {
                 // done
             }
+        }
+
+        private static void RemoveExtraFiles()
+        {
+
         }
 
 
