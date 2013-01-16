@@ -13,7 +13,7 @@ namespace Ildss
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class FileIndexContainer : DbContext
+    public partial class FileIndexContainer : DbContext, IFileIndexContainer
     {
         public FileIndexContainer()
             : base("name=FileIndexContainer")

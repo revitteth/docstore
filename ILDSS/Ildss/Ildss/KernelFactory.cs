@@ -35,7 +35,7 @@ namespace Ildss
             {
                 if (ValidateSubclasses())
                 {
-                    var kernel = new StandardKernel(new IldssModule());
+                    var kernel = new StandardKernel();
                     kernel.Load(assemblyReference);
                     AssemblyKernelRegistry.Add(assemblyKey, kernel);
                 }

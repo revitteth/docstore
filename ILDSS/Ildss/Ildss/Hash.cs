@@ -10,7 +10,7 @@ using System.Security.Permissions;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class Hash
+    public class Hash : IHash
     {
 
         private SHA512 sha512 { get; set; }
@@ -59,7 +59,7 @@ namespace Ildss
         }
 
         // Print the byte array in a readable format. 
-        public static string ByteToString(byte[] array)
+        public string ByteToString(byte[] array)
         {
             int i;
             string hs = "";

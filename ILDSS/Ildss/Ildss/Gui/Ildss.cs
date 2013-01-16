@@ -58,7 +58,8 @@ namespace Ildss
         {
             return Task.Run( () =>
             {
-                new Indexer().IndexFiles(Properties.Settings.Default.directory);
+                KernelFactory.Instance.Get<IIndexer>().IndexFiles(Properties.Settings.Default.directory);
+                //new Indexer().IndexFiles(Properties.Settings.Default.directory);
             });
         }
 

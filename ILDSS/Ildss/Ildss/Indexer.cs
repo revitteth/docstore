@@ -11,7 +11,7 @@ using System.Security.Permissions;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    class Indexer
+    class Indexer : IIndexer
     {
         private FileInfo fi { get; set; }
         
@@ -45,55 +45,64 @@ namespace Ildss
             fi = new FileInfo(path);
 
             // Hash File
-            Hash h = new Hash();
-            string fileHash = h.HashFile(fi.FullName);
+            var h = KernelFactory.Instance.Get<IHash>();
+            string fileHash = h.HashFile(path);
 
             // Insert File into Index Database
-            using (FileIndexContainer fic = new FileIndexContainer())
+            var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+
+            Document result = new Document();
+ 
+            // Check if document exists in db
+            if(fic.Documents.Any(i => i.DocumentHash == fileHash))
             {
-                // Check if document exists in db
-                Document result = fic.Documents.First(i => i.DocumentHash == fileHash);
-
-                // Check if path exists in db
-                DocPath pathResult = fic.DocPaths.First(i => i.DocumentDocumentHash == fileHash && i.path == path);
-
-                // New Document
-                Document doc = new Document()
-                {
-                    DocumentHash = fileHash,
-                    size = fi.Length
-                };
-
-                // New Path (hash not already in db)
-                DocPath dp = new DocPath()
-                {
-                    path = fi.FullName
-                };
-
-                // New Path (hash already in db)
-                DocPath dp2 = new DocPath()
-                {
-                    path = fi.FullName,
-                    DocumentDocumentHash = fileHash
-                };
-
-                // If Document isn't Duplicate
-                if (result.Equals(new Document()))
-                {
-                    fic.Documents.Add(doc);
-                    doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
-                }
-                else 
-                // Document is duplicate
-                {
-                    // If path not already in database
-                    if (pathResult.Equals(new DocPath()))
-                    {
-                        fic.DocPaths.Add(dp2);                    
-                    }
-                }
-                fic.SaveChanges();
+                result = fic.Documents.First(i => i.DocumentHash == fileHash);
             }
+
+            DocPath docpath = new DocPath();
+
+            // Check if path exists in db
+            if (fic.DocPaths.Any(i => i.DocumentDocumentHash == fileHash))
+            {
+                docpath = fic.DocPaths.First(i => i.DocumentDocumentHash == fileHash);
+            }
+
+            // New Document
+            Document doc = new Document()
+            {
+                DocumentHash = fileHash,
+                size = fi.Length
+            };
+
+            // New Path (hash not already in db)
+            DocPath dp = new DocPath()
+            {
+                path = fi.FullName
+            };
+
+            // New Path (hash already in db)
+            DocPath dp2 = new DocPath()
+            {
+                path = fi.FullName,
+                DocumentDocumentHash = fileHash
+            };
+
+            // If Document isn't Duplicate
+            if (result.Equals(new Document()))
+            {
+                fic.Documents.Add(doc);
+                doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
+            }
+            else 
+            // Document is duplicate
+            {
+                // If path not already in database
+                if (docpath.Equals(new DocPath()))
+                {
+                    fic.DocPaths.Add(dp2);                    
+                }
+            }
+            fic.SaveChanges();
 
             Console.WriteLine("Saved " + fi.FullName + " to database");
         }

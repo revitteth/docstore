@@ -8,12 +8,14 @@ using Ninject.Modules;
 
 namespace Ildss
 {
-    class IldssModule : NinjectModule
+    public class IldssModule : NinjectModule
     {
         public override void Load()
         {
-            Console.WriteLine("im being called");
             this.Bind<IEventQueue>().To<EventQueue>().InSingletonScope();
+            this.Bind<IIndexer>().To<Indexer>();
+            this.Bind<IHash>().To<Hash>();
+            this.Bind<IFileIndexContainer>().To<FileIndexContainer>().InSingletonScope();
         }
     }
 }
