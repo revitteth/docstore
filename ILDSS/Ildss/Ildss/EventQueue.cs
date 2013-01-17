@@ -22,7 +22,7 @@ namespace Ildss
         {
             foreach (DocEvent ev in evQueue)
             {
-                var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
                 fic.DocEvents.Add(ev);
                 fic.SaveChanges();
             }
@@ -59,7 +59,7 @@ namespace Ildss
             //{
                     //try and put shit in db
                     //RemoveExtraFiles();
-            var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+            var fic = KernelFactory.Instance.Get<FileIndexContext>();
             foreach (DocEvent ev in evQueue)
             {
                 // switch on the type of event

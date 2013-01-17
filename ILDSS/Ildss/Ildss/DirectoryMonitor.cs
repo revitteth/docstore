@@ -50,7 +50,7 @@ namespace Ildss
                 pattern =>
                 {
                     var hash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
-                    var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
                     Console.WriteLine(hash);
 
@@ -92,7 +92,7 @@ namespace Ildss
                 pattern => {
                     var fi = new FileInfo(pattern.EventArgs.FullPath);
 
-                    var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
                     var updatedDocument = fic.Documents.First(i => i.DocPaths.Any(j=>j.path == pattern.EventArgs.FullPath) == true);
                     //updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
@@ -108,7 +108,7 @@ namespace Ildss
                         last_write = fi.LastWriteTime
                     };
 
-                    if (fic.DocEvents.Any(i => i.IsEqual(de)))
+                    if (false)
                     {
                         // already exists pal
                     }

@@ -50,7 +50,7 @@ namespace Ildss
             var h = KernelFactory.Instance.Get<IHash>();
             string fileHash = h.HashFile(path);
 
-            var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+            var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
             Document result = new Document();
  
@@ -89,7 +89,7 @@ namespace Ildss
             foreach (DocEvent d in fic.DocEvents.Where(i => i.Document.DocumentHash == result.DocumentHash))
             {
                 Console.WriteLine("looping");
-                if (d.IsEqual(de))
+                if (false)
                 {
                     // found it break loop
                     Console.WriteLine("got a matching event");
