@@ -58,22 +58,20 @@ namespace Ildss
         {
             //try
             //{
-                using (FileIndexContainer fic = new FileIndexContainer())
-                {
                     //try and put shit in db
-                    RemoveExtraFiles();
-                    foreach (DocEvent ev in evQueue)
-                    {
-                        // switch on the type of event
-                        switch (ev.type)
-                        {
-                            case "Renamed":
-                                fic.DocEvents.Add(ev);
-                                fic.SaveChanges();
-                                break;
-                        }
-                    }
+                    //RemoveExtraFiles();
+            var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+            foreach (DocEvent ev in evQueue)
+            {
+                // switch on the type of event
+                switch (ev.type)
+                {
+                    case "Renamed":
+                        fic.DocEvents.Add(ev);
+                        fic.SaveChanges();
+                        break;
                 }
+            }
 
             //}
             //catch (Exception e)

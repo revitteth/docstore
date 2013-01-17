@@ -27,18 +27,12 @@ namespace Ildss
         {
             MessageBox.Show("Please close all open files within the directory " + Properties.Settings.Default.directory + " - Click OK to continue");
 
+            // Disable button
             btnManualIndex.Enabled = false;
             btnManualIndex.Text = "Indexing...";
 
-            // Start thread to do indexing
-            /*
-            await Task.Factory.StartNew(() =>
-            {
-                new Indexer().IndexFiles(Properties.Settings.Default.directory);
-            });*/
             var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
             await foo(progress);
-
 
             // Re enable button
             btnManualIndex.Enabled = true;
@@ -59,7 +53,6 @@ namespace Ildss
             return Task.Run( () =>
             {
                 KernelFactory.Instance.Get<IIndexer>().IndexFiles(Properties.Settings.Default.directory);
-                //new Indexer().IndexFiles(Properties.Settings.Default.directory);
             });
         }
 
@@ -73,7 +66,7 @@ namespace Ildss
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //EventQueue.PrintEvents();
+            KernelFactory.Instance.Get<IEventQueue>().PrintEvents();
         }
 
     }

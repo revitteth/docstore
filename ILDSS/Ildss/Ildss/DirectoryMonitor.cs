@@ -46,8 +46,7 @@ namespace Ildss
                             path = pattern.EventArgs.FullPath,
                             type = WatcherChangeTypes.Created.ToString()
                         };
-                        //IldssModule.evQueue.AddEvent(de);
-                        //indexer.IndexFile(pattern.EventArgs.FullPath);
+                        KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
                     }
                 }
             );
@@ -56,12 +55,10 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    var hashting = new Hash().HashFile(pattern.EventArgs.FullPath);
-                    FileIndexContainer fic = new FileIndexContainer();
+                    var hash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
+                    var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
 
-                    Document ddd = fic.Documents.First(i => i.DocumentHash == hashting);
-
-                    //Console.WriteLine(ddd.DocumentHash);
+                    Document ddd = fic.Documents.First(i => i.DocumentHash == hash);
 
                     DocEvent de = new DocEvent()
                     {
@@ -73,7 +70,7 @@ namespace Ildss
                         type = WatcherChangeTypes.Renamed.ToString(),
                         Document = ddd
                     };
-                    //EventQueue.AddEvent(de);
+                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
                 }
             );
 
@@ -90,7 +87,7 @@ namespace Ildss
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Deleted.ToString()
                     };
-                    //EventQueue.AddEvent(de);
+                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
                 }
             );
 
@@ -104,7 +101,12 @@ namespace Ildss
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Changed.ToString()                         
                     };
-                    //EventQueue.AddEvent(de);
+
+                    // NEED TO UPDATE HASH HERE!!!!
+                    // use path to find it.
+
+
+                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
                 }
             );
         }

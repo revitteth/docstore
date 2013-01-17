@@ -175,9 +175,7 @@
   <ItemGroup>
     <Content Include="FileIndex.edmx.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /q /s %25localappdata%25\ILDSS</PreBuildEvent>

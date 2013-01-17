@@ -26,8 +26,7 @@ namespace Ildss
                 Application.Run(new Setup());
             }
             else
-            {
-                
+            {                
                 // Run dashboard GUI
                 Application.Run(new Ildss());
             }

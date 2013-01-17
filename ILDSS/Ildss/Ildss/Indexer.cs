@@ -43,6 +43,9 @@ namespace Ildss
         public void IndexFile(string path)
         {
             fi = new FileInfo(path);
+            fi.Refresh();
+            var dave = fi.LastAccessTime;
+            var mindy = fi.LastWriteTime;
 
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
@@ -104,7 +107,7 @@ namespace Ildss
             }
             fic.SaveChanges();
 
-            Console.WriteLine("Saved " + fi.FullName + " to database");
+            Console.WriteLine("Saved " + fi.FullName + " to database. Last accessed at " + dave + " last written at " + mindy);
         }
 
         public void RemoveFromIndex(string path)
