@@ -44,8 +44,8 @@ namespace Ildss
         {
             fi = new FileInfo(path);
             fi.Refresh();
-            var dave = fi.LastAccessTime;
-            var mindy = fi.LastWriteTime;
+            var lastAccess = fi.LastAccessTime;
+            var lastWrite = fi.LastWriteTime;
 
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
@@ -66,6 +66,18 @@ namespace Ildss
                 fic.Documents.Add(result);
             }
 
+            DocEvent docevent = new DocEvent()
+            {
+                date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                name = fi.Name,
+                path = fi.FullName,
+                type = "Indexed",
+                last_access = lastAccess,
+                last_write = lastWrite
+            };
+
+            result.DocEvents.Add(docevent);
+
             DocPath docpath = new DocPath();
 
             // If path doesn't exist in DB
@@ -76,8 +88,6 @@ namespace Ildss
             }
 
             fic.SaveChanges();
-
-            //Console.WriteLine("Saved " + fi.FullName + " to database. Last accessed at " + dave + " last written at " + mindy);
         }
 
         public void RemoveFromIndex(string path)

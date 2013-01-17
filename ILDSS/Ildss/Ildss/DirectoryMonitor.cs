@@ -106,7 +106,7 @@ namespace Ildss
                         name = pattern.EventArgs.Name,
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Changed.ToString(),
-                        Document = updatedDocument//new hashed document 
+                        Document = updatedDocument
                     };
 
                     KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);

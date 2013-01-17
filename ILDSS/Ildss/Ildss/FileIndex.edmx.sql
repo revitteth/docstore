@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/16/2013 02:03:34
+-- Date Created: 01/17/2013 01:58:32
 -- Generated from EDMX file: F:\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
 -- --------------------------------------------------
 
@@ -61,7 +61,9 @@ CREATE TABLE [dbo].[DocEvents] (
     [path] nvarchar(max)  NOT NULL,
     [old_path] nvarchar(max)  NULL,
     [name] nvarchar(max)  NOT NULL,
-    [old_name] nvarchar(max)  NULL
+    [old_name] nvarchar(max)  NULL,
+    [last_access] datetime  NOT NULL,
+    [last_write] datetime  NOT NULL
 );
 GO
 

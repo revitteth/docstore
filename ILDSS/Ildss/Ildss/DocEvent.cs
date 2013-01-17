@@ -22,6 +22,8 @@ namespace Ildss
         public string old_path { get; set; }
         public string name { get; set; }
         public string old_name { get; set; }
+        public System.DateTime last_access { get; set; }
+        public System.DateTime last_write { get; set; }
     
         public virtual Document Document { get; set; }
     }

@@ -38,6 +38,8 @@
     <Property Name="old_path" Type="nvarchar(max)" Nullable="true" />
     <Property Name="name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="old_name" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="last_access" Type="datetime" Nullable="false" />
+    <Property Name="last_write" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="DocPaths">
     <Key>
@@ -124,6 +126,8 @@
           <Property Type="String" Name="old_path" Nullable="true" />
           <Property Type="String" Name="name" Nullable="false" />
           <Property Type="String" Name="old_name" Nullable="true" />
+          <Property Type="DateTime" Name="last_access" Nullable="false" />
+          <Property Type="DateTime" Name="last_write" Nullable="false" />
         </EntityType>
         <EntityType Name="DocPath">
           <Key>
@@ -196,6 +200,8 @@
           <ScalarProperty Name="old_path" ColumnName="old_path" />
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="old_name" ColumnName="old_name" />
+          <ScalarProperty Name="last_access" ColumnName="last_access" />
+          <ScalarProperty Name="last_write" ColumnName="last_write" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

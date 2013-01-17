@@ -15,7 +15,7 @@ namespace Ildss
             this.Bind<IEventQueue>().To<EventQueue>().InSingletonScope();
             this.Bind<IIndexer>().To<Indexer>();
             this.Bind<IHash>().To<Hash>();
-            this.Bind<IFileIndexContainer>().To<FileIndexContainer>().InSingletonScope();
+            this.Bind<IFileIndexContainer>().To<FileIndexContainer>().InSingletonScope(); // may need to re-implement in the implementation file after changes
             this.Bind<IDirectoryMonitor>().To<DirectoryMonitor>().InSingletonScope();
         }
     }
