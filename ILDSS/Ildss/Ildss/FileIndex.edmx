@@ -31,7 +31,6 @@
       <PropertyRef Name="DocEventId" />
     </Key>
     <Property Name="DocEventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="date_time" Type="datetime" Nullable="false" />
     <Property Name="type" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DocumentDocumentHash" Type="nchar" Nullable="false" MaxLength="128" />
     <Property Name="path" Type="nvarchar(max)" Nullable="false" />
@@ -118,7 +117,6 @@
             <PropertyRef Name="DocEventId" />
           </Key>
           <Property Type="Int32" Name="DocEventId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="DateTime" Name="date_time" Nullable="false" />
           <Property Type="String" Name="type" Nullable="false" />
           <NavigationProperty Name="Document" Relationship="FileIndex.DocumentDocEvent" FromRole="DocEvent" ToRole="Document" />
           <Property Type="String" Name="DocumentDocumentHash" Nullable="false" MaxLength="128" FixedLength="true" Unicode="true" />
@@ -193,7 +191,6 @@
       <EntityTypeMapping TypeName="IsTypeOf(FileIndex.DocEvent)">
         <MappingFragment StoreEntitySet="DocEvents">
           <ScalarProperty Name="DocEventId" ColumnName="DocEventId" />
-          <ScalarProperty Name="date_time" ColumnName="date_time" />
           <ScalarProperty Name="type" ColumnName="type" />
           <ScalarProperty Name="DocumentDocumentHash" ColumnName="DocumentDocumentHash" />
           <ScalarProperty Name="path" ColumnName="path" />

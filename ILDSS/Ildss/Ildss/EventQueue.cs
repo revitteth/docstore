@@ -10,7 +10,6 @@ namespace Ildss
     public class EventQueue : IEventQueue
     {
         private List<DocEvent> evQueue = new List<DocEvent>();
-        private int geoff = 0;
 
         public void AddEvent(DocEvent de)
         {
@@ -21,11 +20,11 @@ namespace Ildss
 
         public void PrintEvents()
         {
-            geoff++;
-            Console.WriteLine("printing events " + geoff);
             foreach (DocEvent ev in evQueue)
             {
-                Console.WriteLine(ev.name + " was " + ev.type);
+                var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+                fic.DocEvents.Add(ev);
+                fic.SaveChanges();
             }
         }
 

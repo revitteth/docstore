@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Timers;
 using System.Threading;
 using System.Security.Permissions;
 
@@ -66,18 +65,6 @@ namespace Ildss
                 fic.Documents.Add(result);
             }
 
-            DocEvent docevent = new DocEvent()
-            {
-                date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
-                name = fi.Name,
-                path = fi.FullName,
-                type = "Indexed",
-                last_access = lastAccess,
-                last_write = lastWrite
-            };
-
-            result.DocEvents.Add(docevent);
-
             DocPath docpath = new DocPath();
 
             // If path doesn't exist in DB
@@ -87,6 +74,39 @@ namespace Ildss
                 result.DocPaths.Add(docpath);
             }
 
+            DocEvent de = new DocEvent()
+            {
+                name = fi.Name,
+                path = fi.FullName,
+                type = "Indexed",
+                Document = result,
+                last_access = lastAccess,
+                last_write = lastWrite,
+            };
+            
+            bool unique = true;
+
+            foreach (DocEvent d in fic.DocEvents.Where(i => i.Document.DocumentHash == result.DocumentHash))
+            {
+                Console.WriteLine("looping");
+                if (d.IsEqual(de))
+                {
+                    // found it break loop
+                    Console.WriteLine("got a matching event");
+                    unique = false;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("still unique!");
+                    unique = true;
+                }
+            }
+            if (unique)
+            {
+                fic.DocEvents.Add(de);
+                Console.WriteLine("Wrote it!");
+            }
             fic.SaveChanges();
         }
 

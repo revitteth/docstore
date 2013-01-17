@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
 -- --------------------------------------------------
--- Date Created: 01/17/2013 01:58:32
+-- Date Created: 01/17/2013 02:37:43
 -- Generated from EDMX file: F:\Documents\GitHub\docstore\ILDSS\Ildss\Ildss\FileIndex.edmx
 -- --------------------------------------------------
 
@@ -55,7 +55,6 @@ GO
 -- Creating table 'DocEvents'
 CREATE TABLE [dbo].[DocEvents] (
     [DocEventId] int IDENTITY(1,1) NOT NULL,
-    [date_time] datetime  NOT NULL,
     [type] nvarchar(max)  NOT NULL,
     [DocumentDocumentHash] nchar(128)  NOT NULL,
     [path] nvarchar(max)  NOT NULL,

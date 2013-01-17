@@ -36,7 +36,6 @@ namespace Ildss
                     {
                         DocEvent de = new DocEvent()
                         {
-                            date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                             name = pattern.EventArgs.Name,
                             path = pattern.EventArgs.FullPath,
                             type = WatcherChangeTypes.Created.ToString()
@@ -61,7 +60,6 @@ namespace Ildss
 
                     DocEvent de = new DocEvent()
                     {
-                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                         name = pattern.EventArgs.Name,
                         old_name = pattern.EventArgs.OldName,
                         path = pattern.EventArgs.FullPath,
@@ -81,7 +79,6 @@ namespace Ildss
 
                     DocEvent de = new DocEvent()
                     {
-                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                         name = pattern.EventArgs.Name,
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Deleted.ToString()
@@ -93,23 +90,32 @@ namespace Ildss
             IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
             var thingy = fswChanged.Subscribe(
                 pattern => {
+                    var fi = new FileInfo(pattern.EventArgs.FullPath);
 
                     var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
 
                     var updatedDocument = fic.Documents.First(i => i.DocPaths.Any(j=>j.path == pattern.EventArgs.FullPath) == true);
-                    updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
+                    //updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
                     Console.WriteLine(updatedDocument);
 
                     DocEvent de = new DocEvent()
                     {
-                        date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                         name = pattern.EventArgs.Name,
                         path = pattern.EventArgs.FullPath,
                         type = WatcherChangeTypes.Changed.ToString(),
-                        Document = updatedDocument
+                        Document = updatedDocument,
+                        last_access = fi.LastAccessTime,
+                        last_write = fi.LastWriteTime
                     };
 
-                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                    if (fic.DocEvents.Any(i => i.IsEqual(de)))
+                    {
+                        // already exists pal
+                    }
+                    else
+                    {
+                        KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                    }
                 }
             );
         }

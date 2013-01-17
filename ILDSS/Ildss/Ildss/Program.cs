@@ -34,3 +34,17 @@ namespace Ildss
 
     }
 }
+
+/*        public override bool Equals(DocEvent de)
+        {
+            if ((type == de.type) && (path == de.path) && (old_path == de.old_path) && (name == de.name) && (old_name == de.old_name) && (last_access == de.last_access)
+                && (last_write == de.last_write))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+*/

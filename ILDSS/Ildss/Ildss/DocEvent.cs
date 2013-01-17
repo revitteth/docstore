@@ -15,7 +15,6 @@ namespace Ildss
     public partial class DocEvent
     {
         public int DocEventId { get; set; }
-        public System.DateTime date_time { get; set; }
         public string type { get; set; }
         public string DocumentDocumentHash { get; set; }
         public string path { get; set; }
@@ -24,6 +23,19 @@ namespace Ildss
         public string old_name { get; set; }
         public System.DateTime last_access { get; set; }
         public System.DateTime last_write { get; set; }
+
+        public bool IsEqual(DocEvent de)
+        {
+            if ((type == de.type) && (path == de.path) && (old_path == de.old_path) && (name == de.name) && (old_name == de.old_name) && (last_access == de.last_access)
+                && (last_write == de.last_write))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     
         public virtual Document Document { get; set; }
     }
