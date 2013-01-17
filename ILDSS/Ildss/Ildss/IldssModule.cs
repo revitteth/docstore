@@ -16,6 +16,7 @@ namespace Ildss
             this.Bind<IIndexer>().To<Indexer>();
             this.Bind<IHash>().To<Hash>();
             this.Bind<IFileIndexContainer>().To<FileIndexContainer>().InSingletonScope();
+            this.Bind<IDirectoryMonitor>().To<DirectoryMonitor>().InSingletonScope();
         }
     }
 }

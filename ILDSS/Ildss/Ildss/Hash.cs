@@ -20,11 +20,18 @@ namespace Ildss
         public Hash()
         {
             sha512 = new SHA512Managed();
+            calculatedHash = null;
+            hashString = null;
         }
 
         [STAThreadAttribute]
         public string HashFile(string path)
         {
+
+            sha512 = new SHA512Managed();
+            calculatedHash = null;
+            hashString = null;
+
             try
             {
                 FileStream fs = System.IO.File.OpenRead(path);

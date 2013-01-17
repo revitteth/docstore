@@ -51,63 +51,33 @@ namespace Ildss
             var h = KernelFactory.Instance.Get<IHash>();
             string fileHash = h.HashFile(path);
 
-            // Insert File into Index Database
             var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
 
             Document result = new Document();
  
-            // Check if document exists in db
+            // If document exists in DB use it, or create new document
             if(fic.Documents.Any(i => i.DocumentHash == fileHash))
             {
                 result = fic.Documents.First(i => i.DocumentHash == fileHash);
             }
+            else
+            {
+                result = new Document() { DocumentHash = fileHash, size = fi.Length };
+                fic.Documents.Add(result);
+            }
 
             DocPath docpath = new DocPath();
 
-            // Check if path exists in db
-            if (fic.DocPaths.Any(i => i.DocumentDocumentHash == fileHash))
+            // If path doesn't exist in DB
+            if (!fic.DocPaths.Any(i => i.path == path))
             {
-                docpath = fic.DocPaths.First(i => i.DocumentDocumentHash == fileHash);
+                docpath = new DocPath() { path = fi.FullName, Document = result };
+                result.DocPaths.Add(docpath);
             }
 
-            // New Document
-            Document doc = new Document()
-            {
-                DocumentHash = fileHash,
-                size = fi.Length
-            };
-
-            // New Path (hash not already in db)
-            DocPath dp = new DocPath()
-            {
-                path = fi.FullName
-            };
-
-            // New Path (hash already in db)
-            DocPath dp2 = new DocPath()
-            {
-                path = fi.FullName,
-                DocumentDocumentHash = fileHash
-            };
-
-            // If Document isn't Duplicate
-            if (result.Equals(new Document()))
-            {
-                fic.Documents.Add(doc);
-                doc.DocPaths.Add(dp);   //page 267/8 in Entity framework 4.0 recipes
-            }
-            else 
-            // Document is duplicate
-            {
-                // If path not already in database
-                if (docpath.Equals(new DocPath()))
-                {
-                    fic.DocPaths.Add(dp2);                    
-                }
-            }
             fic.SaveChanges();
 
-            Console.WriteLine("Saved " + fi.FullName + " to database. Last accessed at " + dave + " last written at " + mindy);
+            //Console.WriteLine("Saved " + fi.FullName + " to database. Last accessed at " + dave + " last written at " + mindy);
         }
 
         public void RemoveFromIndex(string path)

@@ -101,14 +101,15 @@
       <DependentUpon>FileIndex.edmx</DependentUpon>
     </Compile>
     <Compile Include="Hash.cs" />
+    <Compile Include="IDirectoryMonitor.cs" />
     <Compile Include="IEventQueue.cs" />
     <Compile Include="IFileIndexContainer.cs" />
     <Compile Include="IHash.cs" />
     <Compile Include="IIndexer.cs" />
-    <Compile Include="Gui\Ildss.cs">
+    <Compile Include="Ildss.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Gui\Ildss.Designer.cs">
+    <Compile Include="Ildss.Designer.cs">
       <DependentUpon>Ildss.cs</DependentUpon>
     </Compile>
     <Compile Include="IldssModule.cs" />
@@ -116,14 +117,14 @@
     <Compile Include="KernelFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Gui\Setup.cs">
+    <Compile Include="Setup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Gui\Setup.Designer.cs">
+    <Compile Include="Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
     <Compile Include="SillyQueue.cs" />
-    <EmbeddedResource Include="Gui\Ildss.resx">
+    <EmbeddedResource Include="Ildss.resx">
       <DependentUpon>Ildss.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -135,7 +136,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Gui\Setup.resx">
+    <EmbeddedResource Include="Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
     </EmbeddedResource>
     <EntityDeploy Include="FileIndex.edmx">

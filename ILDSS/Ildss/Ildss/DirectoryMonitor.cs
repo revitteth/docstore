@@ -9,13 +9,13 @@ using System.Security.Permissions;
 using System.Reactive.Linq;
 using System.Reactive;
 
-
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    class DirectoryMonitor
+    public class DirectoryMonitor : IDirectoryMonitor
     {
-        public DirectoryMonitor(string path)
+
+        public void MonitorFileSystem (string path)
         {
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
@@ -23,12 +23,7 @@ namespace Ildss
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 
-            MonitorFileSystem(fsw);
-        }
-
-        private static void MonitorFileSystem (FileSystemWatcher fsw)
-        {              
-            Indexer indexer = new Indexer();
+            //Indexer indexer = new Indexer();  IF I NEED THIS USE KERNELFACTORY AND GET IT AS AN INSTANCE
 
             IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
             fswCreated.Subscribe(
@@ -58,7 +53,11 @@ namespace Ildss
                     var hash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
                     var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
 
-                    Document ddd = fic.Documents.First(i => i.DocumentHash == hash);
+                    Console.WriteLine(hash);
+
+                    // FIRST JOB IS TO CHANGE THE FILE NAME IN PATHS - NO WONDER IT DOESNT WORK!!!
+
+                    Document ddd = fic.Documents.First(i => i.DocPaths.Any(j => j.path == pattern.EventArgs.OldFullPath) == true);
 
                     DocEvent de = new DocEvent()
                     {
@@ -94,17 +93,21 @@ namespace Ildss
             IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
             var thingy = fswChanged.Subscribe(
                 pattern => {
+
+                    var fic = KernelFactory.Instance.Get<IFileIndexContainer>();
+
+                    var updatedDocument = fic.Documents.First(i => i.DocPaths.Any(j=>j.path == pattern.EventArgs.FullPath) == true);
+                    updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
+                    Console.WriteLine(updatedDocument);
+
                     DocEvent de = new DocEvent()
                     {
                         date_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
                         name = pattern.EventArgs.Name,
                         path = pattern.EventArgs.FullPath,
-                        type = WatcherChangeTypes.Changed.ToString()                         
+                        type = WatcherChangeTypes.Changed.ToString(),
+                        Document = updatedDocument//new hashed document 
                     };
-
-                    // NEED TO UPDATE HASH HERE!!!!
-                    // use path to find it.
-
 
                     KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
                 }
