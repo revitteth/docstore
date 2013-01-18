@@ -26,7 +26,7 @@ namespace Ildss
             {
                 IndexDirectory(path);
             }
-            CheckIndex(path);
+           // CheckIndex(path);
         }
 
         // Recursively index subdirectories
@@ -53,51 +53,52 @@ namespace Ildss
 
             var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
-            Console.WriteLine("WTF?");
-
-            var documents = fic.Documents.Where(i => i.DocumentHash == fileHash);
+            var hashMatch = fic.Documents.Any(i => i.DocumentHash == fileHash);
+            var nameMatch = fic.DocPaths.Any(i => i.name == fi.Name);
             var document = new Document();
             var docpath = new DocPath();
 
-            Console.WriteLine("hello?!");
-
-            if (documents.Any())
-            {
-                Console.WriteLine("there are docs");
-                // Check hash against all existing documents including ones from checkindex (documents with no paths)
-                //if match
-                if (documents.Any(i => i.DocPaths.Any(j => j.path == fi.FullName)))
+            if(hashMatch){
+                var matchingDocument = fic.Documents.First(i => i.DocumentHash == fileHash);
+                              
+                // Hashes match and we have the document.
+                // check if it has a matching path - if so, leave well alone.
+                if (matchingDocument.DocPaths.Any(i => i.path == fi.FullName))
                 {
-                    // path exists, do nothing.
-                }
-                else if (documents.Any(i => i.DocPaths.Any(j => j.name == fi.Name)))
-                {
-                    // file name with same hash exists (different path) - get it and add it to paths
-                    docpath.Document = documents.First(i => i.DocPaths.Any(j => j.name == fi.Name));
-                    docpath.name = fi.Name;
-                    docpath.path = fi.FullName;
-                    fic.DocPaths.Add(docpath);
+                    // do nothing - hashes and  paths match
                 }
                 else
                 {
-                    // no matching path, only matching hash - create new path
-                    docpath.Document = documents.First(i => i.DocPaths.Any(j => j.name == fi.Name));
-                    docpath.name = fi.Name;
-                    docpath.path = fi.FullName;
-                    fic.DocPaths.Add(docpath);
+                    // document exists in db (by matching hash) - just add the new path
+                    var dp = new DocPath() { path = fi.FullName, name = fi.Name, Document = matchingDocument };
+                    fic.DocPaths.Add(dp);
                 }
             }
-            else
+            else // Hashes do not match
             {
-                // new document, new path
-                document.DocumentHash = fileHash;
-                document.size = fi.Length;
-                fic.Documents.Add(document);
-                docpath.path = fi.FullName;
-                docpath.name = fi.Name;
-                docpath.Document = document;
-                fic.DocPaths.Add(docpath);
-                Console.WriteLine("main else");
+                if(nameMatch)
+                {
+                    // paths match hashes don't - add path to a new document. - MAY NEED TO LOOP THROUGH THEM ALL HERE!!!!!
+                    document = new Document() { DocumentHash = fileHash, size = fi.Length }; //  GET THE OLD DOCPATH AND UPDATE IT DON'T JUST CREATE A NEW ONE!
+                    docpath = fic.DocPaths.First(i => i.name == fi.Name);
+                    docpath.Document = document;
+                    docpath.name = fi.Name;
+                    docpath.path = fi.FullName;
+                    fic.Documents.Add(document);
+                }
+                else
+                {
+                    // if nothing matches
+                    // new document, new path
+                    document.DocumentHash = fileHash;
+                    document.size = fi.Length;
+                    fic.Documents.Add(document);
+                    docpath.path = fi.FullName;
+                    docpath.name = fi.Name;
+                    docpath.Document = document;
+                    fic.DocPaths.Add(docpath);
+                    Console.WriteLine("Fresh index of a file " + docpath.path);
+                }
             }
 
             fic.SaveChanges();
@@ -105,15 +106,22 @@ namespace Ildss
            
         }
 
-        public void CheckIndex(string path)
+        public void CheckIndex()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            //var fileHash = KernelFactory.Instance.Get<IHash>().HashFile(path);
             var documents = fic.Documents;
             var paths = fic.DocPaths;
 
 
             foreach (Document d in documents)
             {
+                if (!(d.DocPaths.Any(i => i.DocumentId == d.DocumentId)))
+                {
+                    //documents.Remove(d);
+                    nullDocs.Add(d);
+                    Console.WriteLine("removing " + d.DocumentId);
+                }
                 foreach (DocPath p in d.DocPaths)
                 {
                     if (!File.Exists(p.path))
@@ -123,12 +131,7 @@ namespace Ildss
                         Console.WriteLine("removing path " + p.path);
                     }
                 }
-                if (!(d.DocPaths.Any(i => i.DocumentId == d.DocumentId)))
-                {
-                    //documents.Remove(d);
-                    nullDocs.Add(d);
-                    Console.WriteLine("removing " + d.DocumentId);
-                }
+
             }
 
             foreach (Document d in nullDocs)
