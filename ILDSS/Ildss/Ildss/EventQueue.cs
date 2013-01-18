@@ -10,21 +10,23 @@ namespace Ildss
     public class EventQueue : IEventQueue
     {
         private List<DocEvent> evQueue = new List<DocEvent>();
+        private List<DocEvent> evUsed = new List<DocEvent>();
 
         public void AddEvent(DocEvent de)
         {
             evQueue.Add(de);
-            EventQueueToDb();
-            PrintEvents();
+            if (evQueue.Count() == 4)
+            {
+                PrintEvents();
+                EventQueueToDb();
+            }
         }
 
         public void PrintEvents()
         {
             foreach (DocEvent ev in evQueue)
             {
-                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                fic.DocEvents.Add(ev);
-                fic.SaveChanges();
+                Console.WriteLine(ev.Document.DocumentId + "    " + ev.type);
             }
         }
 
@@ -55,32 +57,18 @@ namespace Ildss
 
         public void EventQueueToDb()
         {
-            //try
-            //{
-                    //try and put shit in db
-                    //RemoveExtraFiles();
-            var fic = KernelFactory.Instance.Get<FileIndexContext>();
             foreach (DocEvent ev in evQueue)
             {
-                // switch on the type of event
-                switch (ev.type)
-                {
-                    case "Renamed":
-                        fic.DocEvents.Add(ev);
-                        fic.SaveChanges();
-                        break;
-                }
+                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                fic.DocEvents.Add(ev);
+                fic.SaveChanges();
+                evUsed.Add(ev);
             }
 
-            //}
-            //catch (Exception e)
-            //{
-                // carry on with next one
-            //}
-           // finally
-           // {
-                // done
-            //}
+            foreach (DocEvent ev in evUsed)
+            {
+                evQueue.Remove(ev);
+            }
         }
 
         private void RemoveExtraFiles()

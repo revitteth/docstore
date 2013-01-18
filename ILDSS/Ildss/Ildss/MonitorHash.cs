@@ -10,14 +10,17 @@ using System.Security.Permissions;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class Hash : IHash
+    public class MonitorHash : IHash
     {
 
         private SHA512 sha512 { get; set; }
         private byte[] calculatedHash { get; set; }
         private string hashString { get; set; }
+        private DateTime access { get; set; }
+        private DateTime write { get; set; }
 
-        public Hash()
+
+        public MonitorHash()
         {
             sha512 = new SHA512Managed();
             calculatedHash = null;
@@ -31,6 +34,9 @@ namespace Ildss
             sha512 = new SHA512Managed();
             calculatedHash = null;
             hashString = null;
+            FileInfo fi = new FileInfo(path);
+            access = fi.LastAccessTime;
+            write = fi.LastWriteTime;
 
             try
             {
@@ -39,6 +45,7 @@ namespace Ildss
                 calculatedHash = sha512.ComputeHash(fs);
                 fs.Close();
                 hashString = ByteToString(calculatedHash);
+                ResetFileTimes(path);
                 return hashString;
             }
             catch (FileNotFoundException)
@@ -78,6 +85,11 @@ namespace Ildss
             return hs;
         }
 
-
+        public void ResetFileTimes(string path)
+        {
+            FileInfo fi = new FileInfo(path);
+            fi.LastAccessTime = access;
+            fi.LastWriteTime = write;
+        }
     }
 }

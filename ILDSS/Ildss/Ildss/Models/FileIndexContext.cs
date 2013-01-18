@@ -12,5 +12,20 @@ namespace Ildss
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocPath> DocPaths { get; set; }
         public DbSet<DocEvent> DocEvents { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DocPath>()
+                        .HasRequired(dp => dp.Document)
+                        .WithMany(d => d.DocPaths)
+                        .HasForeignKey(dp => dp.DocumentId)
+                        .WillCascadeOnDelete();
+
+            modelBuilder.Entity<DocEvent>()
+                        .HasRequired(de => de.Document)
+                        .WithMany(d => d.DocEvents)
+                        .HasForeignKey(de => de.DocumentId)
+                        .WillCascadeOnDelete();
+        }
     }
 }

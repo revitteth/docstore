@@ -14,6 +14,7 @@ namespace Ildss
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class DirectoryMonitor : IDirectoryMonitor
     {
+        private DateTime LastChange;
 
         public void MonitorFileSystem (string path)
         {
@@ -23,24 +24,47 @@ namespace Ildss
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 
-            //Indexer indexer = new Indexer();  IF I NEED THIS USE KERNELFACTORY AND GET IT AS AN INSTANCE
-
             IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
             fswCreated.Subscribe(
                 pattern => {
-                    if ((File.GetAttributes(pattern.EventArgs.FullPath) & FileAttributes.Directory) == FileAttributes.Directory)
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    
+                    //Ensure not a directory
+                    if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                     {
-                        //do nowt - CURE temp files problem on this one geoff!!!! when making shortcuts.
-                    }
-                    else
-                    {
-                        DocEvent de = new DocEvent()
+                        var fileHash = KernelFactory.Instance.Get<IHash>().HashFile(pe.FullPath);
+                        var d = new Document();
+
+                        // create document + path + event - CHECK IT DOESN'T EXIST ALREADY!!!!! AS A HASH PAL
+                        if(fic.Documents.Any(i => i.DocumentHash == fileHash))
                         {
-                            name = pattern.EventArgs.Name,
-                            path = pattern.EventArgs.FullPath,
-                            type = WatcherChangeTypes.Created.ToString()
+                            // document hash exists - give it a new path
+                            d = fic.Documents.First(i => i.DocumentHash == fileHash);
+                            d.DocPaths.Add(new DocPath() { path = pe.FullPath });
+                        }
+                        else 
+                        {
+                            // Document is new 
+                            d = new Document() { DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pe.FullPath), size = fi.Length };
+                            var p = new DocPath() { path = fi.FullName, Document = d };
+                            d.DocPaths.Add(p);
+                        }
+
+                        
+                        var e = new DocEvent()
+                        {
+                            Document = d,
+                            type = "Created",
+                            last_write = fi.LastWriteTime,
+                            last_access = fi.LastWriteTime,
+                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
                         };
-                        KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+
+                        fic.DocEvents.Add(e);
+                        fic.SaveChanges();
+                        Console.WriteLine("Creation occurred " + pattern.EventArgs.FullPath);
                     }
                 }
             );
@@ -49,72 +73,104 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    var hash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
+                    var pe = pattern.EventArgs;
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-
-                    Console.WriteLine(hash);
-
-                    // FIRST JOB IS TO CHANGE THE FILE NAME IN PATHS - NO WONDER IT DOESNT WORK!!!
-
-                    Document ddd = fic.Documents.First(i => i.DocPaths.Any(j => j.path == pattern.EventArgs.OldFullPath) == true);
-
-                    DocEvent de = new DocEvent()
+                    var fi = new FileInfo(pe.FullPath);
+                    
+                    //Ensure not a directory
+                    if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                     {
-                        name = pattern.EventArgs.Name,
-                        old_name = pattern.EventArgs.OldName,
-                        path = pattern.EventArgs.FullPath,
-                        old_path = pattern.EventArgs.OldFullPath,
-                        type = WatcherChangeTypes.Renamed.ToString(),
-                        Document = ddd
-                    };
-                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                        // Find renamed document -- EXCEPTION HERE ON NEW FILE
+                        var ddd = fic.Documents.First(i => i.DocPaths.Any(j => j.path == pe.OldFullPath) == true);
+
+                        // Update path
+                        var pathToUpdate = ddd.DocPaths.First(i => i.path == pe.OldFullPath);
+                        pathToUpdate.path = fi.FullName;
+                        fic.SaveChanges();
+
+                        // Create event
+                        var de = new DocEvent()
+                        {
+                            type = WatcherChangeTypes.Renamed.ToString(),
+                            last_access = fi.LastAccessTime,
+                            last_write = fi.LastWriteTime,
+                            Document = ddd,
+                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
+                        };
+
+                        //KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                        fic.DocEvents.Add(de);
+                        fic.SaveChanges();
+                        Console.WriteLine("Rename occurred " + pe.FullPath);
+                    }
                 }
             );
 
             IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
             fswDeleted.Subscribe(
                 pattern => {
+                    var pe = pattern.EventArgs;
+                    
+                    //Ensure not a directory
+                    //if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
+                   // {
+                        var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                        var id = fic.DocPaths.First(i => i.path == pe.FullPath);
+                        var id2 = id.Document.DocumentId;
 
-                    // NEED TO DO MORE HERE! DELETE AT LEAST PATH AND IF LAST PATH, DOCUMENT AS WELL
+                        var document = fic.Documents.First(i => i.DocumentId == id2);
+                        fic.Documents.Attach(document);
+                        fic.Documents.Remove(document);
+                        fic.SaveChanges();
 
-                    DocEvent de = new DocEvent()
-                    {
-                        name = pattern.EventArgs.Name,
-                        path = pattern.EventArgs.FullPath,
-                        type = WatcherChangeTypes.Deleted.ToString()
-                    };
-                    KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                        Console.WriteLine("Delete occurred " + pattern.EventArgs.FullPath);
+                    //}
                 }
             );
 
             IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
-            var thingy = fswChanged.Subscribe(
+            fswChanged.Subscribe(
                 pattern => {
-                    var fi = new FileInfo(pattern.EventArgs.FullPath);
-
-                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-
-                    var updatedDocument = fic.Documents.First(i => i.DocPaths.Any(j=>j.path == pattern.EventArgs.FullPath) == true);
-                    //updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pattern.EventArgs.FullPath);
-                    Console.WriteLine(updatedDocument);
-
-                    DocEvent de = new DocEvent()
+                    var pe = pattern.EventArgs;
+                    
+                    //Ensure not a directory
+                    if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory) && LastChange != (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)))
                     {
-                        name = pattern.EventArgs.Name,
-                        path = pattern.EventArgs.FullPath,
-                        type = WatcherChangeTypes.Changed.ToString(),
-                        Document = updatedDocument,
-                        last_access = fi.LastAccessTime,
-                        last_write = fi.LastWriteTime
-                    };
 
-                    if (false)
-                    {
-                        // already exists pal
-                    }
-                    else
-                    {
-                        KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                        var fi = new FileInfo(pe.FullPath);
+                        var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+
+                        var updatedDocument = new Document();
+
+                        if (fic.Documents.Any(i => i.DocPaths.Any(j => j.path == pe.FullPath) == true))
+                        {
+                            updatedDocument = fic.Documents.First(i => i.DocPaths.Any(j => j.path == pe.FullPath) == true);
+                            updatedDocument.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(pe.FullPath);
+                            updatedDocument.size = fi.Length;
+                            fic.SaveChanges();
+                        }
+                        else
+                        {
+                            //document doesn't exist?! - INVESTIGATE THIS FURTHER!!!
+                            // EDIDING A FILE THAT HASN'T BEEN INDEXED
+                            Console.WriteLine(fi.FullName + " APPARENTLY DOESN'T EXIST");
+                        }
+
+                        var de = new DocEvent()
+                        {
+                            type = WatcherChangeTypes.Changed.ToString(),
+                            Document = updatedDocument,
+                            last_access = fi.LastAccessTime,
+                            last_write = fi.LastWriteTime,
+                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
+                        };
+
+                        fic.DocEvents.Add(de);
+                        fic.SaveChanges();
+
+                        //KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
+                        LastChange = de.event_time;
+                        Console.WriteLine("Change occurred " + fi.FullName);
                     }
                 }
             );

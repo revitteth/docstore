@@ -71,13 +71,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MonitorHash.cs" />
     <Compile Include="DirectoryMonitor.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="EventQueue.cs" />
     <Compile Include="Models\FileIndexContext.cs" />
-    <Compile Include="Hash.cs" />
+    <Compile Include="IndexHash.cs" />
     <Compile Include="IDirectoryMonitor.cs" />
     <Compile Include="IEventQueue.cs" />
     <Compile Include="Models\IFileIndexContext.cs" />
@@ -134,7 +135,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>rmdir /q /s %25localappdata%25\ILDSS</PreBuildEvent>

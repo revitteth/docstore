@@ -5,6 +5,6 @@ namespace Ildss
     {
         void IndexFile(string path);
         void IndexFiles(string path);
-        void RemoveFromIndex(string path);
+        void CheckIndex(string path);
     }
 }

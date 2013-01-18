@@ -54,6 +54,11 @@ namespace Ildss
             return GetKernel().Get<T>();
         }
 
+        public T Get<T>(string name)
+        {
+            return GetKernel().Get<T>(name);
+        }
+
 
         // Verifies that subclasses of this class pass the minimum requirements
         // Boolean value indicating whether subclasses succeed or not</returns>

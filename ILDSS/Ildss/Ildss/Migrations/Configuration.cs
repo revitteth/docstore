@@ -10,6 +10,7 @@ namespace Ildss.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(FileIndexContext context)
@@ -26,6 +27,7 @@ namespace Ildss.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+            context.Database.CreateIfNotExists();
         }
     }
 }

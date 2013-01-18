@@ -19,7 +19,7 @@ namespace Ildss
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             if (Properties.Settings.Default.firstrun)
             {
                 // Run setup GUI

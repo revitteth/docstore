@@ -70,5 +70,10 @@ namespace Ildss
             KernelFactory.Instance.Get<IEventQueue>().PrintEvents();
         }
 
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            KernelFactory.Instance.Get<IEventQueue>().EventQueueToDb();
+        }
+
     }
 }

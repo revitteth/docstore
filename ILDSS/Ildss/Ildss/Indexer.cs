@@ -24,6 +24,7 @@ namespace Ildss
             {
                 IndexDirectory(path);
             }
+            CheckIndex(path);
         }
 
         // Recursively index subdirectories
@@ -43,12 +44,17 @@ namespace Ildss
         {
             fi = new FileInfo(path);
             fi.Refresh();
-            var lastAccess = fi.LastAccessTime;
-            var lastWrite = fi.LastWriteTime;
+
+            //var lastAccess = fi.LastAccessTime;
+            //var lastWrite = fi.LastWriteTime;
 
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
             string fileHash = h.HashFile(path);
+
+            // Reset access and write times
+            //fi.LastAccessTime = lastAccess;
+            //fi.LastWriteTime = lastWrite;
 
             var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
@@ -58,6 +64,7 @@ namespace Ildss
             if(fic.Documents.Any(i => i.DocumentHash == fileHash))
             {
                 result = fic.Documents.First(i => i.DocumentHash == fileHash);
+                // check path is ok
             }
             else
             {
@@ -73,46 +80,57 @@ namespace Ildss
                 docpath = new DocPath() { path = fi.FullName, Document = result };
                 result.DocPaths.Add(docpath);
             }
+            else
+            {
+                // update the path and the document.
+                docpath = fic.DocPaths.First(i => i.path == path);
+                docpath.Document = result;
 
-            DocEvent de = new DocEvent()
-            {
-                name = fi.Name,
-                path = fi.FullName,
-                type = "Indexed",
-                Document = result,
-                last_access = lastAccess,
-                last_write = lastWrite,
-            };
-            
-            bool unique = true;
+            }
 
-            foreach (DocEvent d in fic.DocEvents.Where(i => i.Document.DocumentHash == result.DocumentHash))
-            {
-                Console.WriteLine("looping");
-                if (false)
-                {
-                    // found it break loop
-                    Console.WriteLine("got a matching event");
-                    unique = false;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("still unique!");
-                    unique = true;
-                }
-            }
-            if (unique)
-            {
-                fic.DocEvents.Add(de);
-                Console.WriteLine("Wrote it!");
-            }
             fic.SaveChanges();
         }
 
-        public void RemoveFromIndex(string path)
+        public void CheckIndex(string path)
         {
-            // remove this file from the index
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            var documents = fic.Documents;
+            var paths = fic.DocPaths;
+            List<Document> nullDocs = new List<Document>();
+            List<DocPath> nullDocPaths = new List<DocPath>();
+
+            foreach (Document d in documents)
+            {
+                if (!(d.DocPaths.Any(i => i.DocumentId == d.DocumentId)))
+                {
+                    //documents.Remove(d);
+                    nullDocs.Add(d);
+                }
+                else
+                {
+                    foreach (DocPath p in d.DocPaths)
+                    {
+                        if (!File.Exists(p.path))
+                        {
+                            //paths.Remove(p);
+                            nullDocPaths.Add(p);
+                        }
+
+                    }
+                }
+
+            }
+
+            foreach (Document d in nullDocs)
+            {
+                documents.Remove(d);
+            }
+
+            foreach (DocPath p in nullDocPaths)
+            {
+                paths.Remove(p);
+            }
+            fic.SaveChanges();
         }
 
     }
