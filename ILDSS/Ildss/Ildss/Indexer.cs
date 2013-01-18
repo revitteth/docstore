@@ -13,10 +13,11 @@ namespace Ildss
     class Indexer : IIndexer
     {
         private FileInfo fi { get; set; }
+        private List<Document> nullDocs = new List<Document>();
+        private List<DocPath> nullDocPaths = new List<DocPath>();
         
         public void IndexFiles(string path)
         {
-            CheckIndex(path);
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -46,54 +47,62 @@ namespace Ildss
             fi = new FileInfo(path);
             fi.Refresh();
 
-            string indexType = "Indexed";
-
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
             string fileHash = h.HashFile(path);
 
             var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
-            Document result = new Document();
- 
-            // If document exists in DB use it, or create new document
-            if(fic.Documents.Any(i => i.DocumentHash == fileHash))
+            Console.WriteLine("WTF?");
+
+            var documents = fic.Documents.Where(i => i.DocumentHash == fileHash);
+            var document = new Document();
+            var docpath = new DocPath();
+
+            Console.WriteLine("hello?!");
+
+            if (documents.Any())
             {
-                result = fic.Documents.First(i => i.DocumentHash == fileHash);
-                // check path is ok
+                Console.WriteLine("there are docs");
+                // Check hash against all existing documents including ones from checkindex (documents with no paths)
+                //if match
+                if (documents.Any(i => i.DocPaths.Any(j => j.path == fi.FullName)))
+                {
+                    // path exists, do nothing.
+                }
+                else if (documents.Any(i => i.DocPaths.Any(j => j.name == fi.Name)))
+                {
+                    // file name with same hash exists (different path) - get it and add it to paths
+                    docpath.Document = documents.First(i => i.DocPaths.Any(j => j.name == fi.Name));
+                    docpath.name = fi.Name;
+                    docpath.path = fi.FullName;
+                    fic.DocPaths.Add(docpath);
+                }
+                else
+                {
+                    // no matching path, only matching hash - create new path
+                    docpath.Document = documents.First(i => i.DocPaths.Any(j => j.name == fi.Name));
+                    docpath.name = fi.Name;
+                    docpath.path = fi.FullName;
+                    fic.DocPaths.Add(docpath);
+                }
             }
             else
             {
-                result = new Document() { DocumentHash = fileHash, size = fi.Length };
-                fic.Documents.Add(result);
+                // new document, new path
+                document.DocumentHash = fileHash;
+                document.size = fi.Length;
+                fic.Documents.Add(document);
+                docpath.path = fi.FullName;
+                docpath.name = fi.Name;
+                docpath.Document = document;
+                fic.DocPaths.Add(docpath);
+                Console.WriteLine("main else");
             }
-
-            DocPath docpath = new DocPath();
-
-            // If path doesn't exist in DB
-            if (!fic.DocPaths.Any(i => i.path == path))
-            {
-                docpath = new DocPath() { path = fi.FullName, Document = result };
-                result.DocPaths.Add(docpath);
-            }
-            else
-            {
-                // update document.
-                docpath = fic.DocPaths.First(i => i.path == path);
-                docpath.Document = result;
-            }
-
-            var de = new DocEvent()
-            {
-                event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
-                Document = result,
-                last_access = fi.LastAccessTime,
-                last_write = fi.LastWriteTime,
-                type = indexType
-            };
-            fic.DocEvents.Add(de);
 
             fic.SaveChanges();
+            Console.WriteLine("they should be in now");
+           
         }
 
         public void CheckIndex(string path)
@@ -101,8 +110,7 @@ namespace Ildss
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var documents = fic.Documents;
             var paths = fic.DocPaths;
-            List<Document> nullDocs = new List<Document>();
-            List<DocPath> nullDocPaths = new List<DocPath>();
+
 
             foreach (Document d in documents)
             {
