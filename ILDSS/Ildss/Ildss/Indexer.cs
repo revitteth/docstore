@@ -16,6 +16,7 @@ namespace Ildss
         
         public void IndexFiles(string path)
         {
+            CheckIndex(path);
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -45,16 +46,11 @@ namespace Ildss
             fi = new FileInfo(path);
             fi.Refresh();
 
-            //var lastAccess = fi.LastAccessTime;
-            //var lastWrite = fi.LastWriteTime;
+            string indexType = "Indexed";
 
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
             string fileHash = h.HashFile(path);
-
-            // Reset access and write times
-            //fi.LastAccessTime = lastAccess;
-            //fi.LastWriteTime = lastWrite;
 
             var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
@@ -82,11 +78,20 @@ namespace Ildss
             }
             else
             {
-                // update the path and the document.
+                // update document.
                 docpath = fic.DocPaths.First(i => i.path == path);
                 docpath.Document = result;
-
             }
+
+            var de = new DocEvent()
+            {
+                event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond)),
+                Document = result,
+                last_access = fi.LastAccessTime,
+                last_write = fi.LastWriteTime,
+                type = indexType
+            };
+            fic.DocEvents.Add(de);
 
             fic.SaveChanges();
         }
@@ -101,29 +106,28 @@ namespace Ildss
 
             foreach (Document d in documents)
             {
+                foreach (DocPath p in d.DocPaths)
+                {
+                    if (!File.Exists(p.path))
+                    {
+                        //paths.Remove(p);
+                        nullDocPaths.Add(p);
+                        Console.WriteLine("removing path " + p.path);
+                    }
+                }
                 if (!(d.DocPaths.Any(i => i.DocumentId == d.DocumentId)))
                 {
                     //documents.Remove(d);
                     nullDocs.Add(d);
+                    Console.WriteLine("removing " + d.DocumentId);
                 }
-                else
-                {
-                    foreach (DocPath p in d.DocPaths)
-                    {
-                        if (!File.Exists(p.path))
-                        {
-                            //paths.Remove(p);
-                            nullDocPaths.Add(p);
-                        }
-
-                    }
-                }
-
             }
 
             foreach (Document d in nullDocs)
             {
                 documents.Remove(d);
+                // check if the hashes of these are matched in the next index!!!! If so - hook em back up with event history
+                // if not, sack em off.
             }
 
             foreach (DocPath p in nullDocPaths)
