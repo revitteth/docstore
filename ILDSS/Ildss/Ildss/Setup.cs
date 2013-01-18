@@ -60,5 +60,17 @@ namespace Ildss
                 txtDirectory.Text = dialogDirectoryBrowser.SelectedPath;
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            txtDirectory.Text = @"F:\Documents\GitHub\docstore\TestDir";
+            btnFinishSetup_Click(sender, e);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txtDirectory.Text = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+            btnFinishSetup_Click(sender, e);
+        }
     }
 }

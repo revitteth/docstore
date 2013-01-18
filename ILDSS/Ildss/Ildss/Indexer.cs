@@ -26,7 +26,7 @@ namespace Ildss
             {
                 IndexDirectory(path);
             }
-           // CheckIndex(path);
+           CheckIndex();
         }
 
         // Recursively index subdirectories
@@ -60,31 +60,64 @@ namespace Ildss
             if (fic.Documents.Any(i => i.DocumentHash == fileHash))
             {
                 // File hashes match (same file)
-                if (path == fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.First(i => i.path == path).path)
+                // PROBLEM - wen no files in DB this errors
+                if (fic.DocPaths.Any(i => i.name == fi.Name))
                 {
-                    // paths match - do nothing it all exists
+                    Console.WriteLine("blap");
+                    if (fic.DocPaths.Any(i => i.path == fi.FullName))
+                    {
+                        // paths match - do nothing it all exists
+                    }
+                    else
+                    {
+                        Console.WriteLine("the one i'm looking for");
+                        // same document, different path - add path to document
+                        docpath.path = fi.FullName;
+                        docpath.name = fi.Name;
+                        docpath.Document = fic.Documents.First(i => i.DocumentHash == fileHash);
+                        fic.DocPaths.Add(docpath);
+                    }
                 }
                 else
                 {
+                    // file names are different
+                    Console.WriteLine("the one i'm looking for");
                     // same document, different path - add path to document
                     docpath.path = fi.FullName;
                     docpath.name = fi.Name;
                     docpath.Document = fic.Documents.First(i => i.DocumentHash == fileHash);
-                    document.DocPaths.Add(docpath);
                 }
             }
             else
             {
                 // Different file 
-                if (fic.DocPaths.Any(i => i.path == fi.FullName))
+                if (fic.DocPaths.Any(i => i.name == fi.Name))
                 {
-                    // matching paths - file has been updated
-                    document = fic.DocPaths.First(i => i.path == fi.FullName).Document;
-                    document.size = fi.Length;
-                    document.DocumentHash = fileHash;
+                    // if it is a unique bad boy then just update the document
+                    // if it is one of many then make a new document!!!! 
+                    if (fic.DocPaths.Count(i => i.name == fi.Name) == 1)
+                    {
+                        // Unique
+                        Console.WriteLine("Updating Hash and size of old document");
+                        // matching paths - file has been updated, update document
+                        document = fic.DocPaths.First(i => i.name == fi.Name).Document;
+                        document.size = fi.Length;
+                        document.DocumentHash = fileHash;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Writing Hash and size into new document");
+                        // matching paths - file has been updated, update document
+                        document = new Document() { DocumentHash = fileHash, size = fi.Length };
+                        docpath = fic.DocPaths.First(i => i.name == fi.Name);
+                        docpath.Document = document;
+                        document.DocPaths.Add(docpath);
+                        fic.Documents.Add(document);
+                    }
                 }
                 else
                 {
+                    Console.WriteLine("New file");
                     // completely new file & path
                     document.DocumentHash = fileHash;
                     document.size = fi.Length;
@@ -97,7 +130,6 @@ namespace Ildss
             }
 
             fic.SaveChanges();
-            Console.WriteLine("they should be in now");
         }
 
         public void CheckIndex()
