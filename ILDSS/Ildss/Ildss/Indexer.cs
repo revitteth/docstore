@@ -53,100 +53,98 @@ namespace Ildss
 
             var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
-            var hashMatch = fic.Documents.Any(i => i.DocumentHash == fileHash);
             var nameMatch = fic.DocPaths.Any(i => i.name == fi.Name);
             var document = new Document();
             var docpath = new DocPath();
 
-            if(hashMatch){
-                var matchingDocument = fic.Documents.First(i => i.DocumentHash == fileHash);
-                              
-                // Hashes match and we have the document.
-                // check if it has a matching path - if so, leave well alone.
-                if (matchingDocument.DocPaths.Any(i => i.path == fi.FullName))
+            if (fic.Documents.Any(i => i.DocumentHash == fileHash))
+            {
+                // File hashes match (same file)
+                if (path == fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.First(i => i.path == path).path)
                 {
-                    // do nothing - hashes and  paths match
+                    // paths match - do nothing it all exists
                 }
                 else
                 {
-                    // document exists in db (by matching hash) - just add the new path
-                    var dp = new DocPath() { path = fi.FullName, name = fi.Name, Document = matchingDocument };
-                    fic.DocPaths.Add(dp);
+                    // same document, different path - add path to document
+                    docpath.path = fi.FullName;
+                    docpath.name = fi.Name;
+                    docpath.Document = fic.Documents.First(i => i.DocumentHash == fileHash);
+                    document.DocPaths.Add(docpath);
                 }
             }
-            else // Hashes do not match
+            else
             {
-                if(nameMatch)
+                // Different file 
+                if (fic.DocPaths.Any(i => i.path == fi.FullName))
                 {
-                    // paths match hashes don't - add path to a new document. - MAY NEED TO LOOP THROUGH THEM ALL HERE!!!!!
-                    document = new Document() { DocumentHash = fileHash, size = fi.Length }; //  GET THE OLD DOCPATH AND UPDATE IT DON'T JUST CREATE A NEW ONE!
-                    docpath = fic.DocPaths.First(i => i.name == fi.Name);
-                    docpath.Document = document;
-                    docpath.name = fi.Name;
-                    docpath.path = fi.FullName;
-                    fic.Documents.Add(document);
+                    // matching paths - file has been updated
+                    document = fic.DocPaths.First(i => i.path == fi.FullName).Document;
+                    document.size = fi.Length;
+                    document.DocumentHash = fileHash;
                 }
                 else
                 {
-                    // if nothing matches
-                    // new document, new path
+                    // completely new file & path
                     document.DocumentHash = fileHash;
                     document.size = fi.Length;
-                    fic.Documents.Add(document);
-                    docpath.path = fi.FullName;
-                    docpath.name = fi.Name;
                     docpath.Document = document;
+                    docpath.name = fi.Name;
+                    docpath.path = fi.FullName;
+                    fic.Documents.Add(document);
                     fic.DocPaths.Add(docpath);
-                    Console.WriteLine("Fresh index of a file " + docpath.path);
                 }
             }
 
             fic.SaveChanges();
             Console.WriteLine("they should be in now");
-           
         }
 
         public void CheckIndex()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            //var fileHash = KernelFactory.Instance.Get<IHash>().HashFile(path);
             var documents = fic.Documents;
             var paths = fic.DocPaths;
 
-
-            foreach (Document d in documents)
+            if (documents.Any() && paths.Any())
             {
-                if (!(d.DocPaths.Any(i => i.DocumentId == d.DocumentId)))
+                foreach (DocPath p in paths)
                 {
-                    //documents.Remove(d);
-                    nullDocs.Add(d);
-                    Console.WriteLine("removing " + d.DocumentId);
-                }
-                foreach (DocPath p in d.DocPaths)
-                {
-                    if (!File.Exists(p.path))
+                    if (File.Exists(p.path))
                     {
-                        //paths.Remove(p);
+                        // do nothing
+                    }
+                    else if (documents.Any(i => i.DocumentHash == p.Document.DocumentHash))
+                    {
+                        // hash matches one in documents
+                        p.Document = documents.First((i => i.DocumentHash == p.Document.DocumentHash));
+                    }
+                    else
+                    {
                         nullDocPaths.Add(p);
-                        Console.WriteLine("removing path " + p.path);
                     }
                 }
 
-            }
+                foreach (Document d in documents)
+                {
+                    if (!(documents.Any()))
+                    {
+                        nullDocs.Add(d);
+                    }
+                }
 
-            foreach (Document d in nullDocs)
-            {
-                documents.Remove(d);
-                // check if the hashes of these are matched in the next index!!!! If so - hook em back up with event history
-                // if not, sack em off.
-            }
 
-            foreach (DocPath p in nullDocPaths)
-            {
-                paths.Remove(p);
+                foreach (Document d in nullDocs)
+                {
+                    documents.Remove(d);
+                }
+
+                foreach (DocPath p in nullDocPaths)
+                {
+                    paths.Remove(p);
+                }
+                fic.SaveChanges();
             }
-            fic.SaveChanges();
         }
-
     }
 }
