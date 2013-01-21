@@ -95,45 +95,27 @@ namespace Ildss
             }
             else
             {
-                // Different file 
+                // Different file (file has been edited)
                 if (fic.DocPaths.Any(i => i.path == fi.FullName))
                 {
-                    // if it is a unique bad boy then just update the document
-                    // if it is one of many then make a new document!!!! 
-                    if (fic.DocPaths.Any(i => i.name == fi.Name))
+                    Console.WriteLine("hello ====== " + fic.DocPaths.Count(i => i.name == fi.Name));
+                    if (fic.DocPaths.Count(i => i.name == fi.Name) == 1)
                     {
-                        if (fic.DocPaths.Count(i => i.name == fi.Name) == 1)
-                        {
-                            // Unique
-                            Console.WriteLine("Updating Hash and size of old document");
-                            // matching paths - file has been updated, update document
-                            document = fic.DocPaths.First(i => i.path == fi.FullName).Document;
-                            document.size = fi.Length;
-                            document.DocumentHash = fileHash;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Writing Hash and size into new document");
-                            // matching paths - file has been updated, update document
-                            document = new Document() { DocumentHash = fileHash, size = fi.Length };
-                            docpath = fic.DocPaths.First(i => i.path == fi.FullName);
-                            docpath.Document = document;
-                            document.DocPaths.Add(docpath);
-                            fic.Documents.Add(document);
-                        }
+                        // If document only has one path, update the document
+                        Console.WriteLine("Updating Hash and size of old document");
+                        document = fic.DocPaths.First(i => i.path == fi.FullName).Document;
+                        document.size = fi.Length;
+                        document.DocumentHash = fileHash;
                     }
                     else
                     {
-                        Console.WriteLine("New file");
-                        // completely new file & path
-                        document.DocumentHash = fileHash;
-                        document.size = fi.Length;
+                        Console.WriteLine("Writing Hash and size into new document");
+                        // matching paths - one of many identical files has been edited, update the path and add to new document
+                        document = new Document() { DocumentHash = fileHash, size = fi.Length };
+                        docpath = fic.DocPaths.First(i => i.path == fi.FullName);
                         docpath.Document = document;
-                        docpath.name = fi.Name;
-                        docpath.directory = fi.DirectoryName;
-                        docpath.path = fi.FullName;
+                        document.DocPaths.Add(docpath);
                         fic.Documents.Add(document);
-                        fic.DocPaths.Add(docpath);
                     }
                 }
                 else
