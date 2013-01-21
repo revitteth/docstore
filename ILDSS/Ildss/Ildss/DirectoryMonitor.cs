@@ -59,7 +59,7 @@ namespace Ildss
                             type = "Created",
                             last_write = fi.LastWriteTime,
                             last_access = fi.LastWriteTime,
-                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
+                            //event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
                         };
 
                         fic.DocEvents.Add(e);
@@ -95,7 +95,7 @@ namespace Ildss
                             last_access = fi.LastAccessTime,
                             last_write = fi.LastWriteTime,
                             Document = ddd,
-                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
+                            //event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
                         };
 
                         //KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
@@ -162,14 +162,14 @@ namespace Ildss
                             Document = updatedDocument,
                             last_access = fi.LastAccessTime,
                             last_write = fi.LastWriteTime,
-                            event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
+                            //event_time = (DateTime.Now).AddTicks(-((DateTime.Now).Ticks % TimeSpan.TicksPerSecond))
                         };
 
                         fic.DocEvents.Add(de);
                         fic.SaveChanges();
 
                         //KernelFactory.Instance.Get<IEventQueue>().AddEvent(de);
-                        LastChange = de.event_time;
+                        //LastChange = de.event_time;
                         Console.WriteLine("Change occurred " + fi.FullName);
                     }
                 }

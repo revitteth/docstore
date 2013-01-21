@@ -15,6 +15,7 @@ namespace Ildss
         private FileInfo fi { get; set; }
         private List<Document> nullDocs = new List<Document>();
         private List<DocPath> nullDocPaths = new List<DocPath>();
+        private DateTime accessTime, writeTime;
         
         public void IndexFiles(string path)
         {
@@ -47,7 +48,9 @@ namespace Ildss
             fi = new FileInfo(path);
             fi.Refresh();
 
-            //Console.WriteLine(fi.DirectoryName) ;
+            // Preserve access and write times
+            accessTime = fi.LastAccessTime;
+            writeTime = fi.LastWriteTime;
 
             // Hash File
             var h = KernelFactory.Instance.Get<IHash>();
@@ -133,7 +136,20 @@ namespace Ildss
                 }
             }
 
+            if(EventOccurred(path, accessTime, writeTime))
+            {
+                var docevent = new DocEvent() { Document = fic.Documents.FirstOrDefault(i => i.DocPaths.Any(j => j.path == path)),
+                                                last_write = (writeTime).AddTicks(-((writeTime).Ticks % TimeSpan.TicksPerSecond)),
+                                                last_access = (accessTime).AddTicks(-((accessTime).Ticks % TimeSpan.TicksPerSecond)),
+                                                type = "index"
+                };
+                fic.DocEvents.Add(docevent);
+            }
+
             fic.SaveChanges();
+
+            File.SetLastAccessTime(path, accessTime);
+            File.SetLastWriteTime(path, writeTime);
         }
 
         public void CheckIndex()
@@ -189,5 +205,24 @@ namespace Ildss
             fic.SaveChanges();
  
         }
+
+        private bool EventOccurred(string filePath, DateTime access, DateTime write)
+        {
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+
+            foreach (DocEvent d in fic.DocEvents)
+            {
+                TimeSpan diffWrite = write.Subtract(d.last_write);
+                TimeSpan diffAccess = access.Subtract(d.last_write);
+
+                if (diffWrite.Duration() < TimeSpan.FromSeconds(100) && diffAccess.Duration() < TimeSpan.FromSeconds(100))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }
