@@ -28,6 +28,7 @@ namespace Ildss.Migrations
             //    );
             //
             context.Database.CreateIfNotExists();
+            Database.SetInitializer(new DropCreateDatabaseAlways<FileIndexContext>());
         }
     }
 }

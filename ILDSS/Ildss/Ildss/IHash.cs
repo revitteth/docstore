@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Ildss
 {
-    interface IHash
+    public interface IHash
     {
         string ByteToString(byte[] array);
         string HashFile(string path);

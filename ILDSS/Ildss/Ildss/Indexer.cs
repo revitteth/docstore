@@ -10,16 +10,15 @@ using System.Security.Permissions;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    class Indexer : IIndexer
+    public class Indexer : IIndexer
     {
         private FileInfo fi { get; set; }
-        private List<Document> nullDocs = new List<Document>();
+        private List<Document> nullDocs, nullDocsSecondary = new List<Document>();
         private List<DocPath> nullDocPaths = new List<DocPath>();
         private DateTime accessTime, writeTime;
         
         public void IndexFiles(string path)
         {
-            //CheckIndex();
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -28,6 +27,7 @@ namespace Ildss
             {
                 IndexDirectory(path);
             }
+            //CheckIndex();
         }
 
         // Recursively index subdirectories
@@ -68,6 +68,7 @@ namespace Ildss
                 {
                     // same document, same directory, same name
                 }
+                    /*
                 else if (fic.DocPaths.Any(i => i.name == fi.Name))
                 {
                     // same document, different directory, same name
@@ -84,15 +85,23 @@ namespace Ildss
                     docpath.path = fi.FullName;
                     docpath.directory = fi.DirectoryName;
                     docpath.name = fi.Name;
-                }
+                }*/
                 else
                 {
+                    document = fic.Documents.FirstOrDefault(i => i.DocumentHash == fileHash);
                     // same document, different directory, different name
-                    docpath.Document = fic.Documents.First(i => i.DocumentHash == fileHash);
-                    docpath.path = fi.FullName;
-                    docpath.directory = fi.DirectoryName;
-                    docpath.name = fi.Name;
-                    fic.DocPaths.Add(docpath);
+                    if (fic.DocPaths.Any(i => i.path == path))
+                    {
+                        //if path exists update it
+                        docpath = fic.DocPaths.FirstOrDefault(i => i.path == path);
+                    }
+                    else
+                    {
+                        docpath.path = fi.FullName;
+                        docpath.directory = fi.DirectoryName;
+                        docpath.name = fi.Name;
+                    }
+                    document.DocPaths.Add(docpath);
                 }
 
             }
@@ -138,12 +147,12 @@ namespace Ildss
 
             if(EventOccurred(path, accessTime, writeTime))
             {
-                var docevent = new DocEvent() { Document = fic.Documents.FirstOrDefault(i => i.DocPaths.Any(j => j.path == path)),
-                                                last_write = (writeTime).AddTicks(-((writeTime).Ticks % TimeSpan.TicksPerSecond)),
-                                                last_access = (accessTime).AddTicks(-((accessTime).Ticks % TimeSpan.TicksPerSecond)),
+                var docevent = new DocEvent() { //Document = fic.Documents.FirstOrDefault(i => i.DocPaths.Any(j => j.path == path)),
+                                                last_write = writeTime,
+                                                last_access = accessTime,
                                                 type = "index"
                 };
-                fic.DocEvents.Add(docevent);
+                document.DocEvents.Add(docevent);
             }
 
             fic.SaveChanges();
@@ -152,59 +161,6 @@ namespace Ildss
             File.SetLastWriteTime(path, writeTime);
         }
 
-        public void CheckIndex()
-        {
-            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            var documents = fic.Documents;
-            var paths = fic.DocPaths;
-
-            if (paths.Any())
-            {
-                foreach (DocPath p in paths)
-                {
-
-                    // need to ensure that the path is the correct one here!!!!
-                    if (documents.Any(i => i.DocumentHash == p.Document.DocumentHash))
-                    {
-                        if (File.Exists(p.path))
-                        {
-                            p.Document = documents.First((i => i.DocumentHash == p.Document.DocumentHash));
-                        }
-                        else
-                        {
-                            Console.WriteLine("Being removed, " + p.path);
-                            nullDocPaths.Add(p);
-                        }
-                    }
-                }
-            }
-
-            if (documents.Any())
-            {
-                foreach (Document d in documents)
-                {
-                    Console.WriteLine("Document " + d.DocumentId);
-                    if (!(d.DocPaths.Any()))
-                    {
-                        nullDocs.Add(d);
-                        Console.WriteLine("Checkin  - Document has no paths, removing");
-                    }
-                }
-            }
-
-
-            foreach (Document d in nullDocs)
-            {
-                documents.Remove(d);
-            }
-
-            foreach (DocPath p in nullDocPaths)
-            {
-                paths.Remove(p);
-            }
-            fic.SaveChanges();
- 
-        }
 
         private bool EventOccurred(string filePath, DateTime access, DateTime write)
         {

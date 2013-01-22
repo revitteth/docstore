@@ -30,31 +30,6 @@ namespace Ildss
             }
         }
 
-
-        public void DetectOfficeFiles()
-        {
-            // look for the patterns associated with office file creation/save/rename
-            /*
-            if (lastRenamedFile.Contains(".tmp"))
-            {
-                Console.WriteLine("yes bro");
-                if (lastRenamedPath == pattern.EventArgs.FullPath)
-                {
-                    // its a bleeding office file change!!!!
-                    Console.WriteLine(pattern.EventArgs.Name + " has been updated");
-                }
-            }
-            else
-            {
-                Console.WriteLine("nah bro " + lastRenamedFile);
-                var dave = ((FileSystemWatcher)pattern.Sender);
-            }
-
-            lastRenamedPath = pattern.EventArgs.OldFullPath;
-            lastRenamedFile = pattern.EventArgs.Name;
-            */
-                    }
-
         public void EventQueueToDb()
         {
             foreach (DocEvent ev in evQueue)

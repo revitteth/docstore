@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace Ildss
 {
-    class FileIndexContext : DbContext, IFileIndexContext
+    public class FileIndexContext : DbContext, IFileIndexContext
     {
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocPath> DocPaths { get; set; }

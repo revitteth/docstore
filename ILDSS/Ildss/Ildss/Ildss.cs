@@ -67,12 +67,12 @@ namespace Ildss
 
         private void button1_Click(object sender, EventArgs e)
         {
-            KernelFactory.Instance.Get<IIndexer>().CheckIndex();
+            //KernelFactory.Instance.Get<IIndexer>().CheckIndex();
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            KernelFactory.Instance.Get<IEventQueue>().EventQueueToDb();
+        
         }
 
     }

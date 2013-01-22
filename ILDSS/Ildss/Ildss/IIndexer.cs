@@ -1,10 +1,9 @@
 ﻿using System;
 namespace Ildss
 {
-    interface IIndexer
+    public interface IIndexer
     {
         void IndexFile(string path);
         void IndexFiles(string path);
-        void CheckIndex();
     }
 }

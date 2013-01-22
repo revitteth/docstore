@@ -2,7 +2,7 @@
 
 namespace Ildss
 {
-    interface IFileIndexContext
+    public interface IFileIndexContext
     {
         int SaveChanges();
         System.Data.Entity.DbSet<Document> Documents { get; set; }
