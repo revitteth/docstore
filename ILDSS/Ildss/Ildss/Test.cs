@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace Ildss
 {
@@ -22,34 +23,31 @@ namespace Ildss
             private void btnReadEvents_Click(object sender, EventArgs e)
 {
     int i = 0;
-    int nEvents = Convert.ToInt32(txtNumEvents.Text);
+    int nEvents = 50000;//Convert.ToInt32(txtNumEvents.Text);
  
-    EventLog myEvents = new EventLog("Security", "MaxDell");
+    EventLog myEvents = new EventLog("Security", System.Environment.MachineName);
     Stopwatch logTimer = new Stopwatch();
     logTimer.Start();
     lblTimeProcessed.Text = "";
- 
+
     foreach (System.Diagnostics.EventLogEntry entry in myEvents.Entries)
     {
         if (i < nEvents)
         {
-            // Add event fields to the listbox, separated by tabspace (\t).
-            if (entry.InstanceId == 4656)
-            {
-                listBox1.Items.Add(entry.InstanceId
-                                    + "\t" + entry.EntryType
-                                    + "\t" + entry.TimeGenerated
-                                    //+ "\t" + (entry.Data.ToList().ElementAt(0))
-                                    );
+            // NEED TO IGNORE desktop.ini files!!!
+            // Work out a list of ignored files.
+
+            //if (entry.InstanceId == 4656)
+            //{
                 foreach (var d in entry.ReplacementStrings)
                 {
-                    if(File.Exists(d.ToString()) && d.ToString().StartsWith(@"F:\TestDir")){
-                    //void* f = &d;
-                    //d.ToString();
-                    Console.WriteLine("data: " + entry.EntryType + " -- " + entry.TimeGenerated + " -- " + d.ToString());}
+                    if (File.Exists(d.ToString()) && d.ToString().StartsWith(@"F:\TestDir"))
+                    {
+                        Console.WriteLine("data: " + entry.EntryType + " -- " + entry.TimeGenerated + " -- " + d.ToString());
+                    }
                 }
                 // Increment control for loop, or it will pull the whole log.
-            }
+            //}
             i++;
         }
         else
