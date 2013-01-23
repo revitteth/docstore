@@ -10,7 +10,7 @@ using System.Security.Permissions;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class IndexHash : IHash
+    public class HashSHA512 : IHash
     {
 
         private SHA512 sha512 { get; set; }
@@ -18,7 +18,7 @@ namespace Ildss
         private string hashString { get; set; }
 
 
-        public IndexHash()
+        public HashSHA512()
         {
             sha512 = new SHA512Managed();
             calculatedHash = null;

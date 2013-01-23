@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Ildss
 {
-    public class EventQueue : IQueue
+    class SecurityEventQueue : IQueue
     {
         private List<IEvent> _eventList = new List<IEvent>();
 
@@ -20,7 +19,7 @@ namespace Ildss
         {
             foreach (IEvent securityEvent in _eventList)
             {
-                Console.WriteLine(securityEvent.ToString());
+                securityEvent.PrintEvent();
             }
         }
     }

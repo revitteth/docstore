@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Security.AccessControl;
+using System.Collections;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Ildss
 {
@@ -20,48 +23,39 @@ namespace Ildss
             InitializeComponent();
         }
 
-            private void btnReadEvents_Click(object sender, EventArgs e)
-{
-               
-
-    int i = 0;
-    int nEvents = 50000;//Convert.ToInt32(txtNumEvents.Text);
- 
-    EventLog myEvents = new EventLog("Security", System.Environment.MachineName);
-    Stopwatch logTimer = new Stopwatch();
-    logTimer.Start();
-    lblTimeProcessed.Text = "";
-
-    foreach (System.Diagnostics.EventLogEntry entry in myEvents.Entries)
-    {
-        Console.WriteLine(entry.Message.ToString());
-        /*if (i < nEvents)
+        private void btnReadEvents_Click(object sender, EventArgs e)
         {
-            // NEED TO IGNORE desktop.ini files!!!
-            // Work out a list of ignored files.
+            EventLog myEvents = new EventLog("Security", System.Environment.MachineName);
+            Stopwatch logTimer = new Stopwatch();
+            logTimer.Start();
+            lblTimeProcessed.Text = "";
 
-            //if (entry.InstanceId == 4656)
-            //{
-                foreach (var d in entry.Message)
+            System.Diagnostics.EventLogEntryCollection logCollection = myEvents.Entries;
+
+            EventLogEntry[] logCollectionArray = new EventLogEntry[logCollection.Count];    // Possibly compare with old log size?
+            logCollection.CopyTo(logCollectionArray, 0);
+
+            foreach (var log in logCollectionArray)
+            {
+                if (log.InstanceId == 4663)
                 {
-                    Console.WriteLine(d.ToString());
-                    if (File.Exists(d.ToString()) && d.ToString().StartsWith(@"F:\TestDir"))
-                    {
-                        Console.WriteLine("data: " + entry.EntryType + " -- " + entry.TimeGenerated + " -- " + d.ToString() + " -- " + entry.EventID);
-                    }
+                    // Access attempt
+                    var eventToLog = new SecurityLogEvent();
+                    eventToLog.InstanceId = log.InstanceId;
+                    eventToLog.UserName = log.ReplacementStrings[1];
+                    eventToLog.DomainName = log.ReplacementStrings[2];
+                    eventToLog.ObjectType = log.ReplacementStrings[5];
+                    eventToLog.ObjectName = log.ReplacementStrings[6];
+                    eventToLog.ProcessName = log.ReplacementStrings[11];
+                    eventToLog.ResourceAttributes = log.ReplacementStrings[12];
+                    eventToLog.TimeGenerated = log.TimeGenerated;
+
+                    eventToLog.PrintEvent();
                 }
-                // Increment control for loop, or it will pull the whole log.
-            //}
-            i++;
-        }
-        else
-        {
-            // Break out of loop when i = nEvents.
-            break;
-        }*/
-    }
-    logTimer.Stop();
-    lblTimeProcessed.Text = "Processing took " + logTimer.Elapsed.TotalSeconds.ToString() + " seconds.";
+            }
+
+            logTimer.Stop();
+            lblTimeProcessed.Text = "Processing took " + logTimer.Elapsed.TotalSeconds.ToString() + " seconds.";
         }
     }
 }

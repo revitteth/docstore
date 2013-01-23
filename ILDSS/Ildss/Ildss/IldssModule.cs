@@ -12,11 +12,12 @@ namespace Ildss
     {
         public override void Load()
         {
-            this.Bind<IEventQueue>().To<EventQueue>().InSingletonScope();
+            this.Bind<IQueue>().To<EventQueue>().InSingletonScope();
             this.Bind<IIndexer>().To<Indexer>();
-            this.Bind<IHash>().To<IndexHash>();
-            this.Bind<IFileIndexContext>().To<FileIndexContext>().InSingletonScope(); // may need to re-implement in the implementation file after changes
-            this.Bind<IDirectoryMonitor>().To<DirectoryMonitor>().InSingletonScope();
+            this.Bind<IHash>().To<HashSHA512>();
+            this.Bind<IFileIndexContext>().To<FileIndexContext>().InSingletonScope();
+            this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
+            this.Bind<IEvent>().To<SecurityLogEvent>();//.Named("Security");
         }
     }
 }

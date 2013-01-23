@@ -12,11 +12,11 @@ using System.Reactive;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class DirectoryMonitor : IDirectoryMonitor
+    public class DirectoryMonitor : IMonitor
     {
         private DateTime LastChange;
 
-        public void MonitorFileSystem (string path)
+        public void Monitor (string path)
         {
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
@@ -28,21 +28,17 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern => {
                     var pe = pattern.EventArgs;
-                    
-                    //Ensure not a directory
-                    //if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
-                    //{
-                        var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                        var id = fic.DocPaths.First(i => i.path == pe.FullPath);
-                        var id2 = id.Document.DocumentId;
 
-                        var document = fic.Documents.First(i => i.DocumentId == id2);
-                        fic.Documents.Attach(document);
-                        fic.Documents.Remove(document);
-                        fic.SaveChanges();
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                    var id = fic.DocPaths.First(i => i.path == pe.FullPath);
+                    var id2 = id.Document.DocumentId;
 
-                        Console.WriteLine("Delete occurred " + pattern.EventArgs.FullPath);
-                    //}
+                    var document = fic.Documents.First(i => i.DocumentId == id2);
+                    fic.Documents.Attach(document);
+                    fic.Documents.Remove(document);
+                    fic.SaveChanges();
+
+                    Console.WriteLine("Delete occurred " + pattern.EventArgs.FullPath);
                 }
             );
         }

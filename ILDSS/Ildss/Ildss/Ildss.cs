@@ -61,7 +61,7 @@ namespace Ildss
             return Task.Run(() =>
             {
                 //new DirectoryMonitor().MonitorFileSy;  
-                KernelFactory.Instance.Get<IDirectoryMonitor>().MonitorFileSystem(Properties.Settings.Default.directory);
+                KernelFactory.Instance.Get<IMonitor>().Monitor(Properties.Settings.Default.directory);
             });
         }
 
