@@ -37,21 +37,17 @@ namespace Ildss
             _compress = compress;
 
             // Create streams
-            Stream infs = null, gs = null, outfs = null, cryptoStream = null;
+            Stream infs = null, outfs = null, cryptoStream = null;
 
             try
             {
                 infs = new FileStream(_inFile, FileMode.Open);
                 outfs = new FileStream(_inFile + _extension, FileMode.OpenOrCreate);
                 cryptoStream = new CryptoStream(outfs, _aes.CreateEncryptor(), CryptoStreamMode.Write);
-                gs = new GZipStream(cryptoStream, CompressionMode.Compress);
-
-                infs.CopyTo(gs);
+                infs.CopyTo(cryptoStream);
             }
             finally
             {
-                if (gs != null)
-                    gs.Close();
                 if (cryptoStream != null)
                     cryptoStream.Close();
                 if (outfs != null)
