@@ -10,15 +10,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2ACDE4
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IldssTest", "IldssTest\IldssTest.csproj", "{FD5B9691-D279-47BA-B660-4E3B1BAB000C}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://cloudcreations.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Ildss\\Ildss.csproj
 		SccProjectName1 = Ildss
 		SccLocalPath1 = Ildss
+		SccProjectUniqueName2 = IldssTest\\IldssTest.csproj
+		SccProjectName2 = IldssTest
+		SccLocalPath2 = IldssTest
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +34,10 @@ Global
 		{300C02F3-DE60-4BF6-AFF9-86E676874D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{300C02F3-DE60-4BF6-AFF9-86E676874D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{300C02F3-DE60-4BF6-AFF9-86E676874D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD5B9691-D279-47BA-B660-4E3B1BAB000C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5B9691-D279-47BA-B660-4E3B1BAB000C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5B9691-D279-47BA-B660-4E3B1BAB000C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5B9691-D279-47BA-B660-4E3B1BAB000C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
