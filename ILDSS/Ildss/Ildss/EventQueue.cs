@@ -11,16 +11,16 @@ namespace Ildss
     {
         private List<IEvent> _eventList = new List<IEvent>();
 
-        public void AddEvent(IEvent securityEvent)
+        public void AddEvent(IEvent dbEvent)
         {
-            _eventList.Add(securityEvent);
+            _eventList.Add(dbEvent);
         }
 
         public void PrintQueue()
         {
-            foreach (IEvent securityEvent in _eventList)
+            foreach (IEvent dbEvent in _eventList)
             {
-                Console.WriteLine(securityEvent.ToString());
+                Console.WriteLine(dbEvent.ToString() + '\t' + '\t');
             }
         }
     }

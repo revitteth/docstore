@@ -15,6 +15,8 @@ namespace Ildss
         public string ObjectType { get; set; }
         public string ObjectName { get; set; }
         public string ProcessName { get; set; }
+        public string AccessMask { get; set; }
+        public string TranslatedAccessMask { get; set; }
         public string ResourceAttributes { get; set; }
         public DateTime TimeGenerated { get; set; }
 
@@ -25,7 +27,7 @@ namespace Ildss
 
             foreach (PropertyInfo property in properties)
             {
-                Console.WriteLine("Name: " + property.Name + ", Value: " + property.GetValue(this, null));
+                Console.WriteLine("Name: " + property.Name + "," + " Value: " + property.GetValue(this, null));
             }
         }
     }
