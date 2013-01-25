@@ -5,53 +5,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using System.IO;
+using System.Security.Permissions;
 
 namespace Ildss
 {
-    class CompressionGZIP : ICompression
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+    public static class CompressionGZIP
     {
-        public void Compress(string inFile, string outFile)
+        public static void Compress(FileInfo fileToCompress)
         {
-            Stream gs = null, infs = null, outfs = null;
-
-            try
+            using (FileStream originalFileStream = fileToCompress.OpenRead())
             {
-                infs = new FileStream(inFile, FileMode.Open);
-                outfs = new FileStream(inFile + ".gz", FileMode.Create);
-                gs = new GZipStream(outfs, CompressionMode.Compress);
-                infs.CopyTo(gs);
-            }
-            finally
-            {
-                if (gs != null)
-                    gs.Close();
-                if (outfs != null)
-                    outfs.Close();
-                if (infs != null)
-                    infs.Close();
+                if ((File.GetAttributes(fileToCompress.FullName) & FileAttributes.Hidden) != FileAttributes.Hidden & fileToCompress.Extension != ".gz")
+                {
+                    using (FileStream compressedFileStream = File.Create(fileToCompress.FullName + ".gz"))
+                    {
+                        using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
+                        {
+                            originalFileStream.CopyTo(compressionStream);
+                            Console.WriteLine("Compressed {0} from {1} to {2} bytes.",
+                                fileToCompress.Name, fileToCompress.Length.ToString(), compressedFileStream.Length.ToString());
+                        }
+                    }
+                }
             }
         }
 
-        public void Decompress(string inFile, string outFile)
+        public static void Decompress(FileInfo fileToDecompress)
         {
-            // Decompress file
-            Stream gs = null, infs = null, outfs = null;
+            using (FileStream originalFileStream = fileToDecompress.OpenRead())
+            {
+                string currentFileName = fileToDecompress.FullName;
+                string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
 
-            try
-            {
-                infs = new FileStream(inFile, FileMode.Open);
-                outfs = new FileStream(inFile.Replace(".gz", ""), FileMode.Create);
-                gs = new GZipStream(outfs, CompressionMode.Decompress);
-                infs.CopyTo(gs);
-            }
-            finally
-            {
-                if (gs != null)
-                    gs.Close();
-                if (outfs != null)
-                    outfs.Close();
-                if (infs != null)
-                    infs.Close();
+                using (FileStream decompressedFileStream = File.Create(newFileName))
+                {
+                    using (GZipStream decompressionStream = new GZipStream(originalFileStream, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(decompressedFileStream);
+                        Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                    }
+                }
             }
         }
     }

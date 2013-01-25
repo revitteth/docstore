@@ -21,24 +21,43 @@ namespace Ildss
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
             fsw = new FileSystemWatcher(path);
+            var fIndexer = KernelFactory.Instance.Get<IIndexer>("Frequent");
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 
+            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
+            fswCreated.Subscribe(
+                pattern =>
+                {
+                    fIndexer.CheckDatabase();
+                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                }
+            );
+
             IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
             fswDeleted.Subscribe(
-                pattern => {
-                    var pe = pattern.EventArgs;
+                pattern =>
+                {
+                    fIndexer.CheckDatabase();
+                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                }
+            );
 
-                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                    var id = fic.DocPaths.First(i => i.path == pe.FullPath);
-                    var id2 = id.Document.DocumentId;
+            IObservable<EventPattern<FileSystemEventArgs>> fswRenamed = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Renamed");
+            fswRenamed.Subscribe(
+                pattern =>
+                {
+                    fIndexer.CheckDatabase();
+                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                }
+            );
 
-                    var document = fic.Documents.First(i => i.DocumentId == id2);
-                    fic.Documents.Attach(document);
-                    fic.Documents.Remove(document);
-                    fic.SaveChanges();
-
-                    Console.WriteLine("Delete occurred " + pattern.EventArgs.FullPath);
+            IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
+            fswChanged.Subscribe(
+                pattern =>
+                {
+                    fIndexer.CheckDatabase();
+                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
                 }
             );
         }

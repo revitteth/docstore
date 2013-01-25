@@ -13,7 +13,8 @@ namespace Ildss
         public override void Load()
         {
             this.Bind<IQueue>().To<EventQueue>().InSingletonScope();
-            this.Bind<IIndexer>().To<Indexer>();
+            this.Bind<IIndexer>().To<InitialIndexer>().Named("Initial");
+            this.Bind<IIndexer>().To<FrequentIndexer>().Named("Frequent");
             this.Bind<IHash>().To<HashSHA512>();
             this.Bind<IFileIndexContext>().To<FileIndexContext>().InSingletonScope();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();

@@ -52,7 +52,7 @@ namespace Ildss
         {
             return Task.Run( () =>
             {
-                KernelFactory.Instance.Get<IIndexer>().IndexFiles(Properties.Settings.Default.directory);
+                KernelFactory.Instance.Get<IIndexer>("Initial").IndexFiles(Properties.Settings.Default.directory);
             });
         }
 
@@ -72,7 +72,9 @@ namespace Ildss
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-        
+            var geoff = KernelFactory.Instance.Get<IIndexer>("Frequent");
+            geoff.CheckDatabase();
+            geoff.IndexFiles(Properties.Settings.Default.directory);
         }
 
     }

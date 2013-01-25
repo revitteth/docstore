@@ -25,8 +25,8 @@ namespace Ildss
             if (Properties.Settings.Default.firstrun)
             {
                 // Run setup GUI
-                Database.SetInitializer(new DropCreateDatabaseAlways<FileIndexContext>());
-                Application.Run(new Test());
+                //Database.SetInitializer(new DropCreateDatabaseAlways<FileIndexContext>());
+                Application.Run(new Setup());
             }
             else
             {                

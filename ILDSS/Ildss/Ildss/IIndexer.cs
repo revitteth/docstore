@@ -5,5 +5,6 @@ namespace Ildss
     {
         void IndexFile(string path);
         void IndexFiles(string path);
+        void CheckDatabase();
     }
 }

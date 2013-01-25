@@ -102,9 +102,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompressionGZIP.cs" />
     <Compile Include="EncryptionAES.cs" />
+    <Compile Include="FrequentIndexer.cs" />
     <Compile Include="IEncryption.cs" />
     <Compile Include="IEvent.cs" />
+    <Compile Include="InitialIndexer.cs" />
     <Compile Include="MonitorHash.cs" />
     <Compile Include="DirectoryMonitor.cs" />
     <Compile Include="Models\DocEvent.cs" />
@@ -125,7 +128,6 @@
       <DependentUpon>Ildss.cs</DependentUpon>
     </Compile>
     <Compile Include="IldssModule.cs" />
-    <Compile Include="Indexer.cs" />
     <Compile Include="KernelFactory.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
