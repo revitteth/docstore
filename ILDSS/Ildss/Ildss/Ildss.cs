@@ -77,5 +77,15 @@ namespace Ildss
             geoff.IndexFiles(Properties.Settings.Default.directory);
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            foreach (var d in fic.Documents)
+            {
+                fic.Documents.Remove(d);
+            }
+            fic.SaveChanges();
+        }
+
     }
 }

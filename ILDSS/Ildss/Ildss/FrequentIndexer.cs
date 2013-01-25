@@ -43,6 +43,15 @@ namespace Ildss
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
 
+
+            foreach (var mp in missingPaths)
+            {
+                fic.DocPaths.Remove(mp);
+            }
+
+            fic.SaveChanges();
+
+
             foreach (var p in fic.DocPaths)
             {
                 if (File.Exists(p.path))
@@ -53,18 +62,18 @@ namespace Ildss
                         // hashes are different - update it if only 1 path
                         if (fic.DocPaths.Count(i => i.DocPathId == p.DocPathId) <= 1)
                         {
-                            var doc = fic.DocPaths.First(i => i.DocPathId == p.DocPathId);
-                            doc.Document.DocumentHash = hash.HashFile(p.path);
-                            doc.Document.size = new FileInfo(p.path).Length;
-                            //fic.SaveChanges();
+                            Console.WriteLine("different hash (1 path per document)");
+                            var docpath = fic.DocPaths.First(i => i.DocPathId == p.DocPathId);
+                            docpath.Document.DocumentHash = hash.HashFile(p.path);
+                            docpath.Document.size = new FileInfo(p.path).Length;
                         }
                         else
                         {
+                            Console.WriteLine("different hash (multiple paths for same document)");
                             var fi = new FileInfo(p.path);
                             var doc = new Document() { DocumentHash = hash.HashFile(p.path), size = fi.Length };
                             p.Document = doc;
                             fic.Documents.Add(doc);
-                            //fic.SaveChanges();
                         }
                     }
                     // else hashes and path match - do nothing
@@ -86,12 +95,19 @@ namespace Ildss
             var hash = KernelFactory.Instance.Get<IHash>();
             var fi = new FileInfo(path);
 
+            if (File.GetAttributes(path) == FileAttributes.Directory)
+            {
+                Console.WriteLine("directory...");
+                return;
+            }
+
             var fileHash = hash.HashFile(path);
 
             // find moved, and new files
 
             if (missingPaths.Any(i => i.name == fi.Name && i.Document.DocumentHash == fileHash))
             {
+                Console.WriteLine("moved a file " + fi.Name);
                 // file moved
                 // add a new path for it
                 // delete old one
@@ -100,17 +116,35 @@ namespace Ildss
                 doc.DocPaths.Add(docpath);
 
                 // if called on every event this is ok may need to change if called less frequently!
-                //fic.DocPaths.Remove(missingPaths.All(i => i.name == fi.Name && i.Document.DocumentHash == fileHash));
+                fic.DocPaths.Remove(missingPaths.First(i => i.name == fi.Name && i.Document.DocumentHash == fileHash));
                 missingPaths.Remove(missingPaths.First(i => i.name == fi.Name && i.Document.DocumentHash == fileHash));
             }
             else
             {
-                // new file - add it and give it a new document
-                var doc = new Document() { DocumentHash = fileHash, size = fi.Length };
-                var docpath = new DocPath() { name = fi.Name, path = fi.FullName, directory = fi.FullName.Replace(fi.Name, "") };
-                doc.DocPaths.Add(docpath);
-                fic.Documents.Add(doc);
-                fic.SaveChanges();
+                // IF STATEMENT HERE
+                // IF already a document for hash ... assign path to that document
+                if (fic.Documents.Any(i => i.DocumentHash == fileHash))
+                {
+                    var docpath = new DocPath();
+                    // Document already in system
+                    var doc = fic.Documents.First(i => i.DocumentHash == fileHash);
+                    if (!fic.DocPaths.Any(i => i.path == fi.FullName))
+                    {
+                        docpath = new DocPath() { name = fi.Name, path = fi.FullName, directory = fi.FullName.Replace(fi.Name, "") };
+                        doc.DocPaths.Add(docpath);
+                    }
+                    fic.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("new file " + fi.Name);
+                    // new file - add it and give it a new document
+                    var doc = new Document() { DocumentHash = fileHash, size = fi.Length };
+                    var docpath = new DocPath() { name = fi.Name, path = fi.FullName, directory = fi.FullName.Replace(fi.Name, "") };
+                    doc.DocPaths.Add(docpath);
+                    fic.Documents.Add(doc);
+                    fic.SaveChanges();
+                }
             }
 
         }
