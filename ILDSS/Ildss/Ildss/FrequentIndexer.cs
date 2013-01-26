@@ -45,17 +45,18 @@ namespace Ildss
         public void CheckDatabase(string path, string type, string oldpath = "")
         {
             // INTRODUCE A QUEUE HERE - when got 100 events in, process the oldest. Prevent problems.
-            Thread.Sleep(400);
-
             string[] queueable = {path, type, oldpath};
 
             _monitorQueue.Enqueue(queueable);
-
-            if (_monitorQueue.Count() > 100)
+            if (_monitorQueue.Count() < 20)
+            {
+                Console.WriteLine("delaying proportinal to demand");
+                Thread.Sleep((1/_monitorQueue.Count()) * 30000);
+            }
+            else if (_monitorQueue.Count() > 100)
             {
                 // process elements
                 Console.WriteLine(_monitorQueue.Dequeue().ToString());
-
             }
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
@@ -167,17 +168,34 @@ namespace Ildss
                     var docs = fic.Documents;
                     var paths = fic.DocPaths;
 
-                    var relatedDocument = paths.First(i => i.path == path).Document;
+                    if (paths.Any(i => i.path == path))
+                    {
+                        var relatedDocument = paths.First(i => i.path == path).Document;
+                        var thePath = paths.First(i => i.path == path);
 
-                    if (relatedDocument.DocPaths.Count() == 1)
-                    {
-                        // update the document
+                        if (relatedDocument.DocPaths.Count() == 1)
+                        {
+                            // update the document
+                            relatedDocument.DocumentHash = hashChanged;
+                            relatedDocument.size = finfo.Length;
+                        }
+                        else if (relatedDocument.DocPaths.Count() > 1)
+                        {
+                            // create new document + point the path to it
+                            var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged };
+                            newDoc.DocPaths.Add(thePath);
+                            docs.Add(newDoc);
+                        }
+                        else
+                        {
+                            // not sure if this can really happen!
+                        }
                     }
-                    else if (relatedDocument.DocPaths.Count() > 1)
+                    else
                     {
-                        // create new document + point the path to it
+                        // don't think this should happen either
                     }
-                        
+    
                     fic.SaveChanges();
                     break;
             }
