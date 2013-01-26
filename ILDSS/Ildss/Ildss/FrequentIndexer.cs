@@ -13,7 +13,7 @@ namespace Ildss
         List<DocPath> missingPaths = new List<DocPath>();
         List<DocPath> hashedPaths = new List<DocPath>();
         List<Document> removeDocs = new List<Document>();
-        int counter = 1;
+        private Queue<string[]> _monitorQueue = new Queue<string[]>();
 
         public void IndexFiles(string path)
         {
@@ -45,10 +45,18 @@ namespace Ildss
         public void CheckDatabase(string path, string type, string oldpath = "")
         {
             // INTRODUCE A QUEUE HERE - when got 100 events in, process the oldest. Prevent problems.
+            Thread.Sleep(400);
 
-            Console.WriteLine(counter);
-            counter++;
+            string[] queueable = {path, type, oldpath};
 
+            _monitorQueue.Enqueue(queueable);
+
+            if (_monitorQueue.Count() > 100)
+            {
+                // process elements
+                Console.WriteLine(_monitorQueue.Dequeue().ToString());
+
+            }
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
 
@@ -57,6 +65,7 @@ namespace Ildss
                 case "Created":
                     // check db for matching hash
                         // if found, check for matching path (can't really happen?!)
+                    Console.WriteLine(path + " was created");
                     var fi = new FileInfo(path);
                     var fileHash = hash.HashFile(path);
                     var docpath = new DocPath() { path = fi.FullName, name = fi.Name, directory = fi.FullName.Replace(fi.Name, "") };
@@ -97,12 +106,10 @@ namespace Ildss
                         foreach (var directory in fic.DocPaths.Where(i => i.directory.Contains(oldpath)))
                         {
                             directory.directory = directory.directory.Replace(oldpath, path); // subdirectories
-                            Console.WriteLine("directory & subs " + directory.directory);
                         }
                         foreach (var file in fic.DocPaths.Where(i => i.path.Contains(oldpath)))
                         {
                             file.path = file.path.Replace(oldpath, path);   // file paths
-                            Console.WriteLine("files " + file.path);
                         }
                         fic.SaveChanges();
                     }
@@ -110,58 +117,68 @@ namespace Ildss
 
                 case "Deleted":
                     // remove db entry for the path then check that document needs deleting
-                  //  try
-                  //  {
-                        Console.WriteLine(path + " to be deleted");
-                        // see if it matches a directory
-                        if (fic.DocPaths.Any(i => i.directory == path))
-                        {
-                            var deletedPath = fic.DocPaths.First(i => i.path == path);
-                            var deletedDoc = fic.Documents.First(i => i.DocumentId == deletedPath.DocumentId);
-                            if (deletedDoc.DocPaths.Count() <= 1)
-                                fic.Documents.Remove(deletedDoc);
-                            else
-                                fic.DocPaths.Remove(deletedPath);
-                            fic.SaveChanges();
-                        }
+                    Console.WriteLine(path + " was deleted");
+                    // see if it matches a directory
+                    if (fic.DocPaths.Any(i => i.directory == path))
+                    {
+                        var deletedPath = fic.DocPaths.First(i => i.path == path);
+                        var deletedDoc = fic.Documents.First(i => i.DocumentId == deletedPath.DocumentId);
+                        if (deletedDoc.DocPaths.Count() <= 1)
+                            fic.Documents.Remove(deletedDoc);
                         else
+                            fic.DocPaths.Remove(deletedPath);
+                        fic.SaveChanges();
+                    }
+                    else
+                    {
+                        foreach (var dp in fic.DocPaths)
                         {
-                            foreach (var dp in fic.DocPaths)
-                            {
-                                if (!File.Exists(dp.path))
-                                    missingPaths.Add(dp);
-                            }
-                            foreach (var mp in missingPaths)
-                            {
-                                fic.DocPaths.Remove(mp);
-                            }
-                            missingPaths.Clear();
-
-                            foreach (var doc in fic.Documents)
-                            {
-                                if (!doc.DocPaths.Any())
-                                    removeDocs.Add(doc);
-                            }
-                            foreach (var d in removeDocs)
-                            {
-                                fic.Documents.Remove(d);
-                            }
-                            removeDocs.Clear();
-
-                            fic.SaveChanges();
+                            if (!File.Exists(dp.path))
+                                missingPaths.Add(dp);
                         }
-                 //   }
-                 //   catch (Exception e)
-                 //   {
-                        // deleted a directory, or not accessible etc.
-                //        Console.WriteLine("hell nooo" + e.Message);
-                //    }
+                        foreach (var mp in missingPaths)
+                        {
+                            fic.DocPaths.Remove(mp);
+                        }
+                        missingPaths.Clear();
+
+                        foreach (var doc in fic.Documents)
+                        {
+                            if (!doc.DocPaths.Any())
+                                removeDocs.Add(doc);
+                        }
+                        foreach (var d in removeDocs)
+                        {
+                            fic.Documents.Remove(d);
+                        }
+                        removeDocs.Clear();
+
+                        fic.SaveChanges();
+                    }
                     break;
 
                 case "Changed":
                     // if single path - update the document and add new path
                     // if many paths - create new document and add path.
+                    Console.WriteLine(path + " changed");
 
+                    var finfo = new FileInfo(path);
+                    var hashChanged = hash.HashFile(path);
+                    var docs = fic.Documents;
+                    var paths = fic.DocPaths;
+
+                    var relatedDocument = paths.First(i => i.path == path).Document;
+
+                    if (relatedDocument.DocPaths.Count() == 1)
+                    {
+                        // update the document
+                    }
+                    else if (relatedDocument.DocPaths.Count() > 1)
+                    {
+                        // create new document + point the path to it
+                    }
+                        
+                    fic.SaveChanges();
                     break;
             }
             
