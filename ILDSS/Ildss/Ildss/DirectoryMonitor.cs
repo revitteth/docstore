@@ -14,7 +14,6 @@ namespace Ildss
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class DirectoryMonitor : IMonitor
     {
-        private DateTime LastChange;
 
         public void Monitor (string path)
         {
@@ -29,8 +28,10 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    fIndexer.CheckDatabase();
-                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                    if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
+                    {
+                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Created");
+                    }
                 }
             );
 
@@ -38,17 +39,15 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    fIndexer.CheckDatabase();
-                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                    fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Deleted");
                 }
             );
 
-            IObservable<EventPattern<FileSystemEventArgs>> fswRenamed = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Renamed");
+            IObservable<EventPattern<RenamedEventArgs>> fswRenamed = Observable.FromEventPattern<RenamedEventArgs>(fsw, "Renamed");
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    fIndexer.CheckDatabase();
-                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                    fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Renamed", pattern.EventArgs.OldFullPath);
                 }
             );
 
@@ -56,8 +55,10 @@ namespace Ildss
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    fIndexer.CheckDatabase();
-                    fIndexer.IndexFile(pattern.EventArgs.FullPath);
+                    if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
+                    {
+                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Changed");
+                    }
                 }
             );
         }

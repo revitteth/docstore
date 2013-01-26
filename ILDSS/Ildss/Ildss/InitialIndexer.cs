@@ -68,7 +68,7 @@ namespace Ildss
             fic.SaveChanges();
         }
 
-        public void CheckDatabase()
+        public void CheckDatabase(string path, string type, string oldpath = "")
         {
             // nothing
         }
