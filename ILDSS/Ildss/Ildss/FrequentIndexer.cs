@@ -172,32 +172,41 @@ namespace Ildss
                     var docs = fic.Documents;
                     var paths = fic.DocPaths;
 
-                    if (paths.Any(i => i.path == path))
+                    if (docs.Any(i => i.DocumentHash == hashChanged))
                     {
-                        var relatedDocument = paths.First(i => i.path == path).Document;
-                        var thePath = paths.First(i => i.path == path);
-
-                        if (relatedDocument.DocPaths.Count() == 1)
-                        {
-                            // update the document
-                            relatedDocument.DocumentHash = hashChanged;
-                            relatedDocument.size = finfo.Length;
-                        }
-                        else if (relatedDocument.DocPaths.Count() > 1)
-                        {
-                            // create new document + point the path to it
-                            var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged };
-                            newDoc.DocPaths.Add(thePath);
-                            docs.Add(newDoc);
-                        }
-                        else
-                        {
-                            // not sure if this can really happen!
-                        }
+                        // unlikely event - new file hash matches an existing document
+                        var matchingDoc = docs.First(i => i.DocumentHash == hashChanged);
+                        matchingDoc.DocPaths.Add(paths.First(i => i.path == path));
                     }
                     else
                     {
-                        // don't think this should happen either
+                        if (paths.Any(i => i.path == path))
+                        {
+                            var relatedDocument = paths.First(i => i.path == path).Document;
+                            var thePath = paths.First(i => i.path == path);
+
+                            if (relatedDocument.DocPaths.Count() == 1)
+                            {
+                                // update the document
+                                relatedDocument.DocumentHash = hashChanged;
+                                relatedDocument.size = finfo.Length;
+                            }
+                            else if (relatedDocument.DocPaths.Count() > 1)
+                            {
+                                // create new document + point the path to it
+                                var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged };
+                                newDoc.DocPaths.Add(thePath);
+                                docs.Add(newDoc);
+                            }
+                            else
+                            {
+                                // not sure if this can really happen!
+                            }
+                        }
+                        else
+                        {
+                            // don't think this should happen either
+                        }
                     }
     
                     fic.SaveChanges();
@@ -207,9 +216,18 @@ namespace Ildss
             List<Document> docsToRemove = new List<Document>();
 
             // Possibly loop here to check for duplicate documents, copying paths into the docpaths table of one document.
+            // also check for null hashes and re-hash one of the paths.
             foreach (var docu in fic.Documents.Distinct())
             {
-                
+                if (!docu.DocPaths.Any())
+                {
+                    docsToRemove.Add(docu);
+                }
+                else if (docu.DocumentHash == null)
+                {
+                    Console.WriteLine("it was null");
+                    docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().path);
+                }
             }
             foreach (var docToRemove in docsToRemove)
             {
