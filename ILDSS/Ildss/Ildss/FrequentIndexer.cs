@@ -14,6 +14,7 @@ namespace Ildss
         List<DocPath> hashedPaths = new List<DocPath>();
         List<Document> removeDocs = new List<Document>();
         private Queue<string[]> _monitorQueue = new Queue<string[]>();
+        private int _queueMaxCount = 0;
 
         public void IndexFiles(string path)
         {
@@ -48,7 +49,9 @@ namespace Ildss
             string[] queueable = {path, type, oldpath};
 
             _monitorQueue.Enqueue(queueable);
-            if (_monitorQueue.Count() < 20)
+            _queueMaxCount++;
+
+            if (_monitorQueue.Count() < 20 && _queueMaxCount > 30)
             {
                 Console.WriteLine("delaying proportinal to demand");
                 Thread.Sleep((1/_monitorQueue.Count()) * 30000);
@@ -58,6 +61,7 @@ namespace Ildss
                 // process elements
                 Console.WriteLine(_monitorQueue.Dequeue().ToString());
             }
+
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
 
@@ -199,6 +203,20 @@ namespace Ildss
                     fic.SaveChanges();
                     break;
             }
+
+            List<Document> docsToRemove = new List<Document>();
+
+            // Possibly loop here to check for duplicate documents, copying paths into the docpaths table of one document.
+            foreach (var docu in fic.Documents.Distinct())
+            {
+                
+            }
+            foreach (var docToRemove in docsToRemove)
+            {
+                fic.Documents.Remove(docToRemove);
+            }
+            fic.SaveChanges();
+            docsToRemove.Clear();
             
         }
 
