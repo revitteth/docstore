@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Security.Permissions;
 using System.Reactive.Linq;
@@ -11,8 +11,7 @@ using System.Reactive;
 
 namespace Ildss
 {
-    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class DirectoryMonitor : IMonitor
+    class TestMonitor : IMonitor
     {
         private string _changedOffice = "";
 
@@ -29,12 +28,10 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
+
                     if (!pattern.EventArgs.Name.Contains(".tmp"))
                     {
-                        if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
-                        {
-                            fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Created");
-                        }
+                        Console.WriteLine(pattern.EventArgs.Name + " Created");
                     }
                 }
             );
@@ -45,7 +42,7 @@ namespace Ildss
                 {
                     if (!pattern.EventArgs.Name.Contains(".tmp"))
                     {
-                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Deleted");
+                        Console.WriteLine(pattern.EventArgs.Name + " Deleted");
                     }
                 }
             );
@@ -56,7 +53,7 @@ namespace Ildss
                 {
                     if (!pattern.EventArgs.OldName.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".tmp"))
                     {
-                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Renamed", pattern.EventArgs.OldFullPath);
+                        Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
                     }
                     else
                     {
@@ -68,7 +65,7 @@ namespace Ildss
                         else if (pattern.EventArgs.OldName.Contains(".tmp"))
                         {
                             // temp being renamed back to old document name
-                            fIndexer.CheckDatabase(_changedOffice, "Changed");
+                            Console.WriteLine(_changedOffice + " changed");
                         }
                     }
                 }
@@ -80,10 +77,7 @@ namespace Ildss
                 {
                     if (!pattern.EventArgs.Name.Contains(".tmp"))
                     {
-                        if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
-                        {
-                            fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Changed");
-                        }
+                        Console.WriteLine("Changed: " + pattern.EventArgs.Name);
                     }
                 }
             );

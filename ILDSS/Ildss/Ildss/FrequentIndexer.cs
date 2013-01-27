@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ildss
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class FrequentIndexer : IIndexer
     {
         List<DocPath> missingPaths = new List<DocPath>();
         List<DocPath> hashedPaths = new List<DocPath>();
         List<Document> removeDocs = new List<Document>();
-        private Queue<string[]> _monitorQueue = new Queue<string[]>();
-        private int _queueMaxCount = 0;
 
         public void IndexFiles(string path)
         {
@@ -45,23 +45,6 @@ namespace Ildss
 
         public void CheckDatabase(string path, string type, string oldpath = "")
         {
-            // INTRODUCE A QUEUE HERE - when got 100 events in, process the oldest. Prevent problems.
-            string[] queueable = {path, type, oldpath};
-
-            _monitorQueue.Enqueue(queueable);
-            _queueMaxCount++;
-
-            if (_monitorQueue.Count() < 20 && _queueMaxCount > 30)
-            {
-                Console.WriteLine("delaying proportinal to demand");
-                Thread.Sleep((1/_monitorQueue.Count()) * 30000);
-            }
-            else if (_monitorQueue.Count() > 100)
-            {
-                // process elements
-                Console.WriteLine(_monitorQueue.Dequeue().ToString());
-            }
-
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
 

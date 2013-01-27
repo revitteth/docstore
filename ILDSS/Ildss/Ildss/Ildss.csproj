@@ -147,6 +147,7 @@
     <Compile Include="Test.Designer.cs">
       <DependentUpon>Test.cs</DependentUpon>
     </Compile>
+    <Compile Include="TestMonitor.cs" />
     <EmbeddedResource Include="Ildss.resx">
       <DependentUpon>Ildss.cs</DependentUpon>
     </EmbeddedResource>
