@@ -13,7 +13,7 @@ using System.Security.AccessControl;
 using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
-
+/*
 namespace Ildss
 {
     public partial class Test : Form
@@ -146,3 +146,4 @@ namespace Ildss
         }
     }
 }
+*/

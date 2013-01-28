@@ -29,7 +29,8 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    Thread.Sleep(100);
+                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
                     {
                         if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
                         {
@@ -43,7 +44,7 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
                     {
                         fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Deleted");
                     }
@@ -78,7 +79,7 @@ namespace Ildss
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
                     {
                         if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
                         {

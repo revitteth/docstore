@@ -106,18 +106,14 @@
     <Compile Include="EncryptionAES.cs" />
     <Compile Include="FrequentIndexer.cs" />
     <Compile Include="IEncryption.cs" />
-    <Compile Include="IEvent.cs" />
     <Compile Include="InitialIndexer.cs" />
-    <Compile Include="MonitorHash.cs" />
     <Compile Include="DirectoryMonitor.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
     <Compile Include="Models\Document.cs" />
-    <Compile Include="EventQueue.cs" />
     <Compile Include="Models\FileIndexContext.cs" />
-    <Compile Include="IndexHash.cs" />
+    <Compile Include="HashSHA512.cs" />
     <Compile Include="IMonitor.cs" />
-    <Compile Include="IQueue.cs" />
     <Compile Include="Models\IFileIndexContext.cs" />
     <Compile Include="IHash.cs" />
     <Compile Include="IIndexer.cs" />
@@ -132,18 +128,13 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecurityEventQueue.cs" />
-    <Compile Include="SecurityLogEvent.cs" />
-    <Compile Include="SecurityLogMonitor.cs" />
     <Compile Include="Setup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Test.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Test.cs" />
     <Compile Include="Test.Designer.cs">
       <DependentUpon>Test.cs</DependentUpon>
     </Compile>
