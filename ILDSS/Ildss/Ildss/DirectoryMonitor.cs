@@ -15,6 +15,7 @@ namespace Ildss
     public class DirectoryMonitor : IMonitor
     {
         private string _changedOffice = "";
+        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP" };
 
         public void Monitor (string path)
         {
@@ -29,12 +30,16 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    //Thread.Sleep(100);
-                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
+                    var pe = pattern.EventArgs;
+                    if (!pe.Name.Contains(".tmp") && !pe.Name.Contains(".TMP"))
                     {
-                        if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
+                        var fi = new FileInfo(pe.FullPath);
+                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
-                            fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Created");
+                            if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
+                            {
+                                fIndexer.CheckDatabase(pe.FullPath, "Created");
+                            }
                         }
                     }
                 }
@@ -44,9 +49,10 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
+                    var pe = pattern.EventArgs;
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && pe.Name.Contains("."))
                     {
-                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Deleted");
+                        fIndexer.CheckDatabase(pe.FullPath, "Deleted");
                     }
                 }
             );
@@ -55,22 +61,22 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.OldName.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".tmp"))
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                     {
-                        fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Renamed", pattern.EventArgs.OldFullPath);
+                        _changedOffice = pe.OldFullPath;
                     }
-                    else
+                    else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
                     {
-                        if (pattern.EventArgs.Name.Contains(".tmp"))
+                        if (fi.FullName == _changedOffice)
                         {
-                            // the new file is a temp save the old files name
-                            _changedOffice = pattern.EventArgs.OldFullPath;
-                        }
-                        else if (pattern.EventArgs.OldName.Contains(".tmp"))
-                        {
-                            // temp being renamed back to old document name
                             fIndexer.CheckDatabase(_changedOffice, "Changed");
                         }
+                    }
+                    else 
+                    {
+                        fIndexer.CheckDatabase(pe.FullPath, "Renamed", pe.OldFullPath);
                     }
                 }
             );
@@ -79,11 +85,13 @@ namespace Ildss
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))
+                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
-                            fIndexer.CheckDatabase(pattern.EventArgs.FullPath, "Changed");
+                            fIndexer.CheckDatabase(pe.FullPath, "Changed");
                         }
                     }
                 }
