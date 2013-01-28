@@ -20,7 +20,7 @@ namespace Ildss
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
             fsw = new FileSystemWatcher(path);
-            var fIndexer = KernelFactory.Instance.Get<IIndexer>("Frequent");
+            var fIndexer = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 

@@ -21,7 +21,7 @@ namespace Ildss
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
             fsw = new FileSystemWatcher(path);
-            var fIndexer = KernelFactory.Instance.Get<IIndexer>("Frequent");
+            var fIndexer = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 
@@ -29,7 +29,7 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    Thread.Sleep(100);
+                    //Thread.Sleep(100);
                     if (!pattern.EventArgs.Name.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".TMP"))
                     {
                         if (!(File.GetAttributes(pattern.EventArgs.FullPath) == FileAttributes.Directory))

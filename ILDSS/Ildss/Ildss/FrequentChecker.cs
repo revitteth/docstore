@@ -10,38 +10,11 @@ using System.Threading.Tasks;
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    class FrequentIndexer : IIndexer
+    class FrequentChecker : IIndexChecker
     {
         List<DocPath> missingPaths = new List<DocPath>();
         List<DocPath> hashedPaths = new List<DocPath>();
         List<Document> removeDocs = new List<Document>();
-
-        public void IndexFiles(string path)
-        {
-            if (System.IO.File.Exists(path))
-            {
-                IndexFile(path);
-            }
-            else if (System.IO.Directory.Exists(path))
-            {
-                IndexDirectory(path);
-            }
-        }
-
-        private void IndexDirectory(string targetDirectory)
-        {
-            // Process the list of files found in the directory.
-            string[] fileEntries = System.IO.Directory.GetFiles(targetDirectory);
-
-            foreach (string fileName in fileEntries)
-                IndexFile(fileName);
-            
-            // Recurse into subdirectories of this directory.
-            string[] subdirectoryEntries = System.IO.Directory.GetDirectories(targetDirectory);
-
-            foreach (string subdirectory in subdirectoryEntries)
-                IndexDirectory(subdirectory);
-        }
 
         public void CheckDatabase(string path, string type, string oldpath = "")
         {
@@ -219,42 +192,6 @@ namespace Ildss
             fic.SaveChanges();
             docsToRemove.Clear();
             
-        }
-
-        public void IndexFile(string path)
-        {
-            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            var hash = KernelFactory.Instance.Get<IHash>();
-            var fi = new FileInfo(path);
-
-            var fileHash = hash.HashFile(path);
-
-            if (fic.Documents.Any(i => i.DocumentHash == fileHash))
-            {
-                var docpath = new DocPath();
-                Console.WriteLine("Hash exists - assigning path");
-                var doc = fic.Documents.First(i => i.DocumentHash == fileHash);
-                if (!fic.DocPaths.Any(i => i.path == fi.FullName))
-                {
-                    docpath.Document = doc;
-                    docpath.name = fi.Name;
-                    docpath.path = fi.FullName;
-                    docpath.directory = fi.FullName.Replace(fi.Name, "");
-                    fic.DocPaths.Add(docpath);
-                }
-                fic.SaveChanges();
-            }
-            else
-            {
-                Console.WriteLine("new file " + fi.Name);
-                // new file - add it and give it a new document
-                var doc = new Document() { DocumentHash = fileHash, size = fi.Length };
-                var docpath = new DocPath() { name = fi.Name, path = fi.FullName, directory = fi.FullName.Replace(fi.Name, "") };
-                doc.DocPaths.Add(docpath);
-                fic.Documents.Add(doc);
-                fic.SaveChanges();
-            }
-
         }
 
     }

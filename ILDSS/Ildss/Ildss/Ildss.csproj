@@ -105,8 +105,9 @@
     <Compile Include="CompressionGZIP.cs" />
     <Compile Include="EncryptionAES.cs" />
     <Compile Include="EventCollector.cs" />
-    <Compile Include="FrequentIndexer.cs" />
+    <Compile Include="FrequentChecker.cs" />
     <Compile Include="IEncryption.cs" />
+    <Compile Include="IIndexChecker.cs" />
     <Compile Include="InitialIndexer.cs" />
     <Compile Include="DirectoryMonitor.cs" />
     <Compile Include="Models\DocEvent.cs" />
