@@ -35,54 +35,6 @@ namespace Ildss
             EventLogEntry[] logCollectionArray = new EventLogEntry[logCollection.Count];    // Possibly compare with old log size?
             logCollection.CopyTo(logCollectionArray, 0);
 
-            //for (int i = logCollection.Count - (logCollection.Count - j); i < (logCollection.Count - j); i++)
-            //{
-            //    var log = logCollection[i];
-            //    if (log.InstanceId == 4663)
-            //    {
-            //        if (Directory.Exists(log.ReplacementStrings[6]) | log.ReplacementStrings[6].Contains("desktop.ini"))
-            //        {
-            //            //Console.WriteLine("not interested its a directory!!!!! ****************************************");
-            //        }
-            //        else
-            //        {
-            //            // Access attempt
-            //            var eventToLog = new SecurityLogEvent();
-            //            eventToLog.InstanceId = log.InstanceId;
-            //            eventToLog.UserName = log.ReplacementStrings[1];
-            //            eventToLog.DomainName = log.ReplacementStrings[2];
-            //            eventToLog.ObjectType = log.ReplacementStrings[5];
-            //            eventToLog.ObjectName = log.ReplacementStrings[6];
-            //            eventToLog.ProcessName = log.ReplacementStrings[11];
-            //            eventToLog.ResourceAttributes = log.ReplacementStrings[12];
-            //            eventToLog.TimeGenerated = log.TimeGenerated;
-            //            eventToLog.AccessMask = log.ReplacementStrings[9];
-
-            //            //eventToLog.PrintEvent();
-            //            switch (log.ReplacementStrings[9])
-            //            {
-            //                case "0x10000":
-            //                    Console.WriteLine("Delete" + log.TimeGenerated + log.ReplacementStrings[6]);
-            //                    break;
-            //                case "0x1":
-            //                    Console.WriteLine("Read Data (list directory if a directory)" + '\t' + log.TimeGenerated + '\t' + log.ReplacementStrings[6]);
-            //                    break;
-            //                case "0x6":
-            //                    Console.WriteLine("Write Data (or add file)" + '\t' + log.TimeGenerated + '\t' + log.ReplacementStrings[6]);
-            //                    break;
-            //                case "0x4":
-            //                    Console.WriteLine("Append data (or add subdirectory)" + '\t' + log.TimeGenerated + '\t' + log.ReplacementStrings[6]);
-            //                    break;
-            //                default:
-            //                    //Console.WriteLine("############ dunno bro #############");
-            //                    break;
-            //            }
-            //        }
-
-            //    }
-            //}
-            //j = logCollection.Count;
-
             var geoff = new SecurityEventQueue();
 
             foreach (var log in logCollectionArray)
@@ -143,6 +95,11 @@ namespace Ildss
             geoff.PrintQueue();
             logTimer.Stop();
             lblTimeProcessed.Text = "Processing took " + logTimer.Elapsed.TotalSeconds.ToString() + " seconds.";
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

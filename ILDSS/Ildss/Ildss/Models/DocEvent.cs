@@ -14,8 +14,7 @@ namespace Ildss
         [Required]
         public int DocumentId { get; set; }
         public string type { get; set; }
-        public System.DateTime last_access { get; set; }
-        public System.DateTime last_write { get; set; }
+        public System.DateTime time { get; set; }
 
         public virtual Document Document { get; set; }
 

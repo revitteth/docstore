@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="CompressionGZIP.cs" />
     <Compile Include="EncryptionAES.cs" />
+    <Compile Include="EventCollector.cs" />
     <Compile Include="FrequentIndexer.cs" />
     <Compile Include="IEncryption.cs" />
     <Compile Include="IEvent.cs" />
