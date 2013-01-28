@@ -14,6 +14,7 @@ namespace Ildss
     class TestMonitor : IMonitor
     {
         private string _changedOffice = "";
+        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP" };
 
         public void Monitor (string path)
         {
@@ -28,10 +29,12 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    var fi = new FileInfo(pattern.EventArgs.FullPath);
+                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
                     {
+                        var finfomaniac = new FileInfo(pattern.EventArgs.FullPath);
                         Console.WriteLine(pattern.EventArgs.Name + " Created");
+                        Console.WriteLine("Extension " +  finfomaniac.Extension);
                     }
                 }
             );
@@ -40,7 +43,8 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    var fi = new FileInfo(pattern.EventArgs.FullPath);
+                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
                     {
                         Console.WriteLine(pattern.EventArgs.Name + " Deleted");
                     }
@@ -51,22 +55,30 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.OldName.Contains(".tmp") && !pattern.EventArgs.Name.Contains(".tmp"))
+                    var fi = new FileInfo(pattern.EventArgs.FullPath);
+                    if (_ignoreFiles.Any(pattern.EventArgs.Name.Contains) | !pattern.EventArgs.Name.Contains("."))
                     {
-                        Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
+                        _changedOffice = pattern.EventArgs.OldFullPath;
+                        Console.WriteLine("Saving old office name " + pattern.EventArgs.OldName);
+                        //Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
+                    }
+                    else if (_ignoreFiles.Any(pattern.EventArgs.OldName.Contains) | !pattern.EventArgs.OldName.Contains("."))
+                    {
+                        if (fi.FullName == _changedOffice)
+                        {
+                            // it was just an update to a file which saves using temp files
+                            // call changed event on the file.
+                            Console.WriteLine("changed a temp saver: " + _changedOffice);
+                        }
+                        else
+                        {
+                            Console.WriteLine("weird: " + _changedOffice + " -- " + fi.Name);
+                        }
                     }
                     else
                     {
-                        if (pattern.EventArgs.Name.Contains(".tmp"))
-                        {
-                            // the new file is a temp save the old files name
-                            _changedOffice = pattern.EventArgs.OldFullPath;
-                        }
-                        else if (pattern.EventArgs.OldName.Contains(".tmp"))
-                        {
-                            // temp being renamed back to old document name
-                            Console.WriteLine(_changedOffice + " changed");
-                        }
+                        // conventional rename
+                        Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
                     }
                 }
             );
@@ -75,7 +87,8 @@ namespace Ildss
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    if (!pattern.EventArgs.Name.Contains(".tmp"))
+                    var fi = new FileInfo(pattern.EventArgs.FullPath);
+                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
                     {
                         Console.WriteLine("Changed: " + pattern.EventArgs.Name);
                     }
