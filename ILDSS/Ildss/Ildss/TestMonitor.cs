@@ -29,12 +29,12 @@ namespace Ildss
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    var fi = new FileInfo(pattern.EventArgs.FullPath);
-                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        var finfomaniac = new FileInfo(pattern.EventArgs.FullPath);
-                        Console.WriteLine(pattern.EventArgs.Name + " Created");
-                        Console.WriteLine("Extension " +  finfomaniac.Extension);
+                        var finfomaniac = new FileInfo(pe.FullPath);
+                        Console.WriteLine(pe.Name + " Created");
                     }
                 }
             );
@@ -43,10 +43,11 @@ namespace Ildss
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    var fi = new FileInfo(pattern.EventArgs.FullPath);
-                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        Console.WriteLine(pattern.EventArgs.Name + " Deleted");
+                        Console.WriteLine(pe.Name + " Deleted");
                     }
                 }
             );
@@ -55,14 +56,15 @@ namespace Ildss
             fswRenamed.Subscribe(
                 pattern =>
                 {
-                    var fi = new FileInfo(pattern.EventArgs.FullPath);
-                    if (_ignoreFiles.Any(pattern.EventArgs.Name.Contains) | !pattern.EventArgs.Name.Contains("."))
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                     {
-                        _changedOffice = pattern.EventArgs.OldFullPath;
-                        Console.WriteLine("Saving old office name " + pattern.EventArgs.OldName);
-                        //Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
+                        _changedOffice = pe.OldFullPath;
+                        Console.WriteLine("Saving old office name " + pe.OldName);
+                        //Console.WriteLine(pe.OldName + " Renamed to " + pe.Name);
                     }
-                    else if (_ignoreFiles.Any(pattern.EventArgs.OldName.Contains) | !pattern.EventArgs.OldName.Contains("."))
+                    else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
                     {
                         if (fi.FullName == _changedOffice)
                         {
@@ -78,7 +80,7 @@ namespace Ildss
                     else
                     {
                         // conventional rename
-                        Console.WriteLine(pattern.EventArgs.OldName + " Renamed to " + pattern.EventArgs.Name);
+                        Console.WriteLine(pe.OldName + " Renamed to " + pe.Name);
                     }
                 }
             );
@@ -87,10 +89,11 @@ namespace Ildss
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    var fi = new FileInfo(pattern.EventArgs.FullPath);
-                    if (!_ignoreFiles.Any(pattern.EventArgs.Name.Contains) && fi.Extension != "")
+                    var pe = pattern.EventArgs;
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        Console.WriteLine("Changed: " + pattern.EventArgs.Name);
+                        Console.WriteLine("Changed: " + pe.Name);
                     }
                 }
             );
