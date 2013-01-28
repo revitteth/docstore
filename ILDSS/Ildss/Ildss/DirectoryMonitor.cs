@@ -63,20 +63,27 @@ namespace Ildss
                 {
                     var pe = pattern.EventArgs;
                     var fi = new FileInfo(pe.FullPath);
-                    if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
-                    {
-                        _changedOffice = pe.OldFullPath;
-                    }
-                    else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
-                    {
-                        if (fi.FullName == _changedOffice)
-                        {
-                            fIndexer.CheckDatabase(_changedOffice, "Changed");
-                        }
-                    }
-                    else 
+                    if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                     {
                         fIndexer.CheckDatabase(pe.FullPath, "Renamed", pe.OldFullPath);
+                    }
+                    else
+                    {
+                        if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
+                        {
+                            _changedOffice = pe.OldFullPath;
+                        }
+                        else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
+                        {
+                            if (fi.FullName == _changedOffice)
+                            {
+                                fIndexer.CheckDatabase(_changedOffice, "Changed");
+                            }
+                        }
+                        else
+                        {
+                            fIndexer.CheckDatabase(pe.FullPath, "Renamed", pe.OldFullPath);
+                        }
                     }
                 }
             );
