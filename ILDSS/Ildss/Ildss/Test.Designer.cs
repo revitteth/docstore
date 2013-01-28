@@ -1,5 +1,6 @@
-﻿namespace Ildss
+﻿/*namespace Ildss
 {
+  
     partial class Test
     {
         /// <summary>
@@ -100,4 +101,4 @@
         private System.Diagnostics.EventLog myEvents;
         private System.Windows.Forms.Label lblTimeProcessed;
     }
-}
+}*/
