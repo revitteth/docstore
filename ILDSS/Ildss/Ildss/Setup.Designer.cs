@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Setup));
             this.btnFinishSetup = new System.Windows.Forms.Button();
             this.txtDirectory = new System.Windows.Forms.TextBox();
             this.btnDirectory = new System.Windows.Forms.Button();
@@ -110,6 +111,7 @@
             this.Controls.Add(this.btnDirectory);
             this.Controls.Add(this.txtDirectory);
             this.Controls.Add(this.btnFinishSetup);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Setup";
             this.Text = "Setup";
             this.Load += new System.EventHandler(this.Setup_Load);

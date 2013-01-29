@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ildss));
             this.lblDirectory = new System.Windows.Forms.Label();
             this.DirectorySelect = new System.Windows.Forms.FolderBrowserDialog();
             this.lblDirectoryOutput = new System.Windows.Forms.Label();
@@ -35,6 +37,7 @@
             this.btnMonitor = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.notifyTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // lblDirectory
@@ -100,6 +103,13 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // notifyTray
+            // 
+            this.notifyTray.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyTray.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyTray.Icon")));
+            this.notifyTray.Text = "DocStore";
+            this.notifyTray.Visible = true;
+            // 
             // Ildss
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -111,8 +121,10 @@
             this.Controls.Add(this.btnManualIndex);
             this.Controls.Add(this.lblDirectoryOutput);
             this.Controls.Add(this.lblDirectory);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Ildss";
             this.Text = "ILDSS";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.Load += new System.EventHandler(this.Ildss_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -128,6 +140,7 @@
         private System.Windows.Forms.Button btnMonitor;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.NotifyIcon notifyTray;
     }
 }
 

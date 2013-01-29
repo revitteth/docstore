@@ -23,6 +23,24 @@ namespace Ildss
             lblDirectoryOutput.Text = Properties.Settings.Default.directory;
         }
 
+        private void Ildss_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                //notifyTray.Visible = true;
+                //notifyTray.ShowBalloonTip(500);
+                this.Hide();
+
+                notifyTray.BalloonTipTitle = "APP Hidden";
+                notifyTray.BalloonTipText = "Your application has been minimized to the taskbar.";
+                notifyTray.ShowBalloonTip(3000);
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                notifyTray.Visible = false;
+            }
+        }
+
         private async void btnManualIndex_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Please close all open files within the directory " + Properties.Settings.Default.directory + " - Click OK to continue");
