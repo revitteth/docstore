@@ -52,7 +52,7 @@ namespace Ildss
         {
             return Task.Run( () =>
             {
-                KernelFactory.Instance.Get<IIndexer>().IndexFiles(Properties.Settings.Default.directory);
+                KernelFactory.Instance.Get<IIndexer>("Initial").IndexFiles(Properties.Settings.Default.directory);
             });
         }
 
@@ -60,7 +60,6 @@ namespace Ildss
         {
             return Task.Run(() =>
             {
-                //new DirectoryMonitor().MonitorFileSy;  
                 KernelFactory.Instance.Get<IMonitor>().Monitor(Properties.Settings.Default.directory);
             });
         }
@@ -73,6 +72,14 @@ namespace Ildss
                 fic.Documents.Remove(d);
             }
             fic.SaveChanges();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+                {
+                    KernelFactory.Instance.Get<IIndexer>("Frequent").IndexFiles(Properties.Settings.Default.directory);
+                });
         }
 
     }

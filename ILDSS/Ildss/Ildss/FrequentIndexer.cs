@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Ildss
 {
-    class InitialIndexer : IIndexer
+    class FrequentIndexer : IIndexer
     {
-        private List<DocPath> nullDocPaths = new List<DocPath>();
-
         public void IndexFiles(string path)
         {
             if (System.IO.File.Exists(path))
@@ -41,36 +39,7 @@ namespace Ildss
         public void IndexFile(string path)
         {
             var fi = new FileInfo(path);
-            fi.Refresh();
-
-            // Hash File
-            var h = KernelFactory.Instance.Get<IHash>();
-            string fileHash = h.HashFile(path);
-
-            // Get DB Context
-            var fic = KernelFactory.Instance.Get<FileIndexContext>();
-
-            var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
-            //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
-
-            if (fic.Documents.Any(i => i.DocumentHash == fileHash)) 
-            {
-                fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
-                //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
-            }
-            else
-            {
-                var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length };
-                newDocument.DocPaths.Add(newPath);
-                //newDocument.DocEvents.Add(newEvent);
-                fic.Documents.Add(newDocument);
-            }
-
-            fic.SaveChanges();
-
-            // Register last read/write event times
             KernelFactory.Instance.Get<ICollector>().Register(path);
         }
-
     }
 }

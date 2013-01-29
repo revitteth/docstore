@@ -106,10 +106,12 @@
     <Compile Include="EncryptionAES.cs" />
     <Compile Include="EventCollector.cs" />
     <Compile Include="FrequentChecker.cs" />
+    <Compile Include="FrequentIndexer.cs" />
     <Compile Include="IEncryption.cs" />
     <Compile Include="IIndexChecker.cs" />
     <Compile Include="InitialIndexer.cs" />
     <Compile Include="DirectoryMonitor.cs" />
+    <Compile Include="ICollector.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
     <Compile Include="Models\Document.cs" />

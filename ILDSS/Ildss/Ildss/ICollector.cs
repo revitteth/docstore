@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ildss
 {
-    interface IIndexChecker
+    interface ICollector
     {
-        void RespondToEvent(string path, string type, string oldpath = "");
-        void MaintainDocuments();
+        void Collect(string path);
+        void Register(string path);
     }
 }

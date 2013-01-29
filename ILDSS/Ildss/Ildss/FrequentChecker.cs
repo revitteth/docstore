@@ -16,7 +16,7 @@ namespace Ildss
         List<DocPath> hashedPaths = new List<DocPath>();
         List<Document> removeDocs = new List<Document>();
 
-        public void CheckDatabase(string path, string type, string oldpath = "")
+        public void RespondToEvent(string path, string type, string oldpath = "")
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var hash = KernelFactory.Instance.Get<IHash>();
@@ -25,7 +25,6 @@ namespace Ildss
             {
                 case "Created":
                     // check db for matching hash
-                        // if found, check for matching path (can't really happen?!)
                     Console.WriteLine(path + " was created");
                     var fi = new FileInfo(path);
                     var fileHash = hash.HashFile(path);
@@ -44,6 +43,10 @@ namespace Ildss
                         fic.Documents.Add(doc);
                     }
                     fic.SaveChanges();
+
+                    // Register the event - only if NOT a directory?
+                    KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
+
                     break;
 
                 case "Renamed":
@@ -74,6 +77,11 @@ namespace Ildss
                         }
                         fic.SaveChanges();
                     }
+
+                    // Register the event - only if NOT a directory?
+                    fi = new FileInfo(path);
+                    KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
+
                     break;
 
                 case "Deleted":
@@ -166,9 +174,22 @@ namespace Ildss
                     }
     
                     fic.SaveChanges();
+
+                    // Register the event - only if NOT a directory?
+                    fi = new FileInfo(path);
+                    KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
+
                     break;
             }
 
+            MaintainDocuments();
+
+        }
+
+        public void MaintainDocuments()
+        {
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            var hash = KernelFactory.Instance.Get<IHash>();
             List<Document> docsToRemove = new List<Document>();
 
             // Possibly loop here to check for duplicate documents, copying paths into the docpaths table of one document.
@@ -181,7 +202,7 @@ namespace Ildss
                 }
                 else if (docu.DocumentHash == null)
                 {
-                    Console.WriteLine("it was null");
+                    Console.WriteLine("Document with null hash found (possibly file was open at time of attempted hash)");
                     docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().path);
                 }
             }
@@ -191,8 +212,8 @@ namespace Ildss
             }
             fic.SaveChanges();
             docsToRemove.Clear();
-            
         }
+        
 
     }
 }

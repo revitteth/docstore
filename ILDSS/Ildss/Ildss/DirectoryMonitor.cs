@@ -38,7 +38,7 @@ namespace Ildss
                         {
                             if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                             {
-                                fIndexer.CheckDatabase(pe.FullPath, "Created");
+                                fIndexer.RespondToEvent(pe.FullPath, "Created");
                             }
                         }
                     }
@@ -52,7 +52,7 @@ namespace Ildss
                     var pe = pattern.EventArgs;
                     if (!_ignoreFiles.Any(pe.Name.Contains) && pe.Name.Contains("."))
                     {
-                        fIndexer.CheckDatabase(pe.FullPath, "Deleted");
+                        fIndexer.RespondToEvent(pe.FullPath, "Deleted");
                     }
                 }
             );
@@ -65,7 +65,7 @@ namespace Ildss
                     var fi = new FileInfo(pe.FullPath);
                     if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                     {
-                        fIndexer.CheckDatabase(pe.FullPath, "Renamed", pe.OldFullPath);
+                        fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                     }
                     else
                     {
@@ -77,12 +77,12 @@ namespace Ildss
                         {
                             if (fi.FullName == _changedOffice)
                             {
-                                fIndexer.CheckDatabase(_changedOffice, "Changed");
+                                fIndexer.RespondToEvent(_changedOffice, "Changed");
                             }
                         }
                         else
                         {
-                            fIndexer.CheckDatabase(pe.FullPath, "Renamed", pe.OldFullPath);
+                            fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                         }
                     }
                 }
@@ -98,7 +98,7 @@ namespace Ildss
                     {
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
-                            fIndexer.CheckDatabase(pe.FullPath, "Changed");
+                            fIndexer.RespondToEvent(pe.FullPath, "Changed");
                         }
                     }
                 }
