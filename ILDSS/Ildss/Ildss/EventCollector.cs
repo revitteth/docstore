@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Ildss.Models;
+
 namespace Ildss
 {
     class EventCollector : ICollector

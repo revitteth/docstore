@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
+using Ildss.Models;
+
 namespace Ildss
 {
     public partial class Ildss : Form

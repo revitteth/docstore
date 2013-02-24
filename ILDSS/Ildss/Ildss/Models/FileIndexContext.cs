@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace Ildss
+namespace Ildss.Models
 {
     public class FileIndexContext : DbContext, IFileIndexContext
     {

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Ninject;
 using Ninject.Modules;
 
+using Ildss.Models;
+
 namespace Ildss
 {
     public class IldssModule : NinjectModule

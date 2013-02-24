@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Ildss.Models;
+
 namespace Ildss
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
