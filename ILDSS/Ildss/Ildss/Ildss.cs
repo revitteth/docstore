@@ -11,6 +11,7 @@ using System.IO;
 
 using Ildss.Models;
 using Ildss.Index;
+using Ildss.Storage;
 
 namespace Ildss
 {
@@ -108,6 +109,12 @@ namespace Ildss
             Task.Run(() =>
                 {
                    // KernelFactory.Instance.Get<>();
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                    foreach(var d in fic.DocPaths)
+                    {
+                        KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.path);
+                        Console.WriteLine("Succesfully Moved: " + d.name + " to storage");
+                    }
                 });
         }
 

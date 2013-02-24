@@ -8,5 +8,6 @@ namespace Ildss.Storage
 {
     public interface IStorage
     {
+        bool MoveToStorage(string path);
     }
 }

@@ -8,5 +8,10 @@ namespace Ildss.Storage
 {
     public class Glacier : IStorage
     {
+        public bool MoveToStorage(string path)
+        {
+            // move it
+            return true;
+        }
     }
 }
