@@ -1,5 +1,6 @@
 ﻿using System;
-namespace Ildss
+
+namespace Ildss.Index
 {
     public interface IIndexer
     {

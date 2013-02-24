@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Ildss;
+using Ildss.Crypto;
 
 namespace IldssTest
 {
@@ -20,7 +22,7 @@ namespace IldssTest
 
             
 
-            Ildss.EncryptionAES enc = new Ildss.EncryptionAES();
+            EncryptionAES enc = new EncryptionAES();
             enc.EncryptFile(filePath, newFile, false);
 
         }

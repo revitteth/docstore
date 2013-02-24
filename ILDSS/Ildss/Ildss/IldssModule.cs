@@ -7,6 +7,7 @@ using Ninject;
 using Ninject.Modules;
 
 using Ildss.Models;
+using Ildss.Index;
 
 namespace Ildss
 {

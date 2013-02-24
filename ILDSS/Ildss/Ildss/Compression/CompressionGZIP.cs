@@ -7,7 +7,7 @@ using System.IO.Compression;
 using System.IO;
 using System.Security.Permissions;
 
-namespace Ildss
+namespace Ildss.Compression
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public static class CompressionGZIP

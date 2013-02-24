@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Security.Permissions;
 
-namespace Ildss
+namespace Ildss.Crypto
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class EncryptionAES : IEncryption

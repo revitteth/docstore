@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 using Ildss.Models;
 
-namespace Ildss
+namespace Ildss.Index
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class FrequentChecker : IIndexChecker

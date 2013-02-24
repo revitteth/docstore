@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using Ildss.Models;
 
-namespace Ildss
+namespace Ildss.Index
 {
     class InitialIndexer : IIndexer
     {

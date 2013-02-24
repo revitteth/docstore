@@ -102,25 +102,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressionGZIP.cs" />
-    <Compile Include="EncryptionAES.cs" />
+    <Compile Include="Compression\CompressionGZIP.cs" />
+    <Compile Include="Crypto\EncryptionAES.cs" />
     <Compile Include="EventCollector.cs" />
-    <Compile Include="FrequentChecker.cs" />
-    <Compile Include="FrequentIndexer.cs" />
-    <Compile Include="IEncryption.cs" />
-    <Compile Include="IIndexChecker.cs" />
-    <Compile Include="InitialIndexer.cs" />
-    <Compile Include="DirectoryMonitor.cs" />
+    <Compile Include="Index\FrequentChecker.cs" />
+    <Compile Include="Index\FrequentIndexer.cs" />
+    <Compile Include="Crypto\IEncryption.cs" />
+    <Compile Include="Index\IIndexChecker.cs" />
+    <Compile Include="Index\InitialIndexer.cs" />
+    <Compile Include="Index\DirectoryMonitor.cs" />
     <Compile Include="ICollector.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
     <Compile Include="Models\Document.cs" />
     <Compile Include="Models\FileIndexContext.cs" />
-    <Compile Include="HashSHA512.cs" />
-    <Compile Include="IMonitor.cs" />
+    <Compile Include="Crypto\HashSHA512.cs" />
+    <Compile Include="Index\IMonitor.cs" />
     <Compile Include="Models\IFileIndexContext.cs" />
-    <Compile Include="IHash.cs" />
-    <Compile Include="IIndexer.cs" />
+    <Compile Include="Crypto\IHash.cs" />
+    <Compile Include="Index\IIndexer.cs" />
     <Compile Include="Ildss.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,11 +138,10 @@
     <Compile Include="Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Test.cs" />
-    <Compile Include="Test.Designer.cs">
-      <DependentUpon>Test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TestMonitor.cs" />
+    <Compile Include="Storage\Glacier.cs" />
+    <Compile Include="Storage\HardDrive.cs" />
+    <Compile Include="Storage\IStorage.cs" />
+    <Compile Include="Index\TestMonitor.cs" />
     <EmbeddedResource Include="Ildss.resx">
       <DependentUpon>Ildss.cs</DependentUpon>
     </EmbeddedResource>
@@ -157,9 +156,6 @@
     </Compile>
     <EmbeddedResource Include="Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Test.resx">
-      <DependentUpon>Test.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 using System.Security.Permissions;
 using System.Reactive.Linq;
 using System.Reactive;
 
-namespace Ildss
+using Ildss.Index;
+
+namespace Ildss.Index
 {
-    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-    public class DirectoryMonitor : IMonitor
+    class TestMonitor : IMonitor
     {
         private string _changedOffice = "";
         private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP" };
@@ -31,16 +32,11 @@ namespace Ildss
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!pe.Name.Contains(".tmp") && !pe.Name.Contains(".TMP"))
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        var fi = new FileInfo(pe.FullPath);
-                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
-                        {
-                            if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
-                            {
-                                fIndexer.RespondToEvent(pe.FullPath, "Created");
-                            }
-                        }
+                        var finfomaniac = new FileInfo(pe.FullPath);
+                        Console.WriteLine(pe.Name + " Created");
                     }
                 }
             );
@@ -50,9 +46,10 @@ namespace Ildss
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!_ignoreFiles.Any(pe.Name.Contains) && pe.Name.Contains("."))
+                    var fi = new FileInfo(pe.FullPath);
+                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        fIndexer.RespondToEvent(pe.FullPath, "Deleted");
+                        Console.WriteLine(pe.Name + " Deleted");
                     }
                 }
             );
@@ -63,27 +60,29 @@ namespace Ildss
                 {
                     var pe = pattern.EventArgs;
                     var fi = new FileInfo(pe.FullPath);
-                    if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
+                    if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                     {
-                        fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                        _changedOffice = pe.OldFullPath;
+                        Console.WriteLine("Saving old office name " + pe.OldName);
+                        //Console.WriteLine(pe.OldName + " Renamed to " + pe.Name);
                     }
-                    else
+                    else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
                     {
-                        if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
+                        if (fi.FullName == _changedOffice)
                         {
-                            _changedOffice = pe.OldFullPath;
-                        }
-                        else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
-                        {
-                            if (fi.FullName == _changedOffice)
-                            {
-                                fIndexer.RespondToEvent(_changedOffice, "Changed");
-                            }
+                            // it was just an update to a file which saves using temp files
+                            // call changed event on the file.
+                            Console.WriteLine("changed a temp saver: " + _changedOffice);
                         }
                         else
                         {
-                            fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                            Console.WriteLine("weird: " + _changedOffice + " -- " + fi.Name);
                         }
+                    }
+                    else
+                    {
+                        // conventional rename
+                        Console.WriteLine(pe.OldName + " Renamed to " + pe.Name);
                     }
                 }
             );
@@ -96,10 +95,7 @@ namespace Ildss
                     var fi = new FileInfo(pe.FullPath);
                     if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
                     {
-                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
-                        {
-                            fIndexer.RespondToEvent(pe.FullPath, "Changed");
-                        }
+                        Console.WriteLine("Changed: " + pe.Name);
                     }
                 }
             );

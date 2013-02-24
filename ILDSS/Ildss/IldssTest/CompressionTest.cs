@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ildss;
 using System.IO;
+
+using Ildss;
+using Ildss.Compression;
 
 namespace IldssTest
 {

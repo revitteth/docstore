@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ildss
+namespace Ildss.Index
 {
     interface IMonitor
     {
