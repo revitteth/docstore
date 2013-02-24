@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
-namespace Ildss
+namespace Ildss.Interface
 {
     public partial class Setup : Form
     {
@@ -43,7 +43,7 @@ namespace Ildss
                 //call the indexer asynchronously
 
                 this.Hide();
-                Ildss ildss = new Ildss();
+                Main ildss = new Main();
                 ildss.ShowDialog();
                 this.Close();
             }
@@ -84,6 +84,11 @@ namespace Ildss
             {
                 textBox1.Text = folderBrowserDialog1.SelectedPath;
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

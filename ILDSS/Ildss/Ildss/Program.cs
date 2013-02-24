@@ -8,6 +8,8 @@ using Ninject;
 using Ninject.Modules;
 using System.Data.Entity;
 
+using Ildss.Interface;
+
 namespace Ildss
 {
     static class Program
@@ -31,7 +33,7 @@ namespace Ildss
             else
             {                
                 // Run dashboard GUI
-                Application.Run(new Ildss());
+                Application.Run(new Main());
             }
         }
 

@@ -23,14 +23,18 @@ namespace Ildss.Storage
                 }
 
                 // copy file to the storage path
-                File.Copy(fi.FullName, newDir + fi.Name, true);
+                File.Copy(fi.FullName, newDir + fi.Name, false);
 
                 return true;
             }
-            catch (Exception e)
+            catch (IOException e)
             {
-                Console.WriteLine("Failure writing file");
-                //add it to a try again list?
+                Console.WriteLine("File already exists");
+                // in this case - do we do incremental?
+                return false;
+            }
+            catch (Exception e)
+                Console.WriteLine("File upload failure");
                 return false;
             }
         }

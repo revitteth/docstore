@@ -13,11 +13,11 @@ using Ildss.Models;
 using Ildss.Index;
 using Ildss.Storage;
 
-namespace Ildss
+namespace Ildss.Interface
 {
-    public partial class Ildss : Form
+    public partial class Main : Form
     {
-        public Ildss()
+        public Main()
         {
             InitializeComponent();
         }
@@ -31,8 +31,8 @@ namespace Ildss
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
-                //notifyTray.Visible = true;
-                //notifyTray.ShowBalloonTip(500);
+                notifyTray.Visible = true;
+                notifyTray.ShowBalloonTip(500);
                 this.Hide();
 
                 notifyTray.BalloonTipTitle = "APP Hidden";
@@ -108,9 +108,9 @@ namespace Ildss
         {
             Task.Run(() =>
                 {
-                   // KernelFactory.Instance.Get<>();
+                    // KernelFactory.Instance.Get<>();
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                    foreach(var d in fic.DocPaths)
+                    foreach (var d in fic.DocPaths)
                     {
                         KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.path);
                         Console.WriteLine("Succesfully Moved: " + d.name + " to storage");

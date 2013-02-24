@@ -121,29 +121,29 @@
     <Compile Include="Models\IFileIndexContext.cs" />
     <Compile Include="Crypto\IHash.cs" />
     <Compile Include="Index\IIndexer.cs" />
-    <Compile Include="Ildss.cs">
+    <Compile Include="Interface\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Ildss.Designer.cs">
-      <DependentUpon>Ildss.cs</DependentUpon>
+    <Compile Include="Interface\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="IldssModule.cs" />
     <Compile Include="KernelFactory.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Setup.cs">
+    <Compile Include="Interface\Setup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Setup.Designer.cs">
+    <Compile Include="Interface\Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
     <Compile Include="Storage\Glacier.cs" />
     <Compile Include="Storage\HardDrive.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Index\TestMonitor.cs" />
-    <EmbeddedResource Include="Ildss.resx">
-      <DependentUpon>Ildss.cs</DependentUpon>
+    <EmbeddedResource Include="Interface\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -154,7 +154,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Setup.resx">
+    <EmbeddedResource Include="Interface\Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

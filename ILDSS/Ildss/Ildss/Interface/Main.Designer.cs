@@ -1,6 +1,6 @@
-﻿namespace Ildss
+﻿namespace Ildss.Interface
 {
-    partial class Ildss
+    partial class Main
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ildss));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.lblDirectory = new System.Windows.Forms.Label();
             this.DirectorySelect = new System.Windows.Forms.FolderBrowserDialog();
             this.lblDirectoryOutput = new System.Windows.Forms.Label();
