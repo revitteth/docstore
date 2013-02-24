@@ -22,6 +22,7 @@ namespace Ildss
         public void Register(string path)
         {
             // if it is unique (TODO: build a comparer) add it to database
+            // Exception being thrown on line 30 - work out what to do with directory events
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var fi = new FileInfo(path);
             fi.Refresh();
