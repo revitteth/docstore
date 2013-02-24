@@ -1,5 +1,6 @@
 ﻿using System;
-namespace Ildss
+
+namespace Ildss.Crypto
 {
     public interface IHash
     {

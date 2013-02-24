@@ -26,16 +26,17 @@ namespace Ildss
             }
             else
             {
-                txtDirectory.Text = @"F:\TestDir";
+                txtDirectory.Text = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
             }
         }
 
         private void btnFinishSetup_Click(object sender, EventArgs e)
         {
             // Check directory path is valid
-            if (System.IO.Directory.Exists(txtDirectory.Text))
+            if (Directory.Exists(txtDirectory.Text) && Directory.Exists(textBox1.Text))
             {
                 Properties.Settings.Default.directory = txtDirectory.Text;
+                Properties.Settings.Default.storageDir = textBox1.Text;
                 Properties.Settings.Default.firstrun = false; 
                 Properties.Settings.Default.Save();
 
@@ -50,7 +51,6 @@ namespace Ildss
             {
                 MessageBox.Show("Please enter a valid directory");
             }
-
         }
 
         private void btnDirectory_Click(object sender, EventArgs e)
@@ -71,6 +71,19 @@ namespace Ildss
         {
             txtDirectory.Text = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
             btnFinishSetup_Click(sender, e);
+        }
+
+        private void dialogDirectoryBrowser_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBox1.Text = folderBrowserDialog1.SelectedPath;
+            }
         }
     }
 }

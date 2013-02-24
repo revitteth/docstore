@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ildss.Storage
 {
-    class HardDrive : IStorage
+    public class HardDrive : IStorage
     {
+        
     }
 }

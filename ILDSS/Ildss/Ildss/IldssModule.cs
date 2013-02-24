@@ -8,6 +8,7 @@ using Ninject.Modules;
 
 using Ildss.Models;
 using Ildss.Index;
+using Ildss.Crypto;
 
 namespace Ildss
 {

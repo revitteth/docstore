@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ildss.Storage
 {
-    class Glacier : IStorage
+    public class Glacier : IStorage
     {
     }
 }

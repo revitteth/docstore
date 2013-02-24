@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ildss.Storage
 {
-    interface IStorage
+    public interface IStorage
     {
     }
 }
