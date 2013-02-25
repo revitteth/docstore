@@ -108,12 +108,13 @@ namespace Ildss.Interface
         {
             Task.Run(() =>
                 {
+                    // Thread problem - write all into a list, release fic then process them
                     // KernelFactory.Instance.Get<>();
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                    foreach (var d in fic.DocPaths)
+                    foreach (var d in fic.Documents)
                     {
-                        KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.path);
-                        Console.WriteLine("Succesfully Moved: " + d.name + " to storage");
+                        Console.WriteLine("Moving: " + d.DocPaths.First().name + " to storage");
+                        KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.DocPaths.First().path, d.DocumentHash);
                     }
                 });
         }

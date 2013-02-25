@@ -12,7 +12,7 @@ namespace Ildss.Compression
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public static class CompressionGZIP
     {
-        public static void Compress(FileInfo fileToCompress)
+        public static FileInfo Compress(FileInfo fileToCompress)
         {
             using (FileStream originalFileStream = fileToCompress.OpenRead())
             {
@@ -25,9 +25,11 @@ namespace Ildss.Compression
                             originalFileStream.CopyTo(compressionStream);
                             Console.WriteLine("Compressed {0} from {1} to {2} bytes.",
                                 fileToCompress.Name, fileToCompress.Length.ToString(), compressedFileStream.Length.ToString());
+                            return new FileInfo(fileToCompress.FullName + ".gz");
                         }
                     }
                 }
+                return null;
             }
         }
 

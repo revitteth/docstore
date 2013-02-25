@@ -29,7 +29,7 @@ namespace Ildss.Crypto
             _iv = _aes.IV;
         }
 
-        public bool EncryptFile(string inFile, string outFile, bool compress = false)
+        public FileInfo EncryptFile(string inFile, string outFile, bool compress = false)
         {
             // Set up object instance
             _inFile = inFile;
@@ -42,7 +42,7 @@ namespace Ildss.Crypto
             try
             {
                 infs = new FileStream(_inFile, FileMode.Open);
-                outfs = new FileStream(_inFile + _extension, FileMode.OpenOrCreate);
+                outfs = new FileStream(_outFile + _extension, FileMode.OpenOrCreate);
                 cryptoStream = new CryptoStream(outfs, _aes.CreateEncryptor(), CryptoStreamMode.Write);
                 infs.CopyTo(cryptoStream);
             }
@@ -59,7 +59,7 @@ namespace Ildss.Crypto
                 if (_aes != null)
                     _aes.Clear();
             }
-            return true;
+            return new FileInfo(outFile);
         }
 
         public bool DecryptFile(string inFile, string outFile)

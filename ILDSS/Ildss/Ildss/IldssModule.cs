@@ -25,7 +25,7 @@ namespace Ildss
             //this.Bind<IMonitor>().To<TestMonitor>().InSingletonScope();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             this.Bind<ICollector>().To<EventCollector>().InSingletonScope();
-            this.Bind<IStorage>().To<HardDrive>().InSingletonScope();
+            this.Bind<IStorage>().To<HardDrive>();
         }
     }
 }
