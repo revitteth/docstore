@@ -119,5 +119,17 @@ namespace Ildss.Interface
                 });
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+                foreach (var d in fic.Documents)
+                {
+                    KernelFactory.Instance.Get<IStorage>().RetrieveFromStorage(d.DocPaths.First().path, d.DocumentHash);
+                }
+            });
+        }
+
     }
 }

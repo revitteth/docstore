@@ -33,12 +33,12 @@ namespace Ildss.Compression
             }
         }
 
-        public static void Decompress(FileInfo fileToDecompress)
+        public static FileInfo Decompress(FileInfo fileToDecompress)
         {
             using (FileStream originalFileStream = fileToDecompress.OpenRead())
             {
                 string currentFileName = fileToDecompress.FullName;
-                string newFileName = currentFileName.Remove(currentFileName.Length - fileToDecompress.Extension.Length);
+                string newFileName = currentFileName + ".decompressed";
 
                 using (FileStream decompressedFileStream = File.Create(newFileName))
                 {
@@ -46,6 +46,7 @@ namespace Ildss.Compression
                     {
                         decompressionStream.CopyTo(decompressedFileStream);
                         Console.WriteLine("Decompressed: {0}", fileToDecompress.Name);
+                        return new FileInfo(newFileName);
                     }
                 }
             }

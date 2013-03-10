@@ -17,14 +17,15 @@ namespace Ildss.Storage
             try
             {
                 var fi = new FileInfo(path);
-                var newDir = Properties.Settings.Default.storageDir;
+                var storageDir = Properties.Settings.Default.storageDir;
 
                 // zip it
                 var compFi = CompressionGZIP.Compress(fi);
                 Console.WriteLine(compFi.FullName);
-                // copy file to the storage path
-                File.Copy(compFi.FullName, Path.Combine(newDir, hash), false);
-                //File.Delete(compFi.FullName);
+                // copy file to the storage path (no overwrite)
+                File.Copy(compFi.FullName, Path.Combine(storageDir, hash), false);
+                File.Delete(compFi.FullName);
+                File.Delete(fi.FullName);
                 Console.WriteLine("Succes, " + fi.Name + " was compressed, and moved");
                 return true;
             }
@@ -39,6 +40,27 @@ namespace Ildss.Storage
                 Console.WriteLine("File upload failure");
                 return false;
             }
+        }
+
+        public bool RetrieveFromStorage(string path, string hash)
+        {
+            // find the file by hash
+            var storageDir = Properties.Settings.Default.storageDir;
+            var fi = new FileInfo(Path.Combine(storageDir, hash));
+            Console.WriteLine("Retrieve file from: " + fi.FullName);
+
+            // decompress it and move it back
+            var decompFi = CompressionGZIP.Decompress(fi);
+            Console.WriteLine(decompFi.FullName);
+            File.Copy(decompFi.FullName, path);
+            // delete the decompressed temp file (in glacier this will be much harder to do!)
+            //File.Delete(decompFi.FullName);
+            // get the last read/write times from events table
+            // set them
+
+            // present all paths - ask which location the user wants to put the file back in (check boxes)
+
+            return true;
         }
     }
 }

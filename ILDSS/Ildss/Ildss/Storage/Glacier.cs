@@ -13,5 +13,10 @@ namespace Ildss.Storage
             // move it
             return true;
         }
+
+        public bool RetrieveFromStorage(string path, string hash)
+        {
+            return true;
+        }
     }
 }
