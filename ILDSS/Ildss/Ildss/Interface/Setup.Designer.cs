@@ -58,7 +58,7 @@
             this.txtDirectory.Name = "txtDirectory";
             this.txtDirectory.Size = new System.Drawing.Size(250, 20);
             this.txtDirectory.TabIndex = 1;
-            this.txtDirectory.Text = "C:\\Users\\Max\\Documents\\GitHub\\docstore\\TestDir";
+            this.txtDirectory.Text = "E:\\TestDir";
             // 
             // btnDirectory
             // 
@@ -111,7 +111,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(250, 20);
             this.textBox1.TabIndex = 6;
-            this.textBox1.Text = "D:\\ILDSS";
+            this.textBox1.Text = "E:\\Desktop\\ildss";
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1

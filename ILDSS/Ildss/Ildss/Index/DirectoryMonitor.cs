@@ -17,7 +17,7 @@ namespace Ildss.Index
     public class DirectoryMonitor : IMonitor
     {
         private string _changedOffice = "";
-        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP" };
+        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP", ".gz", ".ini" };
 
         public void Monitor (string path)
         {
@@ -33,7 +33,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!pe.Name.Contains(".tmp") && !pe.Name.Contains(".TMP"))
+                    if (!_ignoreFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         var fi = new FileInfo(pe.FullPath);
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
@@ -52,7 +52,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!_ignoreFiles.Any(pe.Name.Contains) && pe.Name.Contains("."))
+                    if (!_ignoreFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         fIndexer.RespondToEvent(pe.FullPath, "Deleted");
                     }
@@ -96,7 +96,7 @@ namespace Ildss.Index
                 {
                     var pe = pattern.EventArgs;
                     var fi = new FileInfo(pe.FullPath);
-                    if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
+                    if (!_ignoreFiles.Any(pe.Name.Contains) & fi.Extension != "")
                     {
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {

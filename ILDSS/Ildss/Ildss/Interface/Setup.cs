@@ -26,7 +26,7 @@ namespace Ildss.Interface
             }
             else
             {
-                txtDirectory.Text = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+                //txtDirectory.Text = @"E:\Desktop\ildss";
             }
         }
 

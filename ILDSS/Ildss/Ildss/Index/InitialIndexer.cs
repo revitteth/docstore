@@ -12,11 +12,18 @@ namespace Ildss.Index
 {
     class InitialIndexer : IIndexer
     {
-        private List<DocPath> nullDocPaths = new List<DocPath>();
+        private List<DocPath> _nullDocPaths = new List<DocPath>();
+        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP", ".gz", ".ini" };
 
         public void IndexFiles(string path)
         {
-            if (System.IO.File.Exists(path))
+            FileInfo fi = new FileInfo(path);
+            if (!_ignoreFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
+            {
+                Console.WriteLine("ignoreFile found in MAIN INDEXER");
+            }
+
+            if (System.IO.File.Exists(path) & !_ignoreFiles.Any(fi.Name.Contains))
             {
                 IndexFile(path);
             }
@@ -46,33 +53,37 @@ namespace Ildss.Index
             var fi = new FileInfo(path);
             fi.Refresh();
 
-            // Hash File
-            var h = KernelFactory.Instance.Get<IHash>();
-            string fileHash = h.HashFile(path);
-
-            // Get DB Context
-            var fic = KernelFactory.Instance.Get<FileIndexContext>();
-
-            var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
-            //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
-
-            if (fic.Documents.Any(i => i.DocumentHash == fileHash)) 
+            if (!_ignoreFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
-                fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
-                //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
-            }
-            else
-            {
-                var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length };
-                newDocument.DocPaths.Add(newPath);
-                //newDocument.DocEvents.Add(newEvent);
-                fic.Documents.Add(newDocument);
-            }
 
-            fic.SaveChanges();
+                // Hash File
+                var h = KernelFactory.Instance.Get<IHash>();
+                string fileHash = h.HashFile(path);
 
-            // Register last read/write event times
-            KernelFactory.Instance.Get<ICollector>().Register(path);
+                // Get DB Context
+                var fic = KernelFactory.Instance.Get<FileIndexContext>();
+
+                var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
+                //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
+
+                if (fic.Documents.Any(i => i.DocumentHash == fileHash))
+                {
+                    fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
+                    //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
+                }
+                else
+                {
+                    var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "current" };
+                    newDocument.DocPaths.Add(newPath);
+                    //newDocument.DocEvents.Add(newEvent);
+                    fic.Documents.Add(newDocument);
+                }
+
+                fic.SaveChanges();
+
+                // Register last read/write event times
+                KernelFactory.Instance.Get<ICollector>().Register(path);
+            }
         }
 
     }

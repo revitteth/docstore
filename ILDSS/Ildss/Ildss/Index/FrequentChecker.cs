@@ -37,11 +37,12 @@ namespace Ildss.Index
                     {
                         // hash exists
                         fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(docpath);
+                        fic.Documents.First(i => i.DocumentHash == fileHash).status = "indexed";
                     }
                     else
                     {
                         // new document + path
-                        var doc = new Document() { DocumentHash = fileHash, size = fi.Length };
+                        var doc = new Document() { DocumentHash = fileHash, size = fi.Length, status = "current" };
                         doc.DocPaths.Add(docpath);
                         fic.Documents.Add(doc);
                     }

@@ -21,8 +21,7 @@ namespace Ildss
             this.Bind<IIndexer>().To<FrequentIndexer>().InSingletonScope().Named("Frequent");
             this.Bind<IIndexChecker>().To<FrequentChecker>();
             this.Bind<IHash>().To<HashSHA512>();
-            this.Bind<IFileIndexContext>().To<FileIndexContext>().InSingletonScope();
-            //this.Bind<IMonitor>().To<TestMonitor>().InSingletonScope();
+            this.Bind<IFileIndexContext>().To<FileIndexContext>();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             this.Bind<ICollector>().To<EventCollector>().InSingletonScope();
             this.Bind<IStorage>().To<HardDrive>();

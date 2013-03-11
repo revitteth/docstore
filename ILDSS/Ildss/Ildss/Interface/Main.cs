@@ -113,7 +113,7 @@ namespace Ildss.Interface
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
                     foreach (var d in fic.Documents)
                     {
-                        Console.WriteLine("Moving: " + d.DocPaths.First().name + " to storage");
+                        Console.WriteLine("Moving: " + d.DocumentHash + " to storage");
                         KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.DocPaths.First().path, d.DocumentHash);
                     }
                 });

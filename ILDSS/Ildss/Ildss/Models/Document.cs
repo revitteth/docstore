@@ -18,6 +18,7 @@ namespace Ildss.Models
         public int DocumentId { get; set; }
         public string DocumentHash { get; set; }
         public long size { get; set; }
+        public string status { get; set; }
 
         public virtual ICollection<DocPath> DocPaths { get; set; }
         public virtual ICollection<DocEvent> DocEvents { get; set; }

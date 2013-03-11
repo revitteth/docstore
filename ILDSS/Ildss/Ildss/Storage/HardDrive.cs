@@ -27,6 +27,7 @@ namespace Ildss.Storage
                 File.Delete(compFi.FullName);
                 File.Delete(fi.FullName);
                 Console.WriteLine("Succes, " + fi.Name + " was compressed, and moved");
+                Console.WriteLine("New path: " + Path.Combine(storageDir, hash));
                 return true;
             }
             catch (IOException e)
