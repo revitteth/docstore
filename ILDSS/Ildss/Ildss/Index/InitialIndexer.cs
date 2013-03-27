@@ -13,7 +13,7 @@ namespace Ildss.Index
     class InitialIndexer : IIndexer
     {
         private List<DocPath> _nullDocPaths = new List<DocPath>();
-        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP", ".gz", ".ini" };
+        private IList<string> _ignoreFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
 
         public void IndexFiles(string path)
         {

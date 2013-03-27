@@ -17,7 +17,7 @@ namespace Ildss.Index
     public class DirectoryMonitor : IMonitor
     {
         private string _changedOffice = "";
-        private List<string> _ignoreFiles = new List<string> { ".tmp", ".TMP", ".gz", ".ini" };
+        private IList<string> _ignoreFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
 
         public void Monitor (string path)
         {
