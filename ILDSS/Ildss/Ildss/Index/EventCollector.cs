@@ -28,19 +28,20 @@ namespace Ildss.Index
             // Don't register events for directories
             if (!(File.GetAttributes(fi.FullName) == FileAttributes.Directory))
             {
-
+                Console.WriteLine(fi.FullName + " " + path);
                 var docu = fic.DocPaths.First(i => i.path == path).Document;
 
                 // Check read events
                 if (fic.DocEvents.Any(i => i.type == "Read" && i.DocumentId == docu.DocumentId))
                 {
                     var recentRead = fic.DocEvents.OrderByDescending(i => i.time).First(j => j.type == "Read");
-                    if (DateTime.Compare(recentRead.time, fi.LastAccessTime) < 0)
+                    if (DateTime.Compare(recentRead.time, fi.LastAccessTime.AddMilliseconds(-fi.LastAccessTime.Millisecond)) < 0)
                     {
                         // add a new read event to the document if file's last access is bigger than last access in DB
                         var readEvent = new DocEvent() { time = fi.LastAccessTime, type = "Read" };
                         docu.DocEvents.Add(readEvent);
-                        Console.WriteLine("More recent read added");
+                        Console.WriteLine("More recent read added " + DateTime.Compare(recentRead.time, fi.LastAccessTime)
+                            + " " + recentRead.time + " " + fi.LastAccessTime);
                     }
                 }
                 else

@@ -17,7 +17,7 @@ namespace Ildss.Index
     public class DirectoryMonitor : IMonitor
     {
         private string _changedOffice = "";
-        private IList<string> _ignoreFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
 
         public void Monitor (string path)
         {
@@ -33,12 +33,12 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!_ignoreFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
+                    if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         var fi = new FileInfo(pe.FullPath);
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
-                            if (!_ignoreFiles.Any(pe.Name.Contains) && fi.Extension != "")
+                            if (!_ignoredFiles.Any(pe.Name.Contains) && fi.Extension != "")
                             {
                                 fIndexer.RespondToEvent(pe.FullPath, "Created");
                             }
@@ -52,7 +52,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    if (!_ignoreFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
+                    if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         fIndexer.RespondToEvent(pe.FullPath, "Deleted");
                     }
@@ -71,11 +71,11 @@ namespace Ildss.Index
                     }
                     else
                     {
-                        if (_ignoreFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
+                        if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                         {
                             _changedOffice = pe.OldFullPath;
                         }
-                        else if (_ignoreFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
+                        else if (_ignoredFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
                         {
                             if (fi.FullName == _changedOffice)
                             {
@@ -96,7 +96,7 @@ namespace Ildss.Index
                 {
                     var pe = pattern.EventArgs;
                     var fi = new FileInfo(pe.FullPath);
-                    if (!_ignoreFiles.Any(pe.Name.Contains) & fi.Extension != "")
+                    if (!_ignoredFiles.Any(pe.Name.Contains) & fi.Extension != "")
                     {
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {

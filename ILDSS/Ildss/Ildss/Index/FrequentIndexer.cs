@@ -5,10 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Ildss.Properties;
+
 namespace Ildss.Index
 {
     class FrequentIndexer : IIndexer
     {
+        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+
         public void IndexFiles(string path)
         {
             if (System.IO.File.Exists(path))
@@ -39,7 +43,11 @@ namespace Ildss.Index
         public void IndexFile(string path)
         {
             var fi = new FileInfo(path);
-            KernelFactory.Instance.Get<ICollector>().Register(path);
+
+            if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
+            {
+                KernelFactory.Instance.Get<ICollector>().Register(path);
+            }
         }
     }
 }

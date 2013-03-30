@@ -13,17 +13,17 @@ namespace Ildss.Index
     class InitialIndexer : IIndexer
     {
         private List<DocPath> _nullDocPaths = new List<DocPath>();
-        private IList<string> _ignoreFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
 
         public void IndexFiles(string path)
         {
             FileInfo fi = new FileInfo(path);
-            if (!_ignoreFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
+            if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
                 Console.WriteLine("ignoreFile found in MAIN INDEXER");
             }
 
-            if (System.IO.File.Exists(path) & !_ignoreFiles.Any(fi.Name.Contains))
+            if (System.IO.File.Exists(path) & !_ignoredFiles.Any(fi.Name.Contains))
             {
                 IndexFile(path);
             }
@@ -53,7 +53,7 @@ namespace Ildss.Index
             var fi = new FileInfo(path);
             fi.Refresh();
 
-            if (!_ignoreFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
+            if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
 
                 // Hash File
