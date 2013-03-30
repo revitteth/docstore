@@ -117,6 +117,7 @@
     <Compile Include="Index\DirectoryMonitor.cs" />
     <Compile Include="Index\ICollector.cs" />
     <Compile Include="ISettings.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
