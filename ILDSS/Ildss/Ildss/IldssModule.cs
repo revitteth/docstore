@@ -24,7 +24,7 @@ namespace Ildss
             this.Bind<IFileIndexContext>().To<FileIndexContext>();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             this.Bind<ICollector>().To<EventCollector>().InSingletonScope();
-            this.Bind<IStorage>().To<HardDrive>();
+            this.Bind<IStorage>().To<LocalStorage>();
             this.Bind<ISettings>().To<Settings>().InSingletonScope();
         }
     }

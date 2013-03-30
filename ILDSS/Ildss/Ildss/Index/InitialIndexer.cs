@@ -73,7 +73,7 @@ namespace Ildss.Index
                 }
                 else
                 {
-                    var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "current" };
+                    var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
                     newDocument.DocPaths.Add(newPath);
                     //newDocument.DocEvents.Add(newEvent);
                     fic.Documents.Add(newDocument);

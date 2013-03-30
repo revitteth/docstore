@@ -81,6 +81,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.0.21114\lib\Net45\System.Reactive.Core.dll</HintPath>
     </Reference>
@@ -143,9 +144,8 @@
     <Compile Include="Interface\Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Storage\Glacier.cs" />
-    <Compile Include="Storage\HardDrive.cs" />
     <Compile Include="Storage\IStorage.cs" />
+    <Compile Include="Storage\LocalStorage.cs" />
     <EmbeddedResource Include="Interface\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

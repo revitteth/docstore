@@ -8,7 +8,7 @@ namespace Ildss
 {
     public class Settings : ISettings
     {
-        // File extensions to be ignored by file indexer
+        // File extensions to be ignored
         public IList<string> ignoredExtensions { get; set; }
 
         // Constructor

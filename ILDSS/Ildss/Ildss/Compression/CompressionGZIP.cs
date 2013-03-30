@@ -23,13 +23,14 @@ namespace Ildss.Compression
                         using (GZipStream compressionStream = new GZipStream(compressedFileStream, CompressionMode.Compress))
                         {
                             originalFileStream.CopyTo(compressionStream);
-                            Console.WriteLine("Compressed {0} from {1} to {2} bytes.",
-                                fileToCompress.Name, fileToCompress.Length.ToString(), compressedFileStream.Length.ToString());
                             return new FileInfo(fileToCompress.FullName + ".gz");
                         }
                     }
                 }
-                return null;
+                else
+                {
+                    throw new Exception();
+                }
             }
         }
 

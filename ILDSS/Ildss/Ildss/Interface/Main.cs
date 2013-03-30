@@ -88,29 +88,13 @@ namespace Ildss.Interface
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            Task.Run(() =>
-                {
-                    // Thread problem - write all into a list, release fic then process them
-                    // KernelFactory.Instance.Get<>();
-                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                    foreach (var d in fic.Documents)
-                    {
-                        Console.WriteLine("Moving: " + d.DocumentHash + " to storage");
-                        KernelFactory.Instance.Get<IStorage>().MoveToStorage(d.DocPaths.First().path, d.DocumentHash);
-                    }
-                });
+            // needs rewriting
+            KernelFactory.Instance.Get<IStorage>().Store();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Task.Run(() =>
-            {
-                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                foreach (var d in fic.Documents)
-                {
-                    KernelFactory.Instance.Get<IStorage>().RetrieveFromStorage(d.DocPaths.First().path, d.DocumentHash);
-                }
-            });
+            // needs rewriting
         }
 
     }

@@ -8,7 +8,7 @@ namespace Ildss.Storage
 {
     public interface IStorage
     {
-        bool MoveToStorage(string path, string hash);
-        bool RetrieveFromStorage(string path, string hash);
+        void Store();
+        void Retrieve();
     }
 }
