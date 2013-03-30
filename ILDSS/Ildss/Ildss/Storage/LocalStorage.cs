@@ -37,25 +37,37 @@ namespace Ildss.Storage
                 var fic = KernelFactory.Instance.Get<IFileIndexContext>();
                 var toStore = fic.Documents.Where(i => i.status == "Indexed").ToList();
 
-                foreach (var doc in toStore)
+                if (toStore.Count() > 0)
                 {
-                    // move to tmp
-                    var d = new FileInfo(doc.DocPaths.First().path);
-                    d.CopyTo(tmp + doc.DocumentHash);
+                    foreach (var doc in toStore)
+                    {
+                        // move to tmp
+                        var d = new FileInfo(doc.DocPaths.First().path);
+                        d.CopyTo(tmp + doc.DocumentHash);
 
+                    }
+
+                    //zip up the tmp
+                    var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy") + ".zip");
+                    ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
+
+                    // move it to storage
+                    zipFile.CopyTo(Path.Combine(storageDir, zipFile.Name));
+
+
+                    // set all database docs to be "Current"
+                    foreach (var doc in toStore)
+                    {
+                        doc.status = "Current";
+                    }
+                    fic.SaveChanges();
+
+
+                    // clean up
+                    // empty ildss directory
+                    Directory.Delete(ildssDir, true);
+                    Directory.CreateDirectory(ildssDir);
                 }
-
-                //zip up the tmp
-                var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy") + ".zip");
-                ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
-
-                // move it to storage
-                zipFile.CopyTo(Path.Combine(storageDir, zipFile.Name));
-
-                // clean up
-                // empty ildss directory
-                Directory.Delete(ildssDir, true);
-                Directory.CreateDirectory(ildssDir);
             }
             catch (IOException e)
             {
