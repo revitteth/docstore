@@ -65,6 +65,9 @@
     <StartupObject>Ildss.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Apex.WinForms">
+      <HintPath>..\packages\SharpShellTools.1.6.0\lib\Apex.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -74,8 +77,12 @@
     <Reference Include="Ninject.MockingKernel">
       <HintPath>..\packages\Ninject.MockingKernel.3.0.0.5\lib\net45-full\Ninject.MockingKernel.dll</HintPath>
     </Reference>
-    <Reference Include="SharpShell">
-      <HintPath>..\packages\SharpShell.1.5.0\lib\SharpShell.dll</HintPath>
+    <Reference Include="ServerManager">
+      <HintPath>..\packages\SharpShellTools.1.6.0\lib\ServerManager.exe</HintPath>
+    </Reference>
+    <Reference Include="SharpShell, Version=1.6.0.0, Culture=neutral, PublicKeyToken=f14dc899472fe6fb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SharpShellTools.1.6.0\lib\SharpShell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -144,6 +151,7 @@
     <Compile Include="Interface\Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Shell\ShellExtension.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Storage\LocalStorage.cs" />
     <EmbeddedResource Include="Interface\Main.resx">
