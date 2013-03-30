@@ -23,7 +23,6 @@ namespace Ildss
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-
             if (Properties.Settings.Default.firstrun)
             {
                 // Run setup GUI
@@ -35,6 +34,7 @@ namespace Ildss
                 // Run dashboard GUI
                 Application.Run(new Main());
             }
+            Logger.save();
         }
 
     }

@@ -20,7 +20,7 @@ namespace Ildss.Index
             FileInfo fi = new FileInfo(path);
             if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
-                Console.WriteLine("ignoreFile found in MAIN INDEXER");
+                Logger.write("InitialIndexer: File with ignored extension found " + fi.FullName);
             }
 
             if (System.IO.File.Exists(path) & !_ignoredFiles.Any(fi.Name.Contains))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,27 +8,17 @@ using System.Threading.Tasks;
 
 namespace Ildss
 {
-    class Logger
+    static class Logger
     {
-        private IList<string> _log;
+        static private List<string> _log = new List<string>();
 
-        public Logger()
+        static public void write(string line)
         {
-
+            _log.Add(DateTime.Now.ToString("hh:mm:ss") + "  " + new StackFrame(1).GetMethod().ReflectedType + "  " + line);
+            save();
         }
 
-        public void write(string line)
-        {
-            _log.Add(line);
-        }
-
-        public void writePrint(string line)
-        {
-            _log.Add(line);
-            Console.WriteLine(line);
-        }
-
-        public void print()
+        static public void print()
         {
             foreach (var line in _log)
             {
@@ -35,14 +26,26 @@ namespace Ildss
             }
         }
 
-        public void save()
+        static public void save()
         {
-            StreamWriter logFile = new StreamWriter("log-" + DateTime.Now.ToString() + ".txt");
+            StreamWriter logFile;
+
+            if (!File.Exists("log.txt"))
+            {
+                logFile = new StreamWriter("log.txt");
+            }
+            else
+            {
+                logFile = File.AppendText("log.txt");
+            }
+
             foreach (var line in _log)
             {
                 logFile.WriteLine(line);
             }
+
             logFile.Close();
+            _log.Clear();
         }
     }
 }

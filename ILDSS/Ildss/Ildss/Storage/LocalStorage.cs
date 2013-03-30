@@ -65,13 +65,14 @@ namespace Ildss.Storage
 
                     // clean up
                     // empty ildss directory
+                    //zipFile.Delete();
                     Directory.Delete(ildssDir, true);
                     Directory.CreateDirectory(ildssDir);
                 }
             }
             catch (IOException e)
             {
-                Console.WriteLine(e.Message);
+                Logger.write(e.Message);
             }
 
         }

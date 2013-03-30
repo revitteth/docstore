@@ -35,7 +35,7 @@ namespace Ildss.Interface
             btnManualIndex.Enabled = false;
             btnManualIndex.Text = "Indexing...";
 
-            var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
+            var progress = new Progress<int>(i => Logger.write(i + " %"));
             await foo(progress);
 
             // Re enable button
@@ -45,7 +45,7 @@ namespace Ildss.Interface
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            var progress = new Progress<int>(i => Console.WriteLine(i + " %"));
+            var progress = new Progress<int>(i => Logger.write(i + " %"));
             await foo2(progress);
 
             btnMonitor.Enabled = false;

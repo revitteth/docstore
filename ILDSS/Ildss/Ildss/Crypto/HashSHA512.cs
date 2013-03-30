@@ -46,12 +46,12 @@ namespace Ildss.Crypto
             catch (FileNotFoundException)
             {
                 // file not found
-                Console.WriteLine("error, file not found");
+                Logger.write("error, file not found");
             }
             catch (IOException)
             {
                 // file could not be accessed
-                Console.WriteLine("error, file not accessible");
+                Logger.write("error, file not accessible");
             }
             catch (UnauthorizedAccessException)
             {
