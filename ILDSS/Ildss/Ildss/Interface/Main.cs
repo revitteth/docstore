@@ -39,8 +39,15 @@ namespace Ildss.Interface
             await foo(progress);
 
             // Re enable button
-            btnManualIndex.Enabled = true;
-            btnManualIndex.Text = "Index";
+            //btnManualIndex.Enabled = true;
+            btnManualIndex.Text = "Indexed";
+
+            var progress2 = new Progress<int>(i => Logger.write(i + " %"));
+            await foo2(progress2);
+
+            btnMonitor.Enabled = false;
+            btnMonitor.Text = "Monitoring...";
+
         }
 
         private async void button2_Click(object sender, EventArgs e)
