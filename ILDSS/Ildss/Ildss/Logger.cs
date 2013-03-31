@@ -10,21 +10,13 @@ namespace Ildss
 {
     static class Logger
     {
-        static private List<string> _log = new List<string>();
+        static private string _line;
 
         static public void write(string line)
         {
             string where = new StackFrame(1).GetMethod().ReflectedType.ToString().Replace("Ildss.", "");
-            _log.Add(DateTime.Now.ToString("hh:mm:ss") + " " + where + "  " + line);
+            _line = (DateTime.Now.ToString("hh:mm:ss") + " " + where + "    " + line);
             save();
-        }
-
-        static public void print()
-        {
-            foreach (var line in _log)
-            {
-                Console.WriteLine(line);
-            }
         }
 
         static public void save()
@@ -39,14 +31,10 @@ namespace Ildss
             {
                 logFile = File.AppendText("log.txt");
             }
-
-            foreach (var line in _log)
-            {
-                logFile.WriteLine(line);
-            }
-
+            
+            logFile.WriteLine(_line);
+            
             logFile.Close();
-            _log.Clear();
         }
     }
 }

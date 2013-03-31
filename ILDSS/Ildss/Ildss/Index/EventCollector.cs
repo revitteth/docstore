@@ -28,7 +28,6 @@ namespace Ildss.Index
             // Don't register events for directories
             if (!(File.GetAttributes(fi.FullName) == FileAttributes.Directory))
             {
-                Logger.write(fi.FullName + " " + path);
                 var docu = fic.DocPaths.First(i => i.path == path).Document;
 
                 // Check read events
@@ -40,8 +39,7 @@ namespace Ildss.Index
                         // add a new read event to the document if file's last access is bigger than last access in DB
                         var readEvent = new DocEvent() { time = fi.LastAccessTime, type = "Read" };
                         docu.DocEvents.Add(readEvent);
-                        Logger.write("More recent read added " + DateTime.Compare(recentRead.time, fi.LastAccessTime)
-                            + " " + recentRead.time + " " + fi.LastAccessTime);
+                        Logger.write("R Time New  " + path);
                     }
                 }
                 else
@@ -49,7 +47,7 @@ namespace Ildss.Index
                     // no existing reads - add the access time of the file
                     var readEvent = new DocEvent() { time = fi.LastAccessTime, type = "Read" };
                     docu.DocEvents.Add(readEvent);
-                    Logger.write("No existing Reads, one added");
+                    Logger.write("R Time Init " + path);
                 }
 
                 // Check write events
@@ -61,7 +59,7 @@ namespace Ildss.Index
                         // add a new write event to the document
                         var writeEvent = new DocEvent() { time = fi.LastWriteTime, type = "Write" };
                         docu.DocEvents.Add(writeEvent);
-                        Logger.write("More recent write added");
+                        Logger.write("W Time New  " + path);
                     }
                 }
                 else
@@ -69,7 +67,7 @@ namespace Ildss.Index
                     // no existing writes - add the write time of the file
                     var writeEvent = new DocEvent() { time = fi.LastWriteTime, type = "Write" };
                     docu.DocEvents.Add(writeEvent);
-                    Logger.write("No existing Writes, one added");
+                    Logger.write("Write Time Init " + path);
                 }
 
                 fic.SaveChanges();
