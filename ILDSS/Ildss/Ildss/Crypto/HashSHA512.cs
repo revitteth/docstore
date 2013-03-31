@@ -46,12 +46,13 @@ namespace Ildss.Crypto
             catch (FileNotFoundException)
             {
                 // file not found
-                Logger.write("error, file not found");
+                Logger.write("Error, file not found");
             }
             catch (IOException)
             {
                 // file could not be accessed
-                Logger.write("error, file not accessible");
+                // warn user and try again on OK
+                Logger.write("Error, file not accessible");
             }
             catch (UnauthorizedAccessException)
             {

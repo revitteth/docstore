@@ -52,41 +52,49 @@ namespace Ildss.Index
 
         public void IndexFile(string path)
         {
-            var fi = new FileInfo(path);
-            fi.Refresh();
-
-            if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
+            try
             {
+                var fi = new FileInfo(path);
+                fi.Refresh();
 
-                // Hash File
-                var h = KernelFactory.Instance.Get<IHash>();
-                string fileHash = h.HashFile(path);
-
-                // Get DB Context
-                var fic = KernelFactory.Instance.Get<FileIndexContext>();
-
-                var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
-                //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
-
-                if (fic.Documents.Any(i => i.DocumentHash == fileHash))
+                if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
                 {
-                    fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
-                    //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
-                    Logger.write("Indexed File (matching hash exists) " + path);
-                }
-                else
-                {
-                    var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
-                    newDocument.DocPaths.Add(newPath);
-                    //newDocument.DocEvents.Add(newEvent);
-                    fic.Documents.Add(newDocument);
-                    Logger.write("Indexed File (new document) " + path);
-                }
 
-                fic.SaveChanges();
+                    // Hash File
+                    var h = KernelFactory.Instance.Get<IHash>();
+                    string fileHash = h.HashFile(path);
 
-                // Register last read/write event times
-                KernelFactory.Instance.Get<ICollector>().Register(path);
+                    // Get DB Context
+                    var fic = KernelFactory.Instance.Get<FileIndexContext>();
+
+                    var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
+                    //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
+
+                    if (fic.Documents.Any(i => i.DocumentHash == fileHash))
+                    {
+                        fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
+                        //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
+                        Logger.write("Indexed File (matching hash exists) " + path);
+                    }
+                    else
+                    {
+                        var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
+                        newDocument.DocPaths.Add(newPath);
+                        //newDocument.DocEvents.Add(newEvent);
+                        fic.Documents.Add(newDocument);
+                        Logger.write("Indexed File (new document) " + path);
+                    }
+
+                    fic.SaveChanges();
+
+                    // Register last read/write event times
+                    KernelFactory.Instance.Get<ICollector>().Register(path);
+                }
+            }
+            catch (IOException e)
+            {
+                // warn user and ask to try again?
+                Logger.write("File is not accessible " + path);
             }
         }
 
