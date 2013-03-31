@@ -56,16 +56,16 @@ namespace Ildss.Storage
                     // move it to storage
                     zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
 
-                    Logger.write("Created local storage backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
+                    Logger.write("Success Created Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
                 else
                 {
                     Logger.write("No files to be backed up");
                 }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                Logger.write(e.Message);
+                Logger.write("Error " + e.Message);
                 return;
             }
 

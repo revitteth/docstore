@@ -36,8 +36,8 @@ namespace Ildss.Index
                     {
                         // hash exists
                         fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(docpath);
-                        fic.Documents.First(i => i.DocumentHash == fileHash).status = "Current";
-                        Logger.write("Created (hash exists already) " + path);
+                        //fic.Documents.First(i => i.DocumentHash == fileHash).status = "Current";
+                        Logger.write("Created (hash exists already, status remains same) " + path);
                     }
                     else
                     {
@@ -45,7 +45,7 @@ namespace Ildss.Index
                         var doc = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
                         doc.DocPaths.Add(docpath);
                         fic.Documents.Add(doc);
-                        Logger.write("Created (new hash, new document) " + path);
+                        Logger.write("Created (new hash, new document, status indexed) " + path);
                     }
                     fic.SaveChanges();
 
@@ -161,7 +161,7 @@ namespace Ildss.Index
                                 relatedDocument.DocumentHash = hashChanged;
                                 relatedDocument.size = finfo.Length;
                                 relatedDocument.status = "Indexed";
-                                Logger.write("Changed (same document, updated hash) " + path);
+                                Logger.write("Changed (same document, updated hash, status indexed) " + path);
                             }
                             else if (relatedDocument.DocPaths.Count() > 1)
                             {
@@ -169,16 +169,18 @@ namespace Ildss.Index
                                 var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged, status = "Indexed" };
                                 newDoc.DocPaths.Add(thePath);
                                 docs.Add(newDoc);
-                                Logger.write("Changed (new hash, new document) " + path);
+                                Logger.write("Changed (new hash, new document, status indexed) " + path);
                             }
                             else
                             {
                                 // not sure if this can really happen!
+                                Logger.write("Error in frequent checker line 177");
                             }
                         }
                         else
                         {
                             // don't think this should happen either
+                            Logger.write("Error in frequent checker line 183");
                         }
                     }
     
