@@ -33,6 +33,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
+                    Logger.write("FSW Event - Created");
                     if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         var fi = new FileInfo(pe.FullPath);
@@ -52,6 +53,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
+                    Logger.write("FSW Event - Deleted");
                     if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
                         fIndexer.RespondToEvent(pe.FullPath, "Deleted");
@@ -64,6 +66,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
+                    Logger.write("FSW Event - Renamed");
                     var fi = new FileInfo(pe.FullPath);
                     if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                     {
@@ -95,6 +98,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
+                    Logger.write("FSW Event - Changed");
                     var fi = new FileInfo(pe.FullPath);
                     if (!_ignoredFiles.Any(pe.Name.Contains) & fi.Extension != "")
                     {

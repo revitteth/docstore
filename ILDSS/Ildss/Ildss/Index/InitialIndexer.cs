@@ -17,6 +17,7 @@ namespace Ildss.Index
 
         public void IndexFiles(string path)
         {
+            Logger.write("Initial Index Started");
             FileInfo fi = new FileInfo(path);
             if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
@@ -31,6 +32,7 @@ namespace Ildss.Index
             {
                 IndexDirectory(path);
             }
+            Logger.write("Initial Index Finished");
         }
 
         private void IndexDirectory(string targetDirectory)

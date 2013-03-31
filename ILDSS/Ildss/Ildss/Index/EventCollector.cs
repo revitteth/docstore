@@ -54,7 +54,7 @@ namespace Ildss.Index
                 if (fic.DocEvents.Any(i => i.type == "Write" && i.DocumentId == docu.DocumentId))
                 {
                     var recentWrite = fic.DocEvents.OrderByDescending(i => i.time).First(j => j.type == "Write");
-                    if (DateTime.Compare(recentWrite.time, fi.LastWriteTime) < 0)
+                    if (DateTime.Compare(recentWrite.time, fi.LastWriteTime.AddMilliseconds(-fi.LastWriteTime.Millisecond)) < 0)
                     {
                         // add a new write event to the document
                         var writeEvent = new DocEvent() { time = fi.LastWriteTime, type = "Write" };
@@ -67,7 +67,7 @@ namespace Ildss.Index
                     // no existing writes - add the write time of the file
                     var writeEvent = new DocEvent() { time = fi.LastWriteTime, type = "Write" };
                     docu.DocEvents.Add(writeEvent);
-                    Logger.write("Write Time Init " + path);
+                    Logger.write("W Time Init " + path);
                 }
 
                 fic.SaveChanges();

@@ -15,6 +15,7 @@ namespace Ildss.Index
 
         public void IndexFiles(string path)
         {
+            Logger.write("Frequent Index Started");
             if (System.IO.File.Exists(path))
             {
                 IndexFile(path);
@@ -23,6 +24,7 @@ namespace Ildss.Index
             {
                 IndexDirectory(path);
             }
+            Logger.write("Frequent Index Finished");
         }
 
         private void IndexDirectory(string targetDirectory)

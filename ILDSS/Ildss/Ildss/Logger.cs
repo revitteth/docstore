@@ -15,7 +15,12 @@ namespace Ildss
         static public void write(string line)
         {
             string where = new StackFrame(1).GetMethod().ReflectedType.ToString().Replace("Ildss.", "");
-            _line = (DateTime.Now.ToString("hh:mm:ss") + " " + where + "    " + line);
+            if (where.Contains('+'))
+            {
+                where = where.Substring(0, where.LastIndexOf('+'));
+            }
+            where = where.PadRight(30, ' ');
+            _line = (DateTime.Now.ToString("hh:mm:ss") + " " + where + " " + line);
             save();
         }
 
