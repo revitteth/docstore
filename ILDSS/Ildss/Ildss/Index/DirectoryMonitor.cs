@@ -69,6 +69,9 @@ namespace Ildss.Index
                     var pe = pattern.EventArgs;
                     Logger.write("FSW Event - Renamed");
                     var fi = new FileInfo(pe.FullPath);
+
+                    Logger.write(pe.OldFullPath + "   " + pe.FullPath);
+
                     if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                     {
                         fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
@@ -91,6 +94,8 @@ namespace Ildss.Index
                             fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                         }
                     }
+
+                    Logger.write(_changedOffice);
                 }
             );
 

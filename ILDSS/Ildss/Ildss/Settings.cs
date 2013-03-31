@@ -14,7 +14,7 @@ namespace Ildss
         // Constructor
         public Settings()
         {
-            ignoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", ".ildss" };
+            ignoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", "~$", ".ildss" };
         }
     
     }
