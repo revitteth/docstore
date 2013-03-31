@@ -9,6 +9,7 @@ namespace Ildss.Storage
     public interface IStorage
     {
         void Store();
+        void StoreAll();
         void Retrieve();
     }
 }

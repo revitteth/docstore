@@ -95,6 +95,7 @@ namespace Ildss.Interface
         private void button4_Click(object sender, EventArgs e)
         {
             // needs rewriting
+            KernelFactory.Instance.Get<IStorage>().StoreAll();
         }
 
     }
