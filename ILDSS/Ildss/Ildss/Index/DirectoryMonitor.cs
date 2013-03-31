@@ -21,6 +21,7 @@ namespace Ildss.Index
 
         public void Monitor (string path)
         {
+            Logger.write("Diretory Monitor Started");
             FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
             fsw = new FileSystemWatcher(path);
