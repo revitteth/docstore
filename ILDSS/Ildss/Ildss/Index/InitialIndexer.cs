@@ -72,6 +72,7 @@ namespace Ildss.Index
                 {
                     fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(newPath);
                     //fic.Documents.First(i => i.DocumentHash == fileHash).DocEvents.Add(newEvent);
+                    Logger.write("Indexed File (matching hash exists) " + path);
                 }
                 else
                 {
@@ -79,6 +80,7 @@ namespace Ildss.Index
                     newDocument.DocPaths.Add(newPath);
                     //newDocument.DocEvents.Add(newEvent);
                     fic.Documents.Add(newDocument);
+                    Logger.write("Indexed File (new document) " + path);
                 }
 
                 fic.SaveChanges();
