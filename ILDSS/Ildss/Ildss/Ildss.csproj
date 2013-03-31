@@ -151,7 +151,6 @@
     <Compile Include="Interface\Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Shell\ShellExtension.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Storage\LocalStorage.cs" />
     <EmbeddedResource Include="Interface\Main.resx">

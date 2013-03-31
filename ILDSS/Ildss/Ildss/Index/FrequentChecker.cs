@@ -37,12 +37,12 @@ namespace Ildss.Index
                     {
                         // hash exists
                         fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(docpath);
-                        fic.Documents.First(i => i.DocumentHash == fileHash).status = "indexed";
+                        fic.Documents.First(i => i.DocumentHash == fileHash).status = "Current";
                     }
                     else
                     {
                         // new document + path
-                        var doc = new Document() { DocumentHash = fileHash, size = fi.Length, status = "current" };
+                        var doc = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
                         doc.DocPaths.Add(docpath);
                         fic.Documents.Add(doc);
                     }
@@ -158,11 +158,12 @@ namespace Ildss.Index
                                 // update the document
                                 relatedDocument.DocumentHash = hashChanged;
                                 relatedDocument.size = finfo.Length;
+                                relatedDocument.status = "Indexed";
                             }
                             else if (relatedDocument.DocPaths.Count() > 1)
                             {
                                 // create new document + point the path to it
-                                var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged };
+                                var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged, status = "Indexed" };
                                 newDoc.DocPaths.Add(thePath);
                                 docs.Add(newDoc);
                             }

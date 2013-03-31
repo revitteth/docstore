@@ -32,11 +32,13 @@ namespace Ildss.Storage
 
         public void Store()
         {
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            var toStore = fic.Documents.Where(i => i.status == "Indexed").ToList();
+
+            cleanDir(tmp);
+
             try
             {
-                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                var toStore = fic.Documents.Where(i => i.status == "Indexed").ToList();
-
                 if (toStore.Count() > 0)
                 {
                     foreach (var doc in toStore)
@@ -48,38 +50,49 @@ namespace Ildss.Storage
                     }
 
                     //zip up the tmp
-                    var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy") + ".zip");
+                    var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy-hhmmss") + ".zip");
                     ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
 
                     // move it to storage
-                    zipFile.CopyTo(Path.Combine(storageDir, zipFile.Name));
+                    zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
 
-
-                    // set all database docs to be "Current"
-                    foreach (var doc in toStore)
-                    {
-                        doc.status = "Current";
-                    }
-                    fic.SaveChanges();
-
-
-                    // clean up
-                    // empty ildss directory
-                    //zipFile.Delete();
-                    Directory.Delete(ildssDir, true);
-                    Directory.CreateDirectory(ildssDir);
+                    Logger.write("Created local storage backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
+                }
+                else
+                {
+                    Logger.write("No files to be backed up");
                 }
             }
             catch (IOException e)
             {
                 Logger.write(e.Message);
+                return;
             }
+
+            // set all database docs to be "Current"
+            foreach (var doc in toStore)
+            {
+                doc.status = "Current";
+            }
+            fic.SaveChanges();
+
+            cleanDir(tmp);
 
         }
 
         public void Retrieve()
         {
 
+        }
+
+        private void cleanDir(string dir)
+        {
+            // clean directory
+            string[] paths = Directory.GetFiles(dir);
+            foreach (var path in paths)
+            {
+                File.Delete(path);
+            }
         }
 
     }

@@ -14,7 +14,8 @@ namespace Ildss
 
         static public void write(string line)
         {
-            _log.Add(DateTime.Now.ToString("hh:mm:ss") + "  " + new StackFrame(1).GetMethod().ReflectedType + "  " + line);
+            string where = new StackFrame(1).GetMethod().ReflectedType.ToString().Replace("Ildss.", "");
+            _log.Add(DateTime.Now.ToString("hh:mm:ss") + " " + where + "  " + line);
             save();
         }
 
