@@ -32,8 +32,28 @@ namespace Ildss.Storage
 
         public void StoreIncr()
         {
+            Store("Incr");
+        }
+
+        public void StoreFull()
+        {
+            Store("Full");    
+        }
+
+        public void Store(string type)
+        {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            var toStore = fic.Documents.Where(i => i.Status == "Indexed").ToList();
+            List<Document> toStore = new List<Document>();
+
+            if (type == "Full")
+            {
+                toStore = fic.Documents.ToList();
+            }
+            else if (type == "Incr")
+            {
+                toStore = fic.Documents.Where(i => i.Status == "Indexed").ToList();
+            }
+
             string backupname = null;
             DateTime backuptime = DateTime.Now;
             long backupsize = 0;
@@ -53,7 +73,7 @@ namespace Ildss.Storage
                     }
 
                     //zip up the tmp
-                    var zipFile = new FileInfo(ildssDir + backuptime.ToString("ddMMyyyy-hhmmss") + "-incr.zip");
+                    var zipFile = new FileInfo(ildssDir + backuptime.ToString("ddMMyyyy-hhmmss") + "-" + type + ".zip");
                     ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
 
                     // move it to storage
@@ -86,71 +106,13 @@ namespace Ildss.Storage
 
             bup.Name = backupname;
             bup.Time = backuptime;
-            bup.Type = "Incr";
+            bup.Type = type;
             bup.Size = backupsize;
             bup.FileCount = toStore.Count();
 
             fic.SaveChanges();
 
             cleanDir(tmp);
-
-        }
-
-        public void StoreFull()
-        {
-            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            string backupname = null;
-            DateTime backuptime = DateTime.Now;
-            long backupsize = 0;
-
-            cleanDir(tmp);
-
-            try
-            {
-                foreach (var doc in fic.Documents)
-                {
-                    // move to tmp
-                    var d = new FileInfo(doc.DocPaths.First().Path);
-                    d.CopyTo(tmp + doc.DocumentHash);
-
-                }
-
-                //zip up the tmp
-                var zipFile = new FileInfo(ildssDir + backuptime.ToString("ddMMyyyy-hhmmss") + "-full.zip");
-                ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
-
-                // move it to storage
-                zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
-                backupname = zipFile.Name;
-                backupsize = zipFile.Length;
-
-                Logger.write("Success Created Full Backup \'" + zipFile.Name + "\' containing " + fic.Documents.Count() + " files");
-            }
-            catch (Exception e)
-            {
-                Logger.write("Error " + e.Message);
-                return;
-            }
-
-            var bup = new Backup();
-
-            // set all database docs to be "Current" and add documents to backup table entry
-            foreach (var doc in fic.Documents)
-            {
-                doc.Status = "Current";
-                bup.Documents.Add(doc);
-                doc.Backups.Add(bup);
-            }
-
-            bup.Name = backupname;
-            bup.Time = backuptime;
-            bup.Type = "Full";
-            bup.Size = backupsize;
-            bup.FileCount = fic.Documents.Count();
-            fic.SaveChanges();
-
-            cleanDir(tmp);
-
         }
 
         public void RetrieveIncr()

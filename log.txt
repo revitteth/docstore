@@ -308,3 +308,27 @@
 12:05:31 Index.DirectoryMonitor         Directory Monitor Started
 12:05:35 Storage.LocalStorage           Success Created Incremental Backup '03042013-120535-incr.zip' containing 6 files
 12:05:36 Storage.LocalStorage           Success Created Full Backup '03042013-120535-full.zip' containing 6 files
+12:17:54 Index.InitialIndexer           Initial Index Started
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\1.txt
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\1.txt
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\1.txt
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\2.txt
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\2.txt
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\2.txt
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\dave.docx
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\dave.docx
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\dave.docx
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\New Microsoft Publisher Document.pub
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\sheet1.xlsx
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\sheet1.xlsx
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\sheet1.xlsx
+12:17:54 Index.InitialIndexer           Indexed File (new document) E:\TestDir\Folder\1.txt
+12:17:54 Index.EventCollector           R Time Init E:\TestDir\Folder\1.txt
+12:17:54 Index.EventCollector           W Time Init E:\TestDir\Folder\1.txt
+12:17:54 Index.InitialIndexer           Initial Index Finished
+12:17:54 Index.DirectoryMonitor         Directory Monitor Started
+12:18:11 Storage.LocalStorage           Success Created Incremental Backup '03042013-121811-Incr.zip' containing 6 files
+12:18:11 Storage.LocalStorage           Success Created Incremental Backup '03042013-121811-Full.zip' containing 6 files
+12:18:20 Storage.LocalStorage           No files to be backed up
