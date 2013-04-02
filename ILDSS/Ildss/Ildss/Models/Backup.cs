@@ -11,16 +11,15 @@ namespace Ildss.Models
     {
         public Backup()
         {
-            this.Documents = new HashSet<DocPath>();
+            this.Documents = new HashSet<Document>();
         }
 
         [Key]
         public int BackupId { get; set; }
         public string Name { get; set; }
+        public DateTime Time { get; set; }
+        public string Type { get; set; }
 
-
-
-
-        public virtual ICollection<DocPath> Documents { get; set; }
+        public virtual ICollection<Document> Documents { get; set; }
     }
 }

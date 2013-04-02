@@ -11,9 +11,9 @@ namespace Ildss.Models
     {
         public int DocPathId { get; set; }
         public int DocumentId { get; set; }
-        public string path { get; set; }
-        public string directory { get; set; }
-        public string name { get; set; }
+        public string Path { get; set; }
+        public string Directory { get; set; }
+        public string Name { get; set; }
 
         public virtual Document Document { get; set; }
     }

@@ -30,7 +30,7 @@ namespace Ildss.Index
                     // check db for matching hash
                     var fi = new FileInfo(path);
                     var fileHash = hash.HashFile(path);
-                    var docpath = new DocPath() { path = fi.FullName, name = fi.Name, directory = fi.FullName.Replace(fi.Name, "") };
+                    var docpath = new DocPath() { Path = fi.FullName, Name = fi.Name, Directory = fi.FullName.Replace(fi.Name, "") };
 
                     if (fic.Documents.Any(i => i.DocumentHash == fileHash))
                     {
@@ -42,7 +42,7 @@ namespace Ildss.Index
                     else
                     {
                         // new document + path
-                        var doc = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
+                        var doc = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = "Indexed" };
                         doc.DocPaths.Add(docpath);
                         fic.Documents.Add(doc);
                         Logger.write("Created (new hash, new document, status indexed) " + path);
@@ -64,22 +64,22 @@ namespace Ildss.Index
                         Logger.write("Rename File " + oldpath + " to " + path);
                         // its just a file - rename it in docpaths
                         var finf = new FileInfo(path);
-                        var renamed = fic.DocPaths.First(i => i.path == oldpath);
-                        renamed.path = path;
-                        renamed.directory = finf.FullName.Replace(finf.Name, "");
-                        renamed.name = finf.Name;
+                        var renamed = fic.DocPaths.First(i => i.Path == oldpath);
+                        renamed.Path = path;
+                        renamed.Directory = finf.FullName.Replace(finf.Name, "");
+                        renamed.Name = finf.Name;
                         fic.SaveChanges();
                     }
                     else
                     {
                         Logger.write("Rename Directory " + oldpath + " to " + path);
-                        foreach (var directory in fic.DocPaths.Where(i => i.directory.Contains(oldpath)))
+                        foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(oldpath)))
                         {
-                            directory.directory = directory.directory.Replace(oldpath, path); // subdirectories
+                            directory.Directory = directory.Directory.Replace(oldpath, path); // subdirectories
                         }
-                        foreach (var file in fic.DocPaths.Where(i => i.path.Contains(oldpath)))
+                        foreach (var file in fic.DocPaths.Where(i => i.Path.Contains(oldpath)))
                         {
-                            file.path = file.path.Replace(oldpath, path);   // file paths
+                            file.Path = file.Path.Replace(oldpath, path);   // file paths
                         }
                         fic.SaveChanges();
                     }
@@ -94,9 +94,9 @@ namespace Ildss.Index
                     // remove db entry for the path then check that document needs deleting
                     Logger.write("Delete " + path);
                     // see if it matches a directory
-                    if (fic.DocPaths.Any(i => i.directory == path))
+                    if (fic.DocPaths.Any(i => i.Directory == path))
                     {
-                        var deletedPath = fic.DocPaths.First(i => i.path == path);
+                        var deletedPath = fic.DocPaths.First(i => i.Path == path);
                         var deletedDoc = fic.Documents.First(i => i.DocumentId == deletedPath.DocumentId);
                         if (deletedDoc.DocPaths.Count() <= 1)
                             fic.Documents.Remove(deletedDoc);
@@ -108,7 +108,7 @@ namespace Ildss.Index
                     {
                         foreach (var dp in fic.DocPaths)
                         {
-                            if (!File.Exists(dp.path))
+                            if (!File.Exists(dp.Path))
                                 missingPaths.Add(dp);
                         }
                         foreach (var mp in missingPaths)
@@ -145,28 +145,28 @@ namespace Ildss.Index
                     {
                         // unlikely event - new file hash matches an existing document
                         var matchingDoc = docs.First(i => i.DocumentHash == hashChanged);
-                        matchingDoc.DocPaths.Add(paths.First(i => i.path == path));
+                        matchingDoc.DocPaths.Add(paths.First(i => i.Path == path));
                         Logger.write("Changed (new hash matches existing file) " + path); 
                     }
                     else
                     {
-                        if (paths.Any(i => i.path == path))
+                        if (paths.Any(i => i.Path == path))
                         {
-                            var relatedDocument = paths.First(i => i.path == path).Document;
-                            var thePath = paths.First(i => i.path == path);
+                            var relatedDocument = paths.First(i => i.Path == path).Document;
+                            var thePath = paths.First(i => i.Path == path);
 
                             if (relatedDocument.DocPaths.Count() == 1)
                             {
                                 // update the document
                                 relatedDocument.DocumentHash = hashChanged;
-                                relatedDocument.size = finfo.Length;
-                                relatedDocument.status = "Indexed";
+                                relatedDocument.Size = finfo.Length;
+                                relatedDocument.Status = "Indexed";
                                 Logger.write("Changed (same document, updated hash, status indexed) " + path);
                             }
                             else if (relatedDocument.DocPaths.Count() > 1)
                             {
                                 // create new document + point the path to it
-                                var newDoc = new Document() { size = finfo.Length, DocumentHash = hashChanged, status = "Indexed" };
+                                var newDoc = new Document() { Size = finfo.Length, DocumentHash = hashChanged, Status = "Indexed" };
                                 newDoc.DocPaths.Add(thePath);
                                 docs.Add(newDoc);
                                 Logger.write("Changed (new hash, new document, status indexed) " + path);
@@ -214,7 +214,7 @@ namespace Ildss.Index
                 else if (docu.DocumentHash == null)
                 {
                     Logger.write("Error - Document with null hash found (possibly file was open at time of attempted hash)");
-                    docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().path);
+                    docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
                 }
             }
             foreach (var docToRemove in docsToRemove)

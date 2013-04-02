@@ -67,7 +67,7 @@ namespace Ildss.Index
                     // Get DB Context
                     var fic = KernelFactory.Instance.Get<FileIndexContext>();
 
-                    var newPath = new DocPath() { directory = fi.FullName.Replace(fi.Name, ""), name = fi.Name, path = fi.FullName };
+                    var newPath = new DocPath() { Directory = fi.FullName.Replace(fi.Name, ""), Name = fi.Name, Path = fi.FullName };
                     //var newEvent = new DocEvent() { type = "Index", time = DateTime.Now };
 
                     if (fic.Documents.Any(i => i.DocumentHash == fileHash))
@@ -78,7 +78,7 @@ namespace Ildss.Index
                     }
                     else
                     {
-                        var newDocument = new Document() { DocumentHash = fileHash, size = fi.Length, status = "Indexed" };
+                        var newDocument = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = "Indexed" };
                         newDocument.DocPaths.Add(newPath);
                         //newDocument.DocEvents.Add(newEvent);
                         fic.Documents.Add(newDocument);

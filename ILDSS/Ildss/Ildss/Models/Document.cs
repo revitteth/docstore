@@ -13,15 +13,17 @@ namespace Ildss.Models
         {
             this.DocPaths = new HashSet<DocPath>();
             this.DocEvents = new HashSet<DocEvent>();
+            this.Backups = new HashSet<Backup>();
         }
 
         public int DocumentId { get; set; }
         public string DocumentHash { get; set; }
-        public long size { get; set; }
-        public string status { get; set; }
+        public long Size { get; set; }
+        public string Status { get; set; }
 
         public virtual ICollection<DocPath> DocPaths { get; set; }
         public virtual ICollection<DocEvent> DocEvents { get; set; }
+        public virtual ICollection<Backup> Backups { get; set; }
 
     }
 }

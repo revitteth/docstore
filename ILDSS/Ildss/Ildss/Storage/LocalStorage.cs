@@ -33,7 +33,9 @@ namespace Ildss.Storage
         public void StoreIncr()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            var toStore = fic.Documents.Where(i => i.status == "Indexed").ToList();
+            var toStore = fic.Documents.Where(i => i.Status == "Indexed").ToList();
+            string backupname = null;
+            DateTime backuptime = DateTime.Now;
 
             cleanDir(tmp);
 
@@ -44,17 +46,18 @@ namespace Ildss.Storage
                     foreach (var doc in toStore)
                     {
                         // move to tmp
-                        var d = new FileInfo(doc.DocPaths.First().path);
+                        var d = new FileInfo(doc.DocPaths.First().Path);
                         d.CopyTo(tmp + doc.DocumentHash);
 
                     }
 
                     //zip up the tmp
-                    var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy-hhmmss") + "-incr.zip");
+                    var zipFile = new FileInfo(ildssDir + backuptime.ToString("ddMMyyyy-hhmmss") + "-incr.zip");
                     ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
 
                     // move it to storage
                     zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
+                    backupname = zipFile.Name;
 
                     Logger.write("Success Created Incremental Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
@@ -69,11 +72,20 @@ namespace Ildss.Storage
                 return;
             }
 
-            // set all database docs to be "Current"
+            var bup = new Backup();
+
+            // set all database docs to be "Current" and add documents to backup table entry
             foreach (var doc in toStore)
             {
-                doc.status = "Current";
+                doc.Status = "Current";
+                bup.Documents.Add(doc);
+                doc.Backups.Add(bup);
             }
+
+            bup.Name = backupname;
+            bup.Time = backuptime;
+            bup.Type = "Incr";
+
             fic.SaveChanges();
 
             cleanDir(tmp);
@@ -83,6 +95,8 @@ namespace Ildss.Storage
         public void StoreFull()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            string backupname = null;
+            DateTime backuptime = DateTime.Now;
 
             cleanDir(tmp);
 
@@ -91,7 +105,7 @@ namespace Ildss.Storage
                 foreach (var doc in fic.Documents)
                 {
                     // move to tmp
-                    var d = new FileInfo(doc.DocPaths.First().path);
+                    var d = new FileInfo(doc.DocPaths.First().Path);
                     d.CopyTo(tmp + doc.DocumentHash);
 
                 }
@@ -110,17 +124,33 @@ namespace Ildss.Storage
                 Logger.write("Error " + e.Message);
                 return;
             }
+
+            var bup = new Backup();
+
+            // set all database docs to be "Current" and add documents to backup table entry
+            foreach (var doc in fic.Documents)
+            {
+                doc.Status = "Current";
+                bup.Documents.Add(doc);
+            }
+
+            bup.Name = backupname;
+            bup.Time = backuptime;
+            bup.Type = "Incr";
+            fic.SaveChanges();
+
             cleanDir(tmp);
+
         }
 
-        public void RetrieveIncr(string date)
+        public void RetrieveIncr()
         {
             // identify the date of the increment and pull it back
 
             // search the events table for the correct event? or backup table
         }
 
-        public void RetrieveFull(string date)
+        public void RetrieveFull()
         {
             // identify the date of the full backup and pull it back
         }

@@ -10,6 +10,7 @@ namespace Ildss.Storage
     {
         void StoreIncr();
         void StoreFull();
-        void Retrieve();
+        void RetrieveIncr();
+        void RetrieveFull();
     }
 }
