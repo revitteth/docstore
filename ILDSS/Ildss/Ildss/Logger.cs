@@ -28,13 +28,13 @@ namespace Ildss
         {
             StreamWriter logFile;
 
-            if (!File.Exists("log.txt"))
+            if (!File.Exists("../../../../../log.txt"))
             {
-                logFile = new StreamWriter("log.txt");
+                logFile = new StreamWriter("../../../../../log.txt");
             }
             else
             {
-                logFile = File.AppendText("log.txt");
+                logFile = File.AppendText("../../../../../log.txt");
             }
             
             logFile.WriteLine(_line);

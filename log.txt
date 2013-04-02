@@ -1,0 +1,10 @@
+09:17:08 Storage.LocalStorage           No files to be backed up
+09:18:30 Index.InitialIndexer           Initial Index Started
+09:18:30 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+09:18:30 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+09:18:30 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+09:18:31 Index.InitialIndexer           Initial Index Finished
+09:18:31 Index.DirectoryMonitor         Directory Monitor Started
+09:20:04 Storage.LocalStorage           Success Created Incremental Backup '02042013-092003-incr.zip' containing 1 files
+09:20:10 Storage.LocalStorage           No files to be backed up
+09:20:14 Storage.LocalStorage           Success Created Full Backup '02042013-092014-full.zip' containing 1 files

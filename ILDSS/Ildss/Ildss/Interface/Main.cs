@@ -96,13 +96,13 @@ namespace Ildss.Interface
         private void button2_Click_1(object sender, EventArgs e)
         {
             // needs rewriting
-            KernelFactory.Instance.Get<IStorage>().Store();
+            KernelFactory.Instance.Get<IStorage>().StoreIncr();
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             // needs rewriting
-            KernelFactory.Instance.Get<IStorage>().StoreAll();
+            KernelFactory.Instance.Get<IStorage>().StoreFull();
         }
 
     }

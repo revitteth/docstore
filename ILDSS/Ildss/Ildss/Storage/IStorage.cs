@@ -8,8 +8,8 @@ namespace Ildss.Storage
 {
     public interface IStorage
     {
-        void Store();
-        void StoreAll();
+        void StoreIncr();
+        void StoreFull();
         void Retrieve();
     }
 }

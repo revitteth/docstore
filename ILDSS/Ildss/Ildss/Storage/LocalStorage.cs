@@ -30,7 +30,7 @@ namespace Ildss.Storage
             }
         }
 
-        public void Store()
+        public void StoreIncr()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var toStore = fic.Documents.Where(i => i.status == "Indexed").ToList();
@@ -80,7 +80,7 @@ namespace Ildss.Storage
 
         }
 
-        public void StoreAll()
+        public void StoreFull()
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
@@ -113,9 +113,16 @@ namespace Ildss.Storage
             cleanDir(tmp);
         }
 
-        public void Retrieve()
+        public void RetrieveIncr(string date)
         {
+            // identify the date of the increment and pull it back
 
+            // search the events table for the correct event? or backup table
+        }
+
+        public void RetrieveFull(string date)
+        {
+            // identify the date of the full backup and pull it back
         }
 
         private void cleanDir(string dir)

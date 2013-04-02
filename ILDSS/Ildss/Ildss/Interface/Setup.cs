@@ -70,6 +70,7 @@ namespace Ildss.Interface
         private void button1_Click(object sender, EventArgs e)
         {
             txtDirectory.Text = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+            textBox1.Text = @"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
             btnFinishSetup_Click(sender, e);
         }
 
