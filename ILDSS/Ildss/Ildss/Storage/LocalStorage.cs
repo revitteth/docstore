@@ -36,6 +36,7 @@ namespace Ildss.Storage
             var toStore = fic.Documents.Where(i => i.Status == "Indexed").ToList();
             string backupname = null;
             DateTime backuptime = DateTime.Now;
+            long backupsize = 0;
 
             cleanDir(tmp);
 
@@ -58,6 +59,7 @@ namespace Ildss.Storage
                     // move it to storage
                     zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
                     backupname = zipFile.Name;
+                    backupsize = zipFile.Length;
 
                     Logger.write("Success Created Incremental Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
@@ -85,6 +87,8 @@ namespace Ildss.Storage
             bup.Name = backupname;
             bup.Time = backuptime;
             bup.Type = "Incr";
+            bup.Size = backupsize;
+            bup.FileCount = toStore.Count();
 
             fic.SaveChanges();
 
@@ -97,6 +101,7 @@ namespace Ildss.Storage
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             string backupname = null;
             DateTime backuptime = DateTime.Now;
+            long backupsize = 0;
 
             cleanDir(tmp);
 
@@ -111,11 +116,13 @@ namespace Ildss.Storage
                 }
 
                 //zip up the tmp
-                var zipFile = new FileInfo(ildssDir + DateTime.Now.ToString("ddMMyyyy-hhmmss") + "-full.zip");
+                var zipFile = new FileInfo(ildssDir + backuptime.ToString("ddMMyyyy-hhmmss") + "-full.zip");
                 ZipFile.CreateFromDirectory(tmp, zipFile.FullName);
 
                 // move it to storage
                 zipFile.MoveTo(Path.Combine(storageDir, zipFile.Name));
+                backupname = zipFile.Name;
+                backupsize = zipFile.Length;
 
                 Logger.write("Success Created Full Backup \'" + zipFile.Name + "\' containing " + fic.Documents.Count() + " files");
             }
@@ -132,11 +139,14 @@ namespace Ildss.Storage
             {
                 doc.Status = "Current";
                 bup.Documents.Add(doc);
+                doc.Backups.Add(bup);
             }
 
             bup.Name = backupname;
             bup.Time = backuptime;
-            bup.Type = "Incr";
+            bup.Type = "Full";
+            bup.Size = backupsize;
+            bup.FileCount = fic.Documents.Count();
             fic.SaveChanges();
 
             cleanDir(tmp);

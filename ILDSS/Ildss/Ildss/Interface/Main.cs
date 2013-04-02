@@ -82,6 +82,10 @@ namespace Ildss.Interface
             {
                 fic.Documents.Remove(d);
             }
+            foreach (var b in fic.Backups)
+            {
+                fic.Backups.Remove(b);
+            }
             fic.SaveChanges();
         }
 
