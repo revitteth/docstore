@@ -419,3 +419,5 @@
 12:24:52 Storage.LocalStorage           Success Created Incremental Backup '03042013-122452-Incr.zip' containing 2 files
 
 
+03:24:56 Index.DirectoryMonitor         Directory Monitor Started
+03:25:00 Index.DirectoryMonitor         Directory Monitor Started
