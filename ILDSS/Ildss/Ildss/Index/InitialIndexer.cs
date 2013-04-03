@@ -13,7 +13,7 @@ namespace Ildss.Index
     class InitialIndexer : IIndexer
     {
         private List<DocPath> _nullDocPaths = new List<DocPath>();
-        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+        private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
 
         public void IndexFiles(string path)
         {
@@ -78,7 +78,7 @@ namespace Ildss.Index
                     }
                     else
                     {
-                        var newDocument = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = "Indexed" };
+                        var newDocument = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = Settings.DocStatus.Indexed };
                         newDocument.DocPaths.Add(newPath);
                         //newDocument.DocEvents.Add(newEvent);
                         fic.Documents.Add(newDocument);

@@ -32,7 +32,7 @@ namespace IldssUI
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Ildss.KernelFactory.Instance.Get<Ildss.Index.DirectoryMonitor>().Monitor(@"E:\TestDir");
+            Ildss.KernelFactory.Instance.Get<Ildss.Index.DirectoryMonitor>().Monitor(Settings.WorkingDir);
             var fic = Ildss.KernelFactory.Instance.Get<Ildss.Models.IFileIndexContext>();
             button1.Content = fic.Documents.First().DocumentHash;
 
@@ -56,7 +56,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
             {
-                KernelFactory.Instance.Get<IIndexer>("Initial").IndexFiles(@"E:\TestDir");
+                KernelFactory.Instance.Get<IIndexer>("Initial").IndexFiles(Settings.WorkingDir);
             });
         }
 
@@ -64,7 +64,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
             {
-                KernelFactory.Instance.Get<IMonitor>().Monitor(@"E:\TestDir");
+                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.WorkingDir);
             });
         }
 

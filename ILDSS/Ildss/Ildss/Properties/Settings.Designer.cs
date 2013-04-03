@@ -22,41 +22,5 @@ namespace Ildss.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool firstrun {
-            get {
-                return ((bool)(this["firstrun"]));
-            }
-            set {
-                this["firstrun"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string directory {
-            get {
-                return ((string)(this["directory"]));
-            }
-            set {
-                this["directory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string storageDir {
-            get {
-                return ((string)(this["storageDir"]));
-            }
-            set {
-                this["storageDir"] = value;
-            }
-        }
     }
 }

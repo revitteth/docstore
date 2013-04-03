@@ -474,3 +474,42 @@
 05:01:30 Storage.LocalStorage           Success Created Full Backup '03042013-050130-Full.zip' containing 6 files
 05:01:34 Storage.LocalStorage           No files to be backed up
 05:01:37 Index.DirectoryMonitor         Directory Monitor Started
+01:02:41 Index.DirectoryMonitor         Directory Monitor Started
+09:41:10 Index.DirectoryMonitor         Directory Monitor Started
+10:16:12 Index.DirectoryMonitor         Directory Monitor Started
+10:17:24 Index.DirectoryMonitor         Directory Monitor Started
+11:01:09 Index.DirectoryMonitor         Directory Monitor Started
+11:03:22 Index.DirectoryMonitor         Directory Monitor Started
+11:03:38 Index.InitialIndexer           Initial Index Started
+11:03:38 Index.InitialIndexer           Initial Index Finished
+11:03:41 Index.DirectoryMonitor         Directory Monitor Started
+11:06:17 Index.InitialIndexer           Initial Index Started
+11:07:06 Index.InitialIndexer           Initial Index Started
+11:07:08 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+11:19:25 Index.InitialIndexer           Initial Index Started
+11:19:26 Index.InitialIndexer           Indexed File (matching hash exists) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+11:31:32 Index.InitialIndexer           Initial Index Started
+11:32:01 Index.InitialIndexer           Initial Index Started
+11:32:02 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+11:32:02 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+11:32:02 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+11:32:02 Index.InitialIndexer           Initial Index Finished
+11:32:04 Index.DirectoryMonitor         Directory Monitor Started
+11:32:36 Storage.LocalStorage           Success Created Incremental Backup '03042013-113236-Incremental.zip' containing 1 files
+11:32:38 Storage.LocalStorage           Success Created Full Backup '03042013-113238-Full.zip' containing 1 files
+11:41:09 Index.DirectoryMonitor         FSW Event - Created
+11:41:11 Index.DirectoryMonitor         FSW Event - Renamed
+11:41:11 Index.DirectoryMonitor         C:\Users\Max\Documents\GitHub\docstore\TestDir\New folder   C:\Users\Max\Documents\GitHub\docstore\TestDir\gef
+11:41:11 Index.FrequentChecker          Rename Directory C:\Users\Max\Documents\GitHub\docstore\TestDir\New folder to C:\Users\Max\Documents\GitHub\docstore\TestDir\gef
+11:41:11 Index.DirectoryMonitor         
+11:41:17 Index.DirectoryMonitor         FSW Event - Created
+11:41:17 Index.FrequentChecker          Created (new hash, new document, status indexed) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Bitmap Image.bmp
+11:41:18 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Bitmap Image.bmp
+11:41:18 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Bitmap Image.bmp
+11:41:18 Index.DirectoryMonitor         FSW Event - Changed
+11:41:19 Index.DirectoryMonitor         FSW Event - Renamed
+11:41:19 Index.DirectoryMonitor         C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Bitmap Image.bmp   C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+11:41:19 Index.FrequentChecker          Rename File C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Bitmap Image.bmp to C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+11:41:19 Index.DirectoryMonitor         
+11:41:19 Index.DirectoryMonitor         FSW Event - Changed
+11:41:42 Storage.LocalStorage           Success Created Incremental Backup '03042013-114142-Incremental.zip' containing 1 files

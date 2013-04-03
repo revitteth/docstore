@@ -31,13 +31,13 @@ namespace Ildss.Index
                 var docu = fic.DocPaths.First(i => i.Path == path).Document;
 
                 // Check read events
-                if (fic.DocEvents.Any(i => i.Type == "Read" && i.DocumentId == docu.DocumentId))
+                if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Read && i.DocumentId == docu.DocumentId))
                 {
-                    var recentRead = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == "Read");
+                    var recentRead = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
                     if (DateTime.Compare(recentRead.Time, fi.LastAccessTime.AddMilliseconds(-fi.LastAccessTime.Millisecond)) < 0)
                     {
                         // add a new read event to the document if file's last access is bigger than last access in DB
-                        var readEvent = new DocEvent() { Time = fi.LastAccessTime, Type = "Read" };
+                        var readEvent = new DocEvent() { Time = fi.LastAccessTime, Type = Settings.EventType.Read };
                         docu.DocEvents.Add(readEvent);
                         Logger.write("R Time New  " + path);
                     }
@@ -45,19 +45,19 @@ namespace Ildss.Index
                 else
                 {
                     // no existing reads - add the access time of the file
-                    var readEvent = new DocEvent() { Time = fi.LastAccessTime, Type = "Read" };
+                    var readEvent = new DocEvent() { Time = fi.LastAccessTime, Type = Settings.EventType.Read };
                     docu.DocEvents.Add(readEvent);
                     Logger.write("R Time Init " + path);
                 }
 
                 // Check write events
-                if (fic.DocEvents.Any(i => i.Type == "Write" && i.DocumentId == docu.DocumentId))
+                if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Write && i.DocumentId == docu.DocumentId))
                 {
-                    var recentWrite = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == "Write");
+                    var recentWrite = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
                     if (DateTime.Compare(recentWrite.Time, fi.LastWriteTime.AddMilliseconds(-fi.LastWriteTime.Millisecond)) < 0)
                     {
                         // add a new write event to the document
-                        var writeEvent = new DocEvent() { Time = fi.LastWriteTime, Type = "Write" };
+                        var writeEvent = new DocEvent() { Time = fi.LastWriteTime, Type = Settings.EventType.Write };
                         docu.DocEvents.Add(writeEvent);
                         Logger.write("W Time New  " + path);
                     }
@@ -65,7 +65,7 @@ namespace Ildss.Index
                 else
                 {
                     // no existing writes - add the write time of the file
-                    var writeEvent = new DocEvent() { Time = fi.LastWriteTime, Type = "Write" };
+                    var writeEvent = new DocEvent() { Time = fi.LastWriteTime, Type = Settings.EventType.Write };
                     docu.DocEvents.Add(writeEvent);
                     Logger.write("W Time Init " + path);
                 }

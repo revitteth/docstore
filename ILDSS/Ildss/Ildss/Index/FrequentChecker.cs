@@ -36,13 +36,13 @@ namespace Ildss.Index
                     {
                         // hash exists
                         fic.Documents.First(i => i.DocumentHash == fileHash).DocPaths.Add(docpath);
-                        //fic.Documents.First(i => i.DocumentHash == fileHash).status = "Current";
+                        //fic.Documents.First(i => i.DocumentHash == fileHash).status = Settings.DocStatus.Current;
                         Logger.write("Created (hash exists already, status remains same) " + path);
                     }
                     else
                     {
                         // new document + path
-                        var doc = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = "Indexed" };
+                        var doc = new Document() { DocumentHash = fileHash, Size = fi.Length, Status = Settings.DocStatus.Indexed };
                         doc.DocPaths.Add(docpath);
                         fic.Documents.Add(doc);
                         Logger.write("Created (new hash, new document, status indexed) " + path);
@@ -160,13 +160,13 @@ namespace Ildss.Index
                                 // update the document
                                 relatedDocument.DocumentHash = hashChanged;
                                 relatedDocument.Size = finfo.Length;
-                                relatedDocument.Status = "Indexed";
+                                relatedDocument.Status = Settings.DocStatus.Indexed;
                                 Logger.write("Changed (same document, updated hash, status indexed) " + path);
                             }
                             else if (relatedDocument.DocPaths.Count() > 1)
                             {
                                 // create new document + point the path to it
-                                var newDoc = new Document() { Size = finfo.Length, DocumentHash = hashChanged, Status = "Indexed" };
+                                var newDoc = new Document() { Size = finfo.Length, DocumentHash = hashChanged, Status = Settings.DocStatus.Indexed };
                                 newDoc.DocPaths.Add(thePath);
                                 docs.Add(newDoc);
                                 Logger.write("Changed (new hash, new document, status indexed) " + path);

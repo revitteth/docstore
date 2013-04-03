@@ -11,7 +11,7 @@ namespace Ildss.Index
 {
     class FrequentIndexer : IIndexer
     {
-        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+        private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
 
         public void IndexFiles(string path)
         {

@@ -13,7 +13,7 @@ namespace Ildss.Models
         public int DocEventId { get; set; }
         [Required]
         public int DocumentId { get; set; }
-        public string Type { get; set; }
+        public Settings.EventType? Type { get; set; }
         public DateTime Time { get; set; }
 
         public virtual Document Document { get; set; }

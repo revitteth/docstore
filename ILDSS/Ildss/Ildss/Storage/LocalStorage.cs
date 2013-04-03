@@ -16,7 +16,7 @@ namespace Ildss.Storage
     {
         private string ildssDir = @"C:\ildss\";
         private string tmp = @"C:\ildss\tmp\";
-        private string storageDir = Properties.Settings.Default.storageDir;
+        private string storageDir = Settings.StorageDir;
 
         public LocalStorage()
         {
@@ -32,26 +32,26 @@ namespace Ildss.Storage
 
         public void StoreIncr()
         {
-            Store("Incr");
+            Store(Settings.BackupType.Incremental);
         }
 
         public void StoreFull()
         {
-            Store("Full");    
+            Store(Settings.BackupType.Full);    
         }
 
-        public void Store(string type)
+        public void Store(Settings.BackupType type)
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             List<Document> toStore = new List<Document>();
 
-            if (type == "Full")
+            if (type == Settings.BackupType.Full)
             {
                 toStore = fic.Documents.ToList();
             }
-            else if (type == "Incr")
+            else if (type == Settings.BackupType.Incremental)
             {
-                toStore = fic.Documents.Where(i => i.Status == "Indexed").ToList();
+                toStore = fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed).ToList();
             }
 
             string backupname = null;
@@ -81,7 +81,7 @@ namespace Ildss.Storage
                     backupname = zipFile.Name;
                     backupsize = zipFile.Length;
 
-                    Logger.write("Success Created " + type + " Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
+                    Logger.write("Success Created " + type.ToString() + " Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
                 else
                 {
@@ -99,7 +99,7 @@ namespace Ildss.Storage
             // set all database docs to be "Current" and add documents to backup table entry
             foreach (var doc in toStore)
             {
-                doc.Status = "Current";
+                doc.Status = Settings.DocStatus.Current;
                 bup.Documents.Add(doc);
                 doc.Backups.Add(bup);
             }
