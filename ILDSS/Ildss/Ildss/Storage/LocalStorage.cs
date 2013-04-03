@@ -81,7 +81,7 @@ namespace Ildss.Storage
                     backupname = zipFile.Name;
                     backupsize = zipFile.Length;
 
-                    Logger.write("Success Created Incremental Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
+                    Logger.write("Success Created " + type + " Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
                 else
                 {

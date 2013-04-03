@@ -2,7 +2,7 @@
 
 namespace Ildss.Index
 {
-    interface IMonitor
+    public interface IMonitor
     {
         void Monitor(string path);
     }
