@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Intelligent Legal Document Storage System" Height="350" Width="525">
     <Grid>
-        <Button x:Name="button1" Content="Button" HorizontalAlignment="Left" Margin="432,19,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Button x:Name="btnIndex" Content="Index" HorizontalAlignment="Left" Height="29" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" Click="btnIndex_Click"/>
-        <Button x:Name="btnMonitor" Content="Monitor" HorizontalAlignment="Left" Height="31" Margin="10,44,0,0" VerticalAlignment="Top" Width="90" Click="btnMonitor_Click"/>
+        <Button x:Name="btnIndex" Content="Index" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" Click="btnIndex_Click"/>
+        <Button x:Name="btnMonitor" Content="Monitor" HorizontalAlignment="Left" Height="30" Margin="10,45,0,0" VerticalAlignment="Top" Width="90" Click="btnMonitor_Click"/>
         <Button x:Name="btnEmptyDb" Content="Empty DB" HorizontalAlignment="Left" Height="30" Margin="10,80,0,0" VerticalAlignment="Top" Width="90" Click="btnEmptyDb_Click"/>
-        <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="32" Margin="10,115,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
-        <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="36" Margin="10,152,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
+        <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="10,115,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
+        <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="10,150,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
 
     </Grid>
     
