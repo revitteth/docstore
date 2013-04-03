@@ -28,6 +28,9 @@ namespace IldssUI
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Ildss.KernelFactory.Instance.Get<Ildss.Index.DirectoryMonitor>().Monitor(@"E:\TestDir");
+            var fic = new Ildss.Models.FileIndexContext();
+            button1.Content = fic.Documents.First().DocumentHash;
+
         }
     }
 }
