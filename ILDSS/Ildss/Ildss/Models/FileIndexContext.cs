@@ -34,8 +34,8 @@ namespace Ildss.Models
                         .Map(
                             m =>
                             {
-                                m.MapLeftKey("DocumentId");
-                                m.MapRightKey("BackupId");
+                                m.MapLeftKey("BackupId");
+                                m.MapRightKey("DocumentId");
                                 m.ToTable("DocumentBackups");
                             }
                         );

@@ -332,3 +332,90 @@
 12:18:11 Storage.LocalStorage           Success Created Incremental Backup '03042013-121811-Incr.zip' containing 6 files
 12:18:11 Storage.LocalStorage           Success Created Incremental Backup '03042013-121811-Full.zip' containing 6 files
 12:18:20 Storage.LocalStorage           No files to be backed up
+12:19:22 Index.DirectoryMonitor         FSW Event - Changed
+12:19:22 Index.FrequentChecker          Changed (same document, updated hash, status indexed) E:\TestDir\2.txt
+12:19:22 Index.EventCollector           W Time New  E:\TestDir\2.txt
+12:19:22 Index.DirectoryMonitor         FSW Event - Changed
+12:19:22 Index.FrequentChecker          Changed (new hash matches existing file) E:\TestDir\2.txt
+12:19:28 Storage.LocalStorage           Success Created Incremental Backup '03042013-121928-Incr.zip' containing 1 files
+12:22:16 Index.InitialIndexer           Initial Index Started
+12:22:16 Index.InitialIndexer           Indexed File (new document) E:\TestDir\1.txt
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\1.txt
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\1.txt
+12:22:17 Index.InitialIndexer           Indexed File (new document) E:\TestDir\2.txt
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\2.txt
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\2.txt
+12:22:17 Index.InitialIndexer           Indexed File (new document) E:\TestDir\dave.docx
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\dave.docx
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\dave.docx
+12:22:17 Index.InitialIndexer           Indexed File (new document) E:\TestDir\New Microsoft Publisher Document.pub
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:22:17 Index.InitialIndexer           Indexed File (new document) E:\TestDir\sheet1.xlsx
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\sheet1.xlsx
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\sheet1.xlsx
+12:22:17 Index.InitialIndexer           Indexed File (new document) E:\TestDir\Folder\1.txt
+12:22:17 Index.EventCollector           R Time Init E:\TestDir\Folder\1.txt
+12:22:17 Index.EventCollector           W Time Init E:\TestDir\Folder\1.txt
+12:22:17 Index.InitialIndexer           Initial Index Finished
+12:22:17 Index.DirectoryMonitor         Directory Monitor Started
+12:22:19 Storage.LocalStorage           Success Created Incremental Backup '03042013-122219-Incr.zip' containing 6 files
+12:22:20 Storage.LocalStorage           No files to be backed up
+12:22:21 Storage.LocalStorage           Success Created Incremental Backup '03042013-122221-Full.zip' containing 6 files
+12:22:22 Storage.LocalStorage           Success Created Incremental Backup '03042013-122222-Full.zip' containing 6 files
+12:22:23 Storage.LocalStorage           Success Created Incremental Backup '03042013-122223-Full.zip' containing 6 files
+12:24:20 Index.InitialIndexer           Initial Index Started
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\1.txt
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\1.txt
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\1.txt
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\2.txt
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\2.txt
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\2.txt
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\dave.docx
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\dave.docx
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\dave.docx
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\New Microsoft Publisher Document.pub
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\New Microsoft Publisher Document.pub
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\sheet1.xlsx
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\sheet1.xlsx
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\sheet1.xlsx
+12:24:20 Index.InitialIndexer           Indexed File (new document) E:\TestDir\Folder\1.txt
+12:24:20 Index.EventCollector           R Time Init E:\TestDir\Folder\1.txt
+12:24:20 Index.EventCollector           W Time Init E:\TestDir\Folder\1.txt
+12:24:20 Index.InitialIndexer           Initial Index Finished
+12:24:20 Index.DirectoryMonitor         Directory Monitor Started
+12:24:26 Index.DirectoryMonitor         FSW Event - Created
+12:24:26 Index.DirectoryMonitor         FSW Event - Deleted
+12:24:26 Index.DirectoryMonitor         FSW Event - Created
+12:24:26 Index.DirectoryMonitor         FSW Event - Deleted
+12:24:26 Index.DirectoryMonitor         FSW Event - Created
+12:24:26 Index.DirectoryMonitor         FSW Event - Changed
+12:24:26 Index.DirectoryMonitor         FSW Event - Changed
+12:24:26 Index.DirectoryMonitor         FSW Event - Deleted
+12:24:26 Index.FrequentChecker          Delete E:\TestDir\New Microsoft Publisher Document.pub
+12:24:26 Index.DirectoryMonitor         FSW Event - Renamed
+12:24:26 Index.DirectoryMonitor         E:\TestDir\pub43C7.tmp   E:\TestDir\New Microsoft Publisher Document.pub
+12:24:26 Index.DirectoryMonitor         
+12:24:37 Storage.LocalStorage           Success Created Incremental Backup '03042013-122437-Incr.zip' containing 6 files
+12:24:42 Index.DirectoryMonitor         FSW Event - Changed
+12:24:42 Index.FrequentChecker          Changed (same document, updated hash, status indexed) E:\TestDir\2.txt
+12:24:42 Index.EventCollector           W Time New  E:\TestDir\2.txt
+12:24:42 Index.DirectoryMonitor         FSW Event - Changed
+12:24:42 Index.FrequentChecker          Changed (new hash matches existing file) E:\TestDir\2.txt
+12:24:46 Index.DirectoryMonitor         FSW Event - Changed
+12:24:46 Index.FrequentChecker          Changed (same document, updated hash, status indexed) E:\TestDir\Folder\1.txt
+12:24:46 Index.EventCollector           W Time New  E:\TestDir\Folder\1.txt
+12:24:46 Index.DirectoryMonitor         FSW Event - Changed
+12:24:46 Index.FrequentChecker          Changed (new hash matches existing file) E:\TestDir\Folder\1.txt
+12:24:49 Index.DirectoryMonitor         FSW Event - Created
+12:24:49 Index.FrequentChecker          Created (hash exists already, status remains same) E:\TestDir\Folder\1 - Copy.txt
+12:24:49 Index.EventCollector           R Time New  E:\TestDir\Folder\1 - Copy.txt
+12:24:49 Index.DirectoryMonitor         FSW Event - Changed
+12:24:49 Index.FrequentChecker          Changed (new hash matches existing file) E:\TestDir\Folder\1 - Copy.txt
+12:24:49 Index.DirectoryMonitor         FSW Event - Changed
+12:24:49 Index.FrequentChecker          Changed (new hash matches existing file) E:\TestDir\Folder\1 - Copy.txt
+12:24:49 Index.DirectoryMonitor         FSW Event - Changed
+12:24:52 Storage.LocalStorage           Success Created Incremental Backup '03042013-122452-Incr.zip' containing 2 files
+
+

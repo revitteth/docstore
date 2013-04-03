@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Ildss
 {
-    static class Logger
+    public static class Logger
     {
-        static private string _line;
+        private static string _line;
 
-        static public void write(string line)
+        public static void write(string line)
         {
             string where = new StackFrame(1).GetMethod().ReflectedType.ToString().Replace("Ildss.", "");
             if (where.Contains('+'))
@@ -24,7 +24,7 @@ namespace Ildss
             save();
         }
 
-        static public void save()
+        public static void save()
         {
             StreamWriter logFile;
 

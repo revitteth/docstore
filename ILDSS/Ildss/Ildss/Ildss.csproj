@@ -64,6 +64,12 @@
   <PropertyGroup>
     <StartupObject>Ildss.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Ildss.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apex.WinForms">
       <HintPath>..\packages\SharpShellTools.1.6.0\lib\Apex.WinForms.dll</HintPath>
@@ -79,10 +85,6 @@
     </Reference>
     <Reference Include="ServerManager">
       <HintPath>..\packages\SharpShellTools.1.6.0\lib\ServerManager.exe</HintPath>
-    </Reference>
-    <Reference Include="SharpShell, Version=1.6.0.0, Culture=neutral, PublicKeyToken=f14dc899472fe6fb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SharpShellTools.1.6.0\lib\SharpShell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -169,6 +171,7 @@
     <EmbeddedResource Include="Interface\Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Ildss.snk" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\DocEvent.datasource" />
