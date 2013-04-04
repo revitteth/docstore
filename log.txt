@@ -513,3 +513,83 @@
 11:41:19 Index.DirectoryMonitor         
 11:41:19 Index.DirectoryMonitor         FSW Event - Changed
 11:41:42 Storage.LocalStorage           Success Created Incremental Backup '03042013-114142-Incremental.zip' containing 1 files
+12:39:07 Index.DirectoryMonitor         Directory Monitor Started
+03:16:23 Index.InitialIndexer           Initial Index Started
+03:16:25 Index.InitialIndexer           Indexed File (matching hash exists) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:16:25 Index.InitialIndexer           Indexed File (matching hash exists) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:16:25 Index.InitialIndexer           Initial Index Finished
+03:16:45 Index.DirectoryMonitor         Directory Monitor Started
+03:17:42 Storage.LocalStorage           No files to be backed up
+03:17:43 Storage.LocalStorage           Success Created Full Backup '04042013-031743-Full.zip' containing 2 files
+03:22:19 Index.InitialIndexer           Initial Index Started
+03:22:20 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:22:20 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:22:20 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:22:20 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:22:20 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:22:20 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:22:20 Index.InitialIndexer           Initial Index Finished
+03:22:22 Index.DirectoryMonitor         Directory Monitor Started
+03:22:37 Index.DirectoryMonitor         FSW Event - Created
+03:22:37 Index.FrequentChecker          Created (hash exists already, status remains same) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Text Document.txt
+03:22:37 Index.EventCollector           R Time New  C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Text Document.txt
+03:22:37 Index.EventCollector           W Time New  C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Text Document.txt
+03:22:37 Index.DirectoryMonitor         FSW Event - Changed
+03:22:38 Index.DirectoryMonitor         FSW Event - Renamed
+03:22:38 Index.DirectoryMonitor         C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Text Document.txt   C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:38 Index.FrequentChecker          Rename File C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\New Text Document.txt to C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:38 Index.DirectoryMonitor         
+03:22:38 Index.DirectoryMonitor         FSW Event - Changed
+03:22:40 Index.DirectoryMonitor         FSW Event - Changed
+03:22:40 Index.FrequentChecker          Changed (new hash, new document, status indexed) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:40 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:40 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:40 Index.DirectoryMonitor         FSW Event - Changed
+03:22:40 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:41 Index.DirectoryMonitor         FSW Event - Changed
+03:22:41 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:41 Index.EventCollector           W Time New  C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:22:41 Index.DirectoryMonitor         FSW Event - Changed
+03:22:41 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:24:15 Storage.LocalStorage           Success Created Incremental Backup '04042013-032415-Incremental.zip' containing 3 files
+03:24:23 Storage.LocalStorage           Success Created Full Backup '04042013-032423-Full.zip' containing 3 files
+03:24:44 Storage.LocalStorage           No files to be backed up
+03:24:51 Storage.LocalStorage           Success Created Full Backup '04042013-032451-Full.zip' containing 3 files
+03:25:44 Index.DirectoryMonitor         FSW Event - Changed
+03:25:44 Index.FrequentChecker          Changed (same document, updated hash, status indexed) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:25:44 Index.EventCollector           W Time New  C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:25:44 Index.DirectoryMonitor         FSW Event - Changed
+03:25:44 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:26:04 Index.DirectoryMonitor         FSW Event - Created
+03:26:04 Index.FrequentChecker          Created (hash exists already, status remains same) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:26:04 Index.EventCollector           R Time New  C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:26:04 Index.DirectoryMonitor         FSW Event - Changed
+03:26:04 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:26:04 Index.DirectoryMonitor         FSW Event - Changed
+03:26:04 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:32:25 Index.InitialIndexer           Initial Index Started
+03:32:26 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:32:26 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:32:26 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:32:26 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:32:26 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:32:26 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:32:26 Index.InitialIndexer           Indexed File (new document) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:32:26 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:32:26 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\picture.bmp
+03:32:26 Index.InitialIndexer           Indexed File (matching hash exists) C:\Users\Max\Documents\GitHub\docstore\TestDir\gef\sdlfksjdf.txt
+03:32:26 Index.InitialIndexer           Initial Index Finished
+03:37:40 Index.DirectoryMonitor         Directory Monitor Started
+03:37:50 Index.DirectoryMonitor         FSW Event - Changed
+03:37:50 Index.FrequentChecker          Changed (new hash, new document, status indexed) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:37:50 Index.EventCollector           R Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:37:50 Index.EventCollector           W Time Init C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:37:50 Index.DirectoryMonitor         FSW Event - Changed
+03:37:50 Index.FrequentChecker          Changed (new hash matches existing file) C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:38:00 Index.DirectoryMonitor         FSW Event - Deleted
+03:38:00 Index.FrequentChecker          Delete C:\Users\Max\Documents\GitHub\docstore\TestDir\sdlfksjdf.txt
+03:38:01 Index.DirectoryMonitor         FSW Event - Deleted
+03:38:01 Index.FrequentChecker          Delete C:\Users\Max\Documents\GitHub\docstore\TestDir\20120207_172047.jpg
+03:38:30 Index.DirectoryMonitor         FSW Event - Renamed
+03:38:30 Index.DirectoryMonitor         C:\Users\Max\Documents\GitHub\docstore\TestDir\gef   C:\Users\Max\Documents\GitHub\docstore\TestDir\brian
+03:38:30 Index.FrequentChecker          Rename Directory C:\Users\Max\Documents\GitHub\docstore\TestDir\gef to C:\Users\Max\Documents\GitHub\docstore\TestDir\brian
