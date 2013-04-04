@@ -94,8 +94,6 @@ namespace Ildss.Index
                             fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                         }
                     }
-
-                    Logger.write(_changedOffice);
                 }
             );
 

@@ -12,7 +12,6 @@ using SharpShell;
 using SharpShell.SharpContextMenu;
 using SharpShell.Attributes;
 
-
 using Ildss;
 using Ildss.Properties;
 
@@ -25,10 +24,10 @@ namespace DocstoreShell
     public class ContextMenu : SharpContextMenu
     {
         string thetext = "dunno";
-        string ildssDirectory = @"E:\TestDir";
+        string ildssDirectory = Settings.WorkingDir;
 
         // possibly query main program for this at startup (as with the above)
-        private IList<string> _ignoredFiles = KernelFactory.Instance.Get<ISettings>().ignoredExtensions;
+        private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
         ContextMenuStrip MenuStrip = new ContextMenuStrip();
 
         protected override bool CanShowMenu()
@@ -76,11 +75,9 @@ namespace DocstoreShell
             MenuStrip.Items.Add(menuItem);
         }
 
-
         public void Geoff()
         {
             MessageBox.Show(thetext);
-            Ildss.Program.Main();
         }
     }
 }

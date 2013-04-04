@@ -30,14 +30,6 @@ namespace IldssUI
             InitializeComponent();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            Ildss.KernelFactory.Instance.Get<Ildss.Index.DirectoryMonitor>().Monitor(Settings.WorkingDir);
-            var fic = Ildss.KernelFactory.Instance.Get<Ildss.Models.IFileIndexContext>();
-            button1.Content = fic.Documents.First().DocumentHash;
-
-        }
-
         private async void btnIndex_Click(object sender, RoutedEventArgs e)
         {
             var progress = new Progress<int>(i => Logger.write(i + " %"));
@@ -52,7 +44,7 @@ namespace IldssUI
             btnMonitor.Content = "monitoring";
         }
 
-        private Task foo(IProgress<int> onProgressPercentChanged)
+        private Task foo(IProgress<int> progress)
         {
             return Task.Run(() =>
             {
