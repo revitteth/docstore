@@ -221,5 +221,7 @@ packages/
 *crunch*.local.xml
 
 
+#docstore
 TestDir/*
 StorageDir/*
+log.txt
