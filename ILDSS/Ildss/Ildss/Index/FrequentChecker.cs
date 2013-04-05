@@ -214,7 +214,7 @@ namespace Ildss.Index
                 }
                 else if (docu.DocumentHash == null)
                 {
-                    Logger.write("Error - Document with null hash found (possibly file was open at time of attempted hash)");
+                    Logger.write("NULL Hash Found, Re-Generating Hash " + docu.DocPaths.FirstOrDefault().Path);
                     docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
                 }
             }

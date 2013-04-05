@@ -34,20 +34,28 @@ namespace Ildss.Index
                 {
                     var pe = pattern.EventArgs;
                     Logger.write("FSW Event - Created");
-                    if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
+
+                    try
                     {
-                        var fi = new FileInfo(pe.FullPath);
-                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
+                        if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                         {
-                            if (!_ignoredFiles.Any(pe.Name.Contains) && fi.Extension != "")
+                            var fi = new FileInfo(pe.FullPath);
+                            if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                             {
-                                fIndexer.RespondToEvent(pe.FullPath, "Created");
-                            }
-                            else
-                            {
-                                Logger.write("Ignored file created" + path);
+                                if (!_ignoredFiles.Any(pe.Name.Contains) && fi.Extension != "")
+                                {
+                                    fIndexer.RespondToEvent(pe.FullPath, "Created");
+                                }
+                                else
+                                {
+                                    Logger.write("Ignored file created" + path);
+                                }
                             }
                         }
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        Logger.write("FILE NOT FOUND EXCEPTION " + path);
                     }
                 }
             );
@@ -109,7 +117,7 @@ namespace Ildss.Index
                             }
                         }
                     }
-                    catch (IOException e)
+                    catch (FileNotFoundException e)
                     {
                         if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                         {
