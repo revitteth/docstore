@@ -55,7 +55,7 @@ namespace Ildss.Index
                     }
                     catch (FileNotFoundException e)
                     {
-                        Logger.write("FILE NOT FOUND EXCEPTION " + path);
+                        Logger.write("FileNotFoundException " + e.Message);
                     }
                 }
             );
@@ -100,6 +100,7 @@ namespace Ildss.Index
                         }
                         else
                         {
+                            Logger.write("First Else - is this needed???? line 103");
                             if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                             {
                                 _changedOffice = pe.OldFullPath;

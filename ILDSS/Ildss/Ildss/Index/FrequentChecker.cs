@@ -220,7 +220,8 @@ namespace Ildss.Index
             }
             foreach (var docToRemove in docsToRemove)
             {
-                fic.Documents.Remove(docToRemove);
+                // removing documents is dangerous at the moment!!!
+                //fic.Documents.Remove(docToRemove);
             }
             fic.SaveChanges();
             docsToRemove.Clear();
