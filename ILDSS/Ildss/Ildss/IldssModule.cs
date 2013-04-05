@@ -23,6 +23,7 @@ namespace Ildss
             this.Bind<IHash>().To<HashSHA512>();
             this.Bind<IFileIndexContext>().To<FileIndexContext>();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
+            //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
             this.Bind<ICollector>().To<EventCollector>().InSingletonScope();
             this.Bind<IStorage>().To<LocalStorage>();
         }

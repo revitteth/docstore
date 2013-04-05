@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crypto\EncryptionAES.cs" />
+    <Compile Include="Index\DiscoMonitor.cs" />
     <Compile Include="Index\EventCollector.cs" />
     <Compile Include="Index\FrequentChecker.cs" />
     <Compile Include="Index\FrequentIndexer.cs" />

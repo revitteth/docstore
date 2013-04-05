@@ -180,7 +180,8 @@ namespace Ildss.Index
                         else
                         {
                             // don't think this should happen either
-                            Logger.write("Error in frequent checker line 183");
+                            // if this does happen - probably because file wasn't indexed properly to start with
+                            Logger.write(path + "Error in frequent checker line 183 - Changed (hash doesn't match, path doesn't match)");
                         }
                     }
     

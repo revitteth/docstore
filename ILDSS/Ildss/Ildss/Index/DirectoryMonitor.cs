@@ -22,9 +22,8 @@ namespace Ildss.Index
         public void Monitor (string path)
         {
             Logger.write("Directory Monitor Started");
-            FileSystemWatcher fsw = new FileSystemWatcher(path, "*.*");
 
-            fsw = new FileSystemWatcher(path);
+            var fsw = new FileSystemWatcher(path);
             var fIndexer = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
@@ -44,6 +43,10 @@ namespace Ildss.Index
                             {
                                 fIndexer.RespondToEvent(pe.FullPath, "Created");
                             }
+                            else
+                            {
+                                Logger.write("Ignored file created" + path);
+                            }
                         }
                     }
                 }
@@ -59,6 +62,15 @@ namespace Ildss.Index
                     {
                         fIndexer.RespondToEvent(pe.FullPath, "Deleted");
                     }
+                    else
+                    {
+                        Logger.write("Ignored file deleted " + path);
+                        if(_ignoredFiles.Any(pe.Name.Contains))
+                        {
+                            //KernelFactory.Instance.Get<IIndexer>("Frequent").IndexFiles(Settings.WorkingDir);
+                            fIndexer.MaintainDocuments();
+                        }
+                    }
                 }
             );
 
@@ -72,11 +84,32 @@ namespace Ildss.Index
 
                     Logger.write(pe.OldFullPath + "   " + pe.FullPath);
 
-                    if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
+                    try
                     {
-                        fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                        if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
+                        {
+                            fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                        }
+                        else
+                        {
+                            if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
+                            {
+                                _changedOffice = pe.OldFullPath;
+                            }
+                            else if (_ignoredFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
+                            {
+                                if (fi.FullName == _changedOffice)
+                                {
+                                    fIndexer.RespondToEvent(_changedOffice, "Changed");
+                                }
+                            }
+                            else
+                            {
+                                fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                            }
+                        }
                     }
-                    else
+                    catch (IOException e)
                     {
                         if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
                         {
@@ -88,10 +121,6 @@ namespace Ildss.Index
                             {
                                 fIndexer.RespondToEvent(_changedOffice, "Changed");
                             }
-                        }
-                        else
-                        {
-                            fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                         }
                     }
                 }
@@ -109,6 +138,10 @@ namespace Ildss.Index
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
                             fIndexer.RespondToEvent(pe.FullPath, "Changed");
+                        }
+                        else
+                        {
+                            Logger.write("Ignored file changed " + path);
                         }
                     }
                 }

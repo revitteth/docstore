@@ -20,7 +20,7 @@ namespace Ildss
                 where = where.Substring(0, where.LastIndexOf('+'));
             }
             where = where.PadRight(30, ' ');
-            _line = (DateTime.Now.ToString("hh:mm:ss") + " " + where + " " + line);
+            _line = (DateTime.Now.ToString("hh:mm:ss:fff") + " " + where + " " + line);
             save();
         }
 
