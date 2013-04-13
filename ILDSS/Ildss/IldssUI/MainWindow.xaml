@@ -1,14 +1,47 @@
-﻿<Window x:Class="IldssUI.MainWindow"
+﻿<Controls:MetroWindow x:Class="IldssUI.MainWindow"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Intelligent Legal Document Storage System" Height="350" Width="525">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Controls:MetroWindow.WindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="settings" />
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Resources>
+                            <SolidColorBrush x:Key="BlackBrush" Color="White" />
+                        </Rectangle.Resources>
+                        <Rectangle.Fill>
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource appbar_cloud}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock Text="ILDSS" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.WindowCommands>
+
     <Grid>
-        <Button x:Name="btnIndex" Content="Index" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" Click="btnIndex_Click"/>
-        <Button x:Name="btnMonitor" Content="Monitor" HorizontalAlignment="Left" Height="30" Margin="10,45,0,0" VerticalAlignment="Top" Width="90" Click="btnMonitor_Click"/>
+        <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="I" HorizontalAlignment="Left" Height="30" Margin="10,10,0,0" VerticalAlignment="Top" Width="30" Click="btnIndex_Click"/>
+        <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="M" HorizontalAlignment="Left" Height="30" Margin="45,10,0,0" VerticalAlignment="Top" Width="30" Click="btnMonitor_Click"/>
         <Button x:Name="btnEmptyDb" Content="Empty DB" HorizontalAlignment="Left" Height="30" Margin="10,80,0,0" VerticalAlignment="Top" Width="90" Click="btnEmptyDb_Click"/>
         <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="10,115,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
         <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="10,150,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
-
     </Grid>
     
-</Window>
+</Controls:MetroWindow>
