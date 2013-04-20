@@ -25,8 +25,6 @@ namespace Ildss.Index
             var fi = new FileInfo(path);
             fi.Refresh();
 
-            Logger.write("Registering event for " + fi.Name);
-
             try
             {
                 using (Stream stream = new FileStream(fi.FullName, FileMode.Open))
