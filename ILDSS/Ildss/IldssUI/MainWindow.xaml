@@ -38,10 +38,11 @@
 
     <Grid>
         <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="Index" HorizontalAlignment="Left" Height="75" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnIndex_Click"/>
-        <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="114,10,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
+        <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
         <Button x:Name="btnEmptyDb" Content="Empty DB" HorizontalAlignment="Left" Height="30" Margin="10,173,0,0" VerticalAlignment="Top" Width="90" Click="btnEmptyDb_Click"/>
         <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="10,208,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
         <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="10,243,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
+        <Label Content="Do not adjust settings here" HorizontalAlignment="Left" Height="33" Margin="10,123,0,0" VerticalAlignment="Top" Width="275"/>
     </Grid>
 
 </Controls:MetroWindow>
