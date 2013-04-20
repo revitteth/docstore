@@ -35,6 +35,7 @@ namespace IldssUI
         private async void btnIndex_Click(object sender, RoutedEventArgs e)
         {
             var progress = new Progress<int>(i => Logger.write(i + " %"));
+            btnIndex.Content = "Working...";
             await foo(progress);
             btnIndex.Content = "done";
         }
@@ -76,14 +77,34 @@ namespace IldssUI
             fic.SaveChanges();
         }
 
-        private void btnIncremental_Click(object sender, RoutedEventArgs e)
+        private Task IncrementalBackup()
         {
-            KernelFactory.Instance.Get<IStorage>().StoreIncr();
+            return Task.Run(() =>
+                {
+                    KernelFactory.Instance.Get<IStorage>().StoreIncr();
+                });
         }
 
-        private void btnFullBackup_Click(object sender, RoutedEventArgs e)
+        private async void btnIncremental_Click(object sender, RoutedEventArgs e)
         {
-            KernelFactory.Instance.Get<IStorage>().StoreFull();
+            btnIncremental.Content = "In Progress...";
+            await IncrementalBackup();
+            btnIncremental.Content = "Incr Backup";
+        }
+
+        private Task FullBackup()
+        {
+            return Task.Run(() =>
+            {
+                KernelFactory.Instance.Get<IStorage>().StoreFull();
+            });
+        }
+
+        private async void btnFullBackup_Click(object sender, RoutedEventArgs e)
+        {
+            btnFullBackup.Content = "In Progress...";
+            await FullBackup();
+            btnFullBackup.Content = "Full Backup";
         }
 
 
