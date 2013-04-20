@@ -10,8 +10,8 @@ namespace Ildss
     {
         // File extensions to be ignored
         public static IList<string> IgnoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", "~$", ".ildss" };
-        public static string WorkingDir = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
-        public static string StorageDir = @"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
+        public static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; //@"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+        public static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         public static bool FirstRun = true;  
   
         // enumerated variables

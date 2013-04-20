@@ -181,15 +181,19 @@ namespace Ildss.Index
                         {
                             // don't think this should happen either
                             // if this does happen - probably because file wasn't indexed properly to start with
-                            Logger.write(path + "Error in frequent checker line 183 - Changed (hash doesn't match, path doesn't match)");
+                            Logger.write(path + "Changed (hash doesn't match, path doesn't match)");
+                            Logger.write("Warning, the above line indicates an office document or a serious error");
+                            var newDoc = new Document() { Size = finfo.Length, DocumentHash = hashChanged, Status = Settings.DocStatus.Indexed };
+                            var newPath = new DocPath() { Directory = finfo.DirectoryName, Path = finfo.FullName, Name = finfo.Name };
+                            newDoc.DocPaths.Add(newPath);
+                            fic.Documents.Add(newDoc);
                         }
                     }
     
                     fic.SaveChanges();
 
-                    // Register the event - only if NOT a directory?
-                    fi = new FileInfo(path);
-                    KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
+                    // Register the event
+                    KernelFactory.Instance.Get<ICollector>().Register(finfo.FullName);
 
                     break;
             }
@@ -214,15 +218,31 @@ namespace Ildss.Index
                 }
                 else if (docu.DocumentHash == null)
                 {
-                    Logger.write("NULL Hash Found, Re-Generating Hash " + docu.DocPaths.FirstOrDefault().Path);
-                    docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
+                    try
+                    {
+
+                        Logger.write("NULL Hash Found, Re-Generating Hash " + docu.DocPaths.FirstOrDefault().Path);
+                        docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
+                        docu.Size = new FileInfo(docu.DocPaths.FirstOrDefault().Path).Length;
+                        docu.Status = Settings.DocStatus.Indexed;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.write(e.Message);
+                    }
                 }
+
+                // THIS COULD BE COMPUTATION INTENSIVE!!!!! WORK OUT A SIMPLER WAY?
+                KernelFactory.Instance.Get<ICollector>().Collect(Settings.WorkingDir);
             }
-            foreach (var docToRemove in docsToRemove)
-            {
+
+
+            //foreach (var docToRemove in docsToRemove)
+            //{
                 // removing documents is dangerous at the moment!!!
                 //fic.Documents.Remove(docToRemove);
-            }
+            //}
+
             fic.SaveChanges();
             docsToRemove.Clear();
         }

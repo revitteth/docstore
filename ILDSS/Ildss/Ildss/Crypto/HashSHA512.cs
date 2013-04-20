@@ -52,7 +52,7 @@ namespace Ildss.Crypto
             {
                 // file could not be accessed
                 // warn user and try again on OK
-                Logger.write("Error, file not accessible");
+                Logger.write("Error, file not accessible " + fi.Name);
             }
             catch (UnauthorizedAccessException)
             {

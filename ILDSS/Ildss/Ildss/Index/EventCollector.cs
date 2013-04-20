@@ -25,6 +25,22 @@ namespace Ildss.Index
             var fi = new FileInfo(path);
             fi.Refresh();
 
+            Logger.write("Registering event for " + fi.Name);
+
+            try
+            {
+                using (Stream stream = new FileStream(fi.FullName, FileMode.Open))
+                {
+                    // File/Stream manipulating code here
+                }
+            }
+            catch
+            {
+                Logger.write("Error, file not accessible " + fi.Name);
+                //check here why it failed and ask user to retry if the file is in use.
+                return;
+            }
+
             // Don't register events for directories
             if (!(File.GetAttributes(fi.FullName) == FileAttributes.Directory))
             {

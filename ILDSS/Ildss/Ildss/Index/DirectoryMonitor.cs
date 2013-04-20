@@ -24,7 +24,7 @@ namespace Ildss.Index
             Logger.write("Directory Monitor Started");
 
             var fsw = new FileSystemWatcher(path);
-            var fIndexer = KernelFactory.Instance.Get<IIndexChecker>();
+            var freqChecker = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
 
@@ -44,7 +44,7 @@ namespace Ildss.Index
                             {
                                 if (!_ignoredFiles.Any(pe.Name.Contains) && fi.Extension != "")
                                 {
-                                    fIndexer.RespondToEvent(pe.FullPath, "Created");
+                                    freqChecker.RespondToEvent(pe.FullPath, "Created");
                                 }
                                 else
                                 {
@@ -68,15 +68,14 @@ namespace Ildss.Index
                     Logger.write("FSW Event - Deleted");
                     if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
                     {
-                        fIndexer.RespondToEvent(pe.FullPath, "Deleted");
+                        freqChecker.RespondToEvent(pe.FullPath, "Deleted");
                     }
                     else
                     {
                         Logger.write("Ignored file deleted " + path);
                         if(_ignoredFiles.Any(pe.Name.Contains))
                         {
-                            //KernelFactory.Instance.Get<IIndexer>("Frequent").IndexFiles(Settings.WorkingDir);
-                            fIndexer.MaintainDocuments();
+                            freqChecker.MaintainDocuments();
                         }
                     }
                 }
@@ -92,45 +91,19 @@ namespace Ildss.Index
 
                     Logger.write(pe.OldFullPath + "   " + pe.FullPath);
 
-                    try
+                    if (_ignoredFiles.Any(pe.FullPath.Contains))
                     {
-                        if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
-                        {
-                            fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
-                        }
-                        else
-                        {
-                            Logger.write("First Else - is this needed???? line 103");
-                            if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
-                            {
-                                _changedOffice = pe.OldFullPath;
-                            }
-                            else if (_ignoredFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
-                            {
-                                if (fi.FullName == _changedOffice)
-                                {
-                                    fIndexer.RespondToEvent(_changedOffice, "Changed");
-                                }
-                            }
-                            else
-                            {
-                                fIndexer.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
-                            }
-                        }
+                        Logger.write("Renamed to an ignored file " + pe.Name);
+                        _changedOffice = pe.FullPath;
                     }
-                    catch (FileNotFoundException e)
+                    else if(_ignoredFiles.Any(pe.OldFullPath.Contains) | !pe.OldFullPath.Contains("."))
                     {
-                        if (_ignoredFiles.Any(pe.Name.Contains) | !pe.Name.Contains("."))
-                        {
-                            _changedOffice = pe.OldFullPath;
-                        }
-                        else if (_ignoredFiles.Any(pe.OldName.Contains) | !pe.OldName.Contains("."))
-                        {
-                            if (fi.FullName == _changedOffice)
-                            {
-                                fIndexer.RespondToEvent(_changedOffice, "Changed");
-                            }
-                        }
+                        Logger.write("Changed file (atomic temp) " + pe.Name);
+                        freqChecker.RespondToEvent(pe.FullPath, "Changed");    
+                    }
+                    else if (!_ignoredFiles.Any(pe.Name.Contains))  // beware the extensionless excel temp - same as a directory!! :(
+                    {
+                        freqChecker.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
                     }
                 }
             );
@@ -146,7 +119,7 @@ namespace Ildss.Index
                     {
                         if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
                         {
-                            fIndexer.RespondToEvent(pe.FullPath, "Changed");
+                            freqChecker.RespondToEvent(pe.FullPath, "Changed");
                         }
                         else
                         {
@@ -155,6 +128,7 @@ namespace Ildss.Index
                     }
                 }
             );
+
         }
     }
 }
