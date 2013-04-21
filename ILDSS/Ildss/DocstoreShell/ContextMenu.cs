@@ -24,10 +24,10 @@ namespace DocstoreShell
     public class ContextMenu : SharpContextMenu
     {
         string thetext = "dunno";
-        string ildssDirectory = Settings.WorkingDir;
+        string ildssDirectory = Settings.getWorkingDir();
 
         // possibly query main program for this at startup (as with the above)
-        private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
+        private IList<string> _ignoredFiles = Settings.getIgnoredExtensions();
         ContextMenuStrip MenuStrip = new ContextMenuStrip();
 
         protected override bool CanShowMenu()
