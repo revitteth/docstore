@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,31 @@ namespace IldssUI
             InitializeComponent();
             Settings.InitSettings();
 
+            lblIndexFrequency.Text = lblIndexFrequency.Text + Settings.getIndexInterval() / 60000 + " minutes";
+
+            if (Settings.getFirstRun())
+            {
+                TabControl.SetIsSelected(tabSettings, true);
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                txtWorkingDir.IsEnabled = false;
+                txtStorageDir.IsEnabled = false;
+                btnFinish.IsEnabled = false;
+                btnLoadDefaults.IsEnabled = false;
+                btnIndex.IsEnabled = false;
+                btnMonitor.IsEnabled = false;
+                txtWorkingDir.Text = Settings.getWorkingDir();
+                txtStorageDir.Text = Settings.getStorageDir();
+                this.Hide();
+                Task.Run(() =>
+                {
+                    KernelFactory.Instance.Get<IEventManager>("Index");
+                    KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.getWorkingDir());
+                });
+            }
+
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = new System.Drawing.Icon("../../cloud.ico");
             ni.Visible = true;
@@ -45,11 +71,6 @@ namespace IldssUI
                     this.Show();
                     this.WindowState = WindowState.Normal;
                 };
-
-            if (Settings.getFirstRun())
-            {
-                Settings.setFirstRun(false);
-            }
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -67,14 +88,13 @@ namespace IldssUI
             {
                 KernelFactory.Instance.Get<IEventManager>("Index");
             });
-            btnIndex.Content = "Index";
         }
 
         private async void btnMonitor_Click(object sender, RoutedEventArgs e)
         {
             var progress = new Progress<int>(i => Logger.write(i + " %"));
             await foo2(progress);
-            btnMonitor.Content = "monitoring";
+            btnMonitor.Content = "Working...";
         }
 
         private Task foo2(IProgress<int> onProgressPercentChanged)
@@ -139,6 +159,52 @@ namespace IldssUI
             btnExportCSV.Content = "Export CSV";
         }
 
+        private void txtWorkingDir_LostFocus(object sender, EventArgs e)
+        {
+            if (Directory.Exists(txtWorkingDir.Text))
+            {
+                txtWorkingDir.Background = System.Windows.Media.Brushes.LightGreen;
+                txtStorageDir.Focus();
+            }
+            else
+            {
+                txtWorkingDir.Background = System.Windows.Media.Brushes.LightPink;
+            }
+        }
+
+        private void txtStorageDir_LostFocus(object sender, EventArgs e)
+        {
+            if (Directory.Exists(txtStorageDir.Text))
+            {
+                txtStorageDir.Background = System.Windows.Media.Brushes.LightGreen;
+                btnFinish.Focus();
+            }
+            else
+            {
+                txtStorageDir.Background = System.Windows.Media.Brushes.LightPink;
+            }
+        }
+
+        private void btnFinish_Click(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(txtStorageDir.Text) & Directory.Exists(txtWorkingDir.Text))
+            {
+                Settings.setFirstRun(false);
+                Settings.setStorageDir(txtStorageDir.Text);
+                Settings.setWorkingDir(txtWorkingDir.Text);
+                btnFinish.IsEnabled = false;
+                btnLoadDefaults.IsEnabled = false;
+                txtWorkingDir.IsEnabled = false;
+                txtStorageDir.IsEnabled = false;
+                TabControl.SetIsSelected(tabDashboard, true);
+            }
+        }
+
+        private void btnLoadDefaults_Click(object sender, RoutedEventArgs e)
+        {
+            txtWorkingDir.Text = Settings.getWorkingDir();
+            txtStorageDir.Text = Settings.getStorageDir();
+        }
 
     }
 }

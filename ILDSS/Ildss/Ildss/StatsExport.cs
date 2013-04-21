@@ -17,7 +17,7 @@ namespace Ildss
             Logger.write("Exporting CSV!");
 
             // open CSV
-            System.IO.StreamWriter file = new System.IO.StreamWriter(@"E:\Documents\GitHub\docstore\output.csv");
+            System.IO.StreamWriter file = new System.IO.StreamWriter(Settings.getStorageDir() + @"\output.csv");
 
             string line = "";
 

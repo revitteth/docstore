@@ -42,16 +42,23 @@
         <Label Content="DO NOT TOUCH" HorizontalAlignment="Left" Height="33" Margin="322,280,0,0" VerticalAlignment="Top" Width="90" FontSize="11"/>
         <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="10,278,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <TabControl HorizontalAlignment="Left" Height="140" Margin="10,10,0,0" VerticalAlignment="Top" Width="500">
-            <TabItem Header="Dashboard">
+            <TabItem Header="Dashboard" Name="tabDashboard">
                 <Grid Background="White" Margin="0,0,0,-125">
-                <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="Index" HorizontalAlignment="Left" Height="75" Margin="6,6,0,0" VerticalAlignment="Top" Width="75" Click="btnIndex_Click"/>
-                <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="101,6,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
-                <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="378,14,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
-                <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="378,51,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
+                    <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="Index" HorizontalAlignment="Left" Height="75" Margin="6,6,0,0" VerticalAlignment="Top" Width="75" Click="btnIndex_Click"/>
+                    <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="101,6,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
+                    <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="378,14,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
+                    <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="378,51,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
+                    <TextBlock x:Name="lblIndexFrequency" HorizontalAlignment="Left" Height="40" Margin="5,95,0,0" TextWrapping="Wrap" Text="Index Runs Every " VerticalAlignment="Top" Width="329" FontSize="24"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings">
-                <Grid Background="White" Margin="0,0,0,-125">  
+            <TabItem Header="Settings" Name="tabSettings">
+                <Grid Background="White" Margin="0,0,0,-125">
+                    <TextBox Controls:TextboxHelper.Watermark="e.g. C:\IldssWorkingDir" x:Name="txtWorkingDir" HorizontalAlignment="Left" Height="26" Margin="80,25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="405" LostFocus="txtWorkingDir_LostFocus"/>
+                    <Label Content="Work Dir:" HorizontalAlignment="Left" Height="26" Margin="0,24,0,0" VerticalAlignment="Top" Width="75"/>
+                    <TextBox Controls:TextboxHelper.Watermark="e.g. D:\IldssStorageDir" x:Name="txtStorageDir" HorizontalAlignment="Left" Height="26" Margin="80,55,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="405" LostFocus="txtStorageDir_LostFocus"/>
+                    <Label Content="Storage Dir:" HorizontalAlignment="Left" Height="26" Margin="0,55,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Button x:Name="btnFinish" Content="Finish" HorizontalAlignment="Left" Height="35" Margin="350,170,0,0" VerticalAlignment="Top" Width="100" Click="btnFinish_Click"/>
+                    <Button x:Name="btnLoadDefaults" Content="Load Defaults" HorizontalAlignment="Left" Height="35" Margin="236,170,0,0" VerticalAlignment="Top" Width="100" Click="btnLoadDefaults_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>

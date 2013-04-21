@@ -11,11 +11,13 @@ namespace Ildss
     public static class Settings
     {
         private static IList<string> IgnoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", "~$", ".ildss" };
-        private static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; //@"C:\Users\Max\Documents\GitHub\docstore\TestDir";
-        private static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
+        //private static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; 
+        private static string WorkingDir = @"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+        //private static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir";
+        private static string StorageDir = @"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         private static bool FirstRun = true;
-        private static int IndexInterval = 2000;
-        private static int BackupInterval = 200000;
+        private static int IndexInterval = 2000; // default to 1 hour
+        private static int BackupInterval = 1;
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived };
@@ -94,7 +96,6 @@ namespace Ildss
             }
             else
             {
-                FirstRun = false;
                 UpdateSettings();
             }
         }
@@ -137,9 +138,6 @@ namespace Ildss
             fic.SaveChanges();
 
         }
-
-
-
 
     }
 }
