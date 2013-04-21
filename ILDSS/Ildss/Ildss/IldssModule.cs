@@ -17,15 +17,12 @@ namespace Ildss
     {
         public override void Load()
         {
-            this.Bind<IIndexer>().To<InitialIndexer>().Named("Initial");
-            this.Bind<IIndexer>().To<FrequentIndexer>().InSingletonScope().Named("Frequent");
-            this.Bind<IIndexChecker>().To<FrequentChecker>();
             this.Bind<IHash>().To<HashSHA512>();
             this.Bind<IFileIndexContext>().To<FileIndexContext>();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
-            this.Bind<IEventManager>().To<EventManager>().InSingletonScope();
-            this.Bind<ICollector>().To<EventCollector>().InSingletonScope();
+            this.Bind<IEventManager>().To<IndexManager>().Named("Index");
+            this.Bind<IEventManager>().To<BackupManager>().Named("Backup");
             this.Bind<IStorage>().To<LocalStorage>();
         }
     }

@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Ildss.Index
 {
-    interface ICollector
+    public class StatsExport
     {
-        void Collect(string path);
-        void Register(string path);
+        public StatsExport()
+        {
+         //read the database into a CSV file
+
+        }
     }
 }

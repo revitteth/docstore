@@ -10,22 +10,15 @@ using System.Timers;
 
 namespace Ildss.Index
 {
-    class EventManager : IEventManager
+    class IndexManager : IEventManager
     {
         private IList<FSEvent> _events = new List<FSEvent>();
-        private Timer timer = new Timer(Settings.IndexInterval);
-        private DateTime timer_start;
+        private Timer _indexTimer = new Timer(Settings.IndexInterval);
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
         public void AddEvent(FSEvent eve)
         {
             _events.Add(eve);
-        }
-
-        public string GetTimeRemaining()
-        {
-            TimeSpan t = DateTime.Now - timer_start;
-            return t.ToString();
         }
 
         public void print()
@@ -37,19 +30,17 @@ namespace Ildss.Index
             _events.Clear();
         }
 
-
-        // every half hour look for new events
-        public EventManager()
+        public IndexManager()
         {
-            timer.Start();
-            timer_start = DateTime.Now;
-            timer.Elapsed += new ElapsedEventHandler(IntervalIndex);
-            GC.KeepAlive(timer);
+            Logger.write("Started Indexer with Interval " + Settings.IndexInterval / 1000 + " seconds");
+            _indexTimer.Start();
+            _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
+            GC.KeepAlive(_indexTimer);
         }
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
-            timer.Enabled = false;
+            _indexTimer.Enabled = false;
             try
             {
                 var fic = KernelFactory.Instance.Get<IFileIndexContext>();
@@ -77,7 +68,7 @@ namespace Ildss.Index
                 Logger.write(ex.Message);
             //    // possibly dump all changes to DB?
             }
-            timer.Enabled = true;
+            _indexTimer.Enabled = true;
         }
 
         private static IEnumerable<string> GetFiles(string path)
@@ -318,9 +309,6 @@ namespace Ildss.Index
             fic.SaveChanges();
 
         }
-
-
-
 
         public void MaintainDocuments()
         {

@@ -119,17 +119,11 @@
   <ItemGroup>
     <Compile Include="Crypto\EncryptionAES.cs" />
     <Compile Include="Index\DiscoMonitor.cs" />
-    <Compile Include="Index\EventCollector.cs" />
     <Compile Include="Index\EventManager.cs" />
-    <Compile Include="Index\FrequentChecker.cs" />
-    <Compile Include="Index\FrequentIndexer.cs" />
     <Compile Include="Crypto\IEncryption.cs" />
     <Compile Include="Index\FSEvent.cs" />
     <Compile Include="Index\IEventManager.cs" />
-    <Compile Include="Index\IIndexChecker.cs" />
-    <Compile Include="Index\InitialIndexer.cs" />
     <Compile Include="Index\DirectoryMonitor.cs" />
-    <Compile Include="Index\ICollector.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Models\Backup.cs" />
     <Compile Include="Settings.cs" />
@@ -141,7 +135,6 @@
     <Compile Include="Index\IMonitor.cs" />
     <Compile Include="Models\IFileIndexContext.cs" />
     <Compile Include="Crypto\IHash.cs" />
-    <Compile Include="Index\IIndexer.cs" />
     <Compile Include="IldssModule.cs" />
     <Compile Include="KernelFactory.cs" />
     <Compile Include="Migrations\Configuration.cs" />

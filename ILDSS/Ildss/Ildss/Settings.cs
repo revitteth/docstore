@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,9 @@ namespace Ildss
         public static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         public static bool FirstRun = true;
         public static int IndexInterval = 2000;
+        public static int BackupInterval = 200000;
+
+        public static BlockingCollection<string> queue = new BlockingCollection<string>();
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived };

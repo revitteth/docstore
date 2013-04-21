@@ -29,18 +29,19 @@ namespace IldssUI
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private Timer timer = new Timer(500);
+        
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private async void btnIndex_Click(object sender, RoutedEventArgs e)
         {
-            var progress = new Progress<int>(i => Logger.write(i + " %"));
-            btnIndex.Content = "Working...";
-            await foo(progress);
-            btnIndex.Content = "done";
+            await Task.Run(() =>
+            {
+                KernelFactory.Instance.Get<IEventManager>("Index");
+            });
         }
 
         private async void btnMonitor_Click(object sender, RoutedEventArgs e)
@@ -48,14 +49,6 @@ namespace IldssUI
             var progress = new Progress<int>(i => Logger.write(i + " %"));
             await foo2(progress);
             btnMonitor.Content = "monitoring";
-        }
-
-        private Task foo(IProgress<int> progress)
-        {
-            return Task.Run(() =>
-            {
-                KernelFactory.Instance.Get<IIndexer>("Initial").IndexFiles(Settings.WorkingDir);
-            });
         }
 
         private Task foo2(IProgress<int> onProgressPercentChanged)
@@ -108,23 +101,6 @@ namespace IldssUI
             btnFullBackup.Content = "In Progress...";
             await FullBackup();
             btnFullBackup.Content = "Full Backup";
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-           // timer.Start();
-            //timer.Elapsed += new ElapsedEventHandler(BtnUpdate);
-           // GC.KeepAlive(timer);
-            Task.Run(() =>
-                {
-                    
-                    KernelFactory.Instance.Get<IEventManager>();
-                });
-        }
-
-        private void BtnUpdate(object source, ElapsedEventArgs e)
-        {
-         //   btnIntervalIndex.Content = KernelFactory.Instance.Get<IEventManager>().GetTimeRemaining();    
         }
 
 
