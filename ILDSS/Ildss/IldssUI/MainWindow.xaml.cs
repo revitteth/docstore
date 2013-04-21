@@ -38,10 +38,12 @@ namespace IldssUI
 
         private async void btnIndex_Click(object sender, RoutedEventArgs e)
         {
+            btnIndex.Content = "Working...";
             await Task.Run(() =>
             {
                 KernelFactory.Instance.Get<IEventManager>("Index");
             });
+            btnIndex.Content = "Index";
         }
 
         private async void btnMonitor_Click(object sender, RoutedEventArgs e)
@@ -103,9 +105,14 @@ namespace IldssUI
             btnFullBackup.Content = "Full Backup";
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            StatsExport.Export();
+            btnExportCSV.Content = "Exporting...";
+            await Task.Run(() =>
+                {
+                    StatsExport.Export();
+                });
+            btnExportCSV.Content = "Export CSV";
         }
 
 

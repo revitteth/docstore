@@ -14,6 +14,8 @@ namespace Ildss
             //read the database into a CSV file
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
+            Logger.write("Exporting CSV!");
+
             // open CSV
             System.IO.StreamWriter file = new System.IO.StreamWriter(@"E:\Documents\GitHub\docstore\output.csv");
 
@@ -31,6 +33,8 @@ namespace Ildss
                 }
             }
             file.Close();
+
+            Logger.write("Finished Exporting CSV " + @"E:\Documents\GitHub\docstore\output.csv");
 
         }
     }
