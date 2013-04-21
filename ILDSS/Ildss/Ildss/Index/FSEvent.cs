@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ildss.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Ildss.Index
     {
         public Settings.EventType Type { get; set; }
         public FileInfo FileInf { get; set; }
+        public int DocumentId { get; set; }
     }
 }

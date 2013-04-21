@@ -14,6 +14,7 @@ namespace Ildss.Index
     {
         private IList<FSEvent> _events = new List<FSEvent>();
         private Timer timer = new Timer(Settings.IndexInterval);
+        private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
         public void AddEvent(FSEvent eve)
         {
@@ -24,7 +25,7 @@ namespace Ildss.Index
         {
             foreach(var e in _events)
             {
-                Logger.write(e.Type + " " + e.FileInf.LastAccessTime + " " + e.FileInf.LastWriteTime + " " +  e.FileInf.Name);
+                Logger.write(e.Type + " " + e.FileInf.FullName);
             }
             _events.Clear();
         }
@@ -47,10 +48,14 @@ namespace Ildss.Index
 
                 // all based on path now - renaming is handled by the FSW
                 // go through directories comparing read/write times - if different add to events
-                DirectoryTraverse(Settings.WorkingDir, fic);
+                DirectoryTraverse(Settings.WorkingDir);
 
 
-                WriteChangesToDB(fic);
+                WriteChangesToDB();
+
+                // TODO
+                // 1. delete documents with no paths
+                // 2. rename logic
 
                 // if different
                 // check to see if the file has more than one path
@@ -105,7 +110,7 @@ namespace Ildss.Index
             }
         }
 
-        public void DirectoryTraverse(string dir, IFileIndexContext fic)
+        public void DirectoryTraverse(string dir)
         {
             try
             {
@@ -118,14 +123,13 @@ namespace Ildss.Index
                         {
                             // path matches
                             var doc = fic.DocPaths.First(i => i.Path == file).Document;
-                            CheckReadWrite(file, doc, fic);
+                            CheckReadWrite(file, doc);
                         }
                         else
                         {
                             // new document found
                             // add the event with the file info - this should mean the file is created on evaluation of events
                             _events.Add(new FSEvent() { Type = Settings.EventType.Create, FileInf = new FileInfo(file) });
-                            Logger.write("CREATE event registered " + file);
                         }
                     }
                 }
@@ -136,7 +140,7 @@ namespace Ildss.Index
             }
         }
 
-        public void CheckReadWrite(string path, Document doc, IFileIndexContext fic)
+        public void CheckReadWrite(string path, Document doc)
         {
             var fi = new FileInfo(path);
                
@@ -147,8 +151,7 @@ namespace Ildss.Index
                 if (DateTime.Compare(recentRead.Time, fi.LastAccessTime.AddMilliseconds(-fi.LastAccessTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Read'
-                    _events.Add(new FSEvent() { Type = Settings.EventType.Read, FileInf = fi });
-                    Logger.write("READ event registered " + fi.Name);
+                    _events.Add(new FSEvent() { Type = Settings.EventType.Read, FileInf = fi, DocumentId = doc.DocumentId });
                 }
             }
 
@@ -159,15 +162,47 @@ namespace Ildss.Index
                 if (DateTime.Compare(recentWrite.Time, fi.LastWriteTime.AddMilliseconds(-fi.LastWriteTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Write'
-                    _events.Add(new FSEvent() { Type = Settings.EventType.Write, FileInf = fi });
-                    Logger.write("WRITE event registered " + fi.Name);
+                    _events.Add(new FSEvent() { Type = Settings.EventType.Write, FileInf = fi, DocumentId = doc.DocumentId });
                 }
             }
 
 
         }
 
-        public void WriteChangesToDB(IFileIndexContext fic)
+        public void UpdateReadWrite(Document doc, FSEvent eve)
+        {
+            // READ Events
+            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Read && i.DocumentId == doc.DocumentId))
+            {
+                var recentRead = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
+                if (DateTime.Compare(recentRead.Time, eve.FileInf.LastAccessTime.AddMilliseconds(-eve.FileInf.LastAccessTime.Millisecond)) < 0)
+                {
+                    // add event to doc
+                    doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Read, Time = eve.FileInf.LastAccessTime });
+                }
+            }
+            else
+            {
+                doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Read, Time = eve.FileInf.LastAccessTime });
+            }
+
+            // WRITE Events
+            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Write && i.DocumentId == doc.DocumentId))
+            {
+                var recentWrite = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
+                if (DateTime.Compare(recentWrite.Time, eve.FileInf.LastWriteTime.AddMilliseconds(-eve.FileInf.LastWriteTime.Millisecond)) < 0)
+                {
+                    // add event to doc
+                    doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Write, Time = eve.FileInf.LastWriteTime });
+                }
+            }
+            else
+            {
+                doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Write, Time = eve.FileInf.LastWriteTime });
+            }
+        }
+
+        public void WriteChangesToDB()
         {
             foreach (var e in _events)
             {
@@ -183,16 +218,15 @@ namespace Ildss.Index
                         var doc = fic.Documents.First(i => i.DocumentHash == hash);
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
                         doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = DateTime.Now });
-                        doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Read, Time = e.FileInf.LastAccessTime });
-                        doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Write, Time = e.FileInf.LastWriteTime });
+                        UpdateReadWrite(doc, e);
                     }
                     else
                     {
                         // no path or hash found in DB
                         var doc = new Document() { DocumentHash = hash, Size = e.FileInf.Length, Status = Settings.DocStatus.Indexed };
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
-                        doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Read, Time = e.FileInf.LastAccessTime });
-                        doc.DocEvents.Add(new DocEvent() { Type = Settings.EventType.Write, Time = e.FileInf.LastWriteTime });
+                        doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = DateTime.Now });
+                        UpdateReadWrite(doc, e);
                         fic.Documents.Add(doc);
                     }
 
@@ -214,6 +248,7 @@ namespace Ildss.Index
                         // file hash matches an existing document (move the path to the matching document)
                         var matchingDoc = fic.Documents.First(i => i.DocumentHash == hash);
                         matchingDoc.DocPaths.Add(fic.DocPaths.First(i => i.Path == e.FileInf.FullName));
+                        matchingDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
                         Logger.write("Changed (new hash matches existing document) " + e.FileInf.Name);
                     }
                     else
@@ -229,19 +264,27 @@ namespace Ildss.Index
                                 relatedDoc.DocumentHash = hash;
                                 relatedDoc.Size = e.FileInf.Length;
                                 relatedDoc.Status = Settings.DocStatus.Indexed;
+                                relatedDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
                                 Logger.write("Changed (same document, updated hash, status indexed) " + e.FileInf.Name);
                             }
                             else if (relatedDoc.DocPaths.Count() > 1)
                             {
+                                // create new doc and add the path to it
                                 var newDoc = new Document() { DocumentHash = hash, Size = e.FileInf.Length, Status = Settings.DocStatus.Indexed };
-
+                                newDoc.DocPaths.Add(currentPath);
+                                newDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
+                                fic.Documents.Add(newDoc);
+                                Logger.write("Changed (new hash, new document, status indexed");
                             }
-
+                            else
+                            {
+                                // can't happen
+                                Logger.write("Error, impossible logic");
+                            }
                         }
                     }
 
-                    // do this bit last
-                    doc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
+                    fic.SaveChanges();
                 }
                 else if (e.Type == Settings.EventType.Rename)
                 {
