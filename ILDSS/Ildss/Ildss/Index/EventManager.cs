@@ -62,9 +62,10 @@ namespace Ildss.Index
                 WriteChangesToDB();
 
                 // TODO
-                // 1. delete documents with no paths DONE.
+                // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
                 // 2. rename directory logic is a bit wonky - seems ok now just give it a few more rename trials on directories
                 // 3. Take events from one doc to another on update (i.e. don't lose the history!)
+                // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
 
                 print();
 
@@ -313,9 +314,9 @@ namespace Ildss.Index
                         renamed.Name = e.FileInf.Name;    
                     }
                 }
-                
             }
             fic.SaveChanges();
+
         }
 
 
@@ -336,11 +337,17 @@ namespace Ildss.Index
                 {
                     foreach (var path in docu.DocPaths)
                     {
-                        if(!File.Exists(path.Path))
+                        if (!File.Exists(path.Path))
                         {
                             pathsToRemove.Add(path);
+                            Logger.write("Deleting Path " + path.Name);
                         }
                     }
+                }
+                if (docu.DocumentHash == null & docu.DocPaths.Any())
+                {
+                    Logger.write("NULL Hash - repairing");
+                    docu.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(docu.DocPaths.FirstOrDefault().Path);
                 }
             }
 
