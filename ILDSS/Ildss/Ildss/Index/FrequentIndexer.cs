@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Ildss.Properties;
+using Ildss.Models;
+using Ildss.Crypto;
 
 namespace Ildss.Index
 {
@@ -45,10 +47,34 @@ namespace Ildss.Index
         public void IndexFile(string path)
         {
             var fi = new FileInfo(path);
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            var hash = KernelFactory.Instance.Get<IHash>().HashFile(path);
+
+            // need WAY more logic here!
 
             if (!_ignoredFiles.Any(fi.Name.Contains) & fi.Name.Contains("."))
             {
-                KernelFactory.Instance.Get<ICollector>().Register(path);
+                if (!fic.Documents.Any(i => i.DocPaths.Any(j => j.Path == path)))
+                {
+                    Logger.write("TROUBLE");
+                    var newPath = new DocPath() { Directory = fi.DirectoryName, Path = fi.FullName, Name = fi.Name };
+
+                    if (fic.Documents.Any(i => i.DocumentHash == hash))
+                    {
+                        fic.Documents.FirstOrDefault(i => i.DocumentHash == hash).DocPaths.Add(newPath);
+                    }
+                    else
+                    {
+                        var newDoc = new Document() { DocumentHash = hash, Size = fi.Length, Status = Settings.DocStatus.Indexed };
+                        newDoc.DocPaths.Add(newPath);
+                        fic.Documents.Add(newDoc);
+                    }
+                    fic.SaveChanges();
+                }
+                else
+                {
+                    KernelFactory.Instance.Get<ICollector>().Register(path);
+                }
             }
         }
     }

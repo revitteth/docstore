@@ -49,7 +49,7 @@ namespace Ildss.Index
                     }
                     fic.SaveChanges();
 
-                    // Register the event - only if NOT a directory?
+                    // Register the event
                     KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
 
                     break;
@@ -84,7 +84,7 @@ namespace Ildss.Index
                         fic.SaveChanges();
                     }
 
-                    // Register the event - only if NOT a directory?
+                    // Register the event
                     fi = new FileInfo(path);
                     KernelFactory.Instance.Get<ICollector>().Register(fi.FullName);
 
@@ -99,9 +99,13 @@ namespace Ildss.Index
                         var deletedPath = fic.DocPaths.First(i => i.Path == path);
                         var deletedDoc = fic.Documents.First(i => i.DocumentId == deletedPath.DocumentId);
                         if (deletedDoc.DocPaths.Count() <= 1)
+                        {
                             fic.Documents.Remove(deletedDoc);
+                        }
                         else
+                        {
                             fic.DocPaths.Remove(deletedPath);
+                        }
                         fic.SaveChanges();
                     }
                     else
@@ -220,7 +224,7 @@ namespace Ildss.Index
                 {
                     try
                     {
-
+                        string newHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
                         Logger.write("NULL Hash Found, Re-Generating Hash " + docu.DocPaths.FirstOrDefault().Path);
                         docu.DocumentHash = hash.HashFile(docu.DocPaths.FirstOrDefault().Path);
                         docu.Size = new FileInfo(docu.DocPaths.FirstOrDefault().Path).Length;
@@ -233,14 +237,14 @@ namespace Ildss.Index
                 }
 
                 // THIS COULD BE COMPUTATION INTENSIVE!!!!! WORK OUT A SIMPLER WAY?
-                KernelFactory.Instance.Get<ICollector>().Collect(Settings.WorkingDir);
+                //poss breaking the copy pasting
+                //KernelFactory.Instance.Get<ICollector>().Collect(Settings.WorkingDir);
             }
 
-
+            // this is dangerous atm
             //foreach (var docToRemove in docsToRemove)
             //{
-                // removing documents is dangerous at the moment!!!
-                //fic.Documents.Remove(docToRemove);
+            //    fic.Documents.Remove(docToRemove);
             //}
 
             fic.SaveChanges();

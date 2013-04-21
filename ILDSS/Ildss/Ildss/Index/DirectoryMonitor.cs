@@ -27,6 +27,7 @@ namespace Ildss.Index
             var freqChecker = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
+            fsw.InternalBufferSize = 64;
 
             IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
             fswCreated.Subscribe(

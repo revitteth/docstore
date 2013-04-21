@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ildss.Index
 {
-    interface IIndexChecker
+    public interface IIndexChecker
     {
         void RespondToEvent(string path, string type, string oldpath = "");
         void MaintainDocuments();

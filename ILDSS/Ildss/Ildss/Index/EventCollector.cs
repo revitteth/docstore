@@ -42,6 +42,7 @@ namespace Ildss.Index
             // Don't register events for directories
             if (!(File.GetAttributes(fi.FullName) == FileAttributes.Directory))
             {
+                Logger.write("Troublesome path = " + path);
                 var docu = fic.DocPaths.First(i => i.Path == path).Document;
 
                 // Check read events

@@ -107,6 +107,12 @@ namespace IldssUI
             btnFullBackup.Content = "Full Backup";
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            KernelFactory.Instance.Get<IIndexer>("Frequent").IndexFiles(Settings.WorkingDir);
+            KernelFactory.Instance.Get<IIndexChecker>().MaintainDocuments();
+        }
+
 
     }
 }
