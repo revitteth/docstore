@@ -66,7 +66,7 @@ namespace Ildss.Index
 
                 print();
 
-                //MaintainDocuments();
+                MaintainDocuments();
 
             //}
            // catch (Exception ex)
