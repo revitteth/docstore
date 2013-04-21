@@ -41,8 +41,8 @@ namespace Ildss.Index
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 var fic = KernelFactory.Instance.Get<IFileIndexContext>();
                 // add FSEvents for the following files:
 
@@ -54,8 +54,9 @@ namespace Ildss.Index
                 WriteChangesToDB();
 
                 // TODO
-                // 1. delete documents with no paths
+                // 1. delete documents with no paths DONE.
                 // 2. rename logic
+                // 3. Take events from one doc to another on update (i.e. don't lose the history!)
 
                 // if different
                 // check to see if the file has more than one path
@@ -65,14 +66,14 @@ namespace Ildss.Index
 
                 print();
 
-                MaintainDocuments();
+                //MaintainDocuments();
 
-            }
-            catch (Exception ex)
-            {
-                Logger.write(ex.Message);
-                // possibly dump all changes to DB?
-            }
+            //}
+           // catch (Exception ex)
+            //{
+           //     Logger.write(ex.Message);
+            //    // possibly dump all changes to DB?
+            //}
         }
 
         private static IEnumerable<string> GetFiles(string path)
@@ -286,17 +287,32 @@ namespace Ildss.Index
                         }
                     }
 
-                    fic.SaveChanges();
                 }
                 else if (e.Type == Settings.EventType.Rename)
                 {
-                   // file has had path changed - may be a directory etc.
+                    if (e.isDirectory)
+                    {
+                        Logger.write("Rename Directory " + e.OldPath + " to " + e.FileInf.FullName);
+                        foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(e.OldPath)))
+                        {
+                            directory.Directory = directory.Directory.Replace(e.OldPath, e.FileInf.FullName); // subdirectories
+                        }
+                        foreach (var file in fic.DocPaths.Where(i => i.Path.Contains(e.OldPath)))
+                        {
+                            file.Path = file.Path.Replace(e.OldPath, e.FileInf.FullName);   // file paths
+                        }
+                    }
+                    else
+                    {
+                        var renamed = fic.DocPaths.First(i => i.Path == e.OldPath);
+                        renamed.Path = e.FileInf.FullName;
+                        renamed.Directory = e.FileInf.FullName.Replace(e.FileInf.Name, "");
+                        renamed.Name = e.FileInf.Name;    
+                    }
                 }
-
-                // is it possible/more efficient to do this outside the for loop?
-                fic.SaveChanges();
+                
             }
-
+            fic.SaveChanges();
         }
 
 
@@ -305,12 +321,23 @@ namespace Ildss.Index
         public void MaintainDocuments()
         {
             List<Document> docsToRemove = new List<Document>();
+            List<DocPath> pathsToRemove = new List<DocPath>();
 
             foreach (var docu in fic.Documents.Distinct())
             {
                 if (!docu.DocPaths.Any())
                 {
                     docsToRemove.Add(docu);
+                }
+                else
+                {
+                    foreach (var path in docu.DocPaths)
+                    {
+                        if(!File.Exists(path.Path))
+                        {
+                            pathsToRemove.Add(path);
+                        }
+                    }
                 }
             }
 
@@ -319,6 +346,11 @@ namespace Ildss.Index
             {
                 fic.Documents.Remove(docToRemove);                
                 //Logger.write("Deleted (had no paths) " + docToRemove.DocumentId + " " + docToRemove.DocPaths.FirstOrDefault().Name);
+            }
+
+            foreach (var pathToRemove in pathsToRemove)
+            {
+                fic.DocPaths.Remove(pathToRemove);
             }
 
             fic.SaveChanges();

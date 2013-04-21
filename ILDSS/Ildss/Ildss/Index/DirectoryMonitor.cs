@@ -33,14 +33,24 @@ namespace Ildss.Index
                 {
                     var pe = pattern.EventArgs;
 
-                    if (!_ignoredFiles.Any(pe.OldFullPath.Contains) | pe.OldFullPath.Contains("."))
+                    try
                     {
-                        // THIS WILL NEED TO IGNORE OFFICE FILES ETC USING SAME LOGIC AS BEFORE
+                        if (!_ignoredFiles.Any(pe.OldFullPath.Contains))
+                        {
+                            bool isDir = false;
+                            if (File.GetAttributes(pe.OldFullPath) == FileAttributes.Directory | File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
+                            {
+                                isDir = true;
+                            }
+                            var fs = new FSEvent() { Type = Settings.EventType.Rename, FileInf = new FileInfo(pe.FullPath), OldPath = pe.OldFullPath, isDirectory = isDir };
+                            KernelFactory.Instance.Get<IEventManager>().AddEvent(fs);
 
-                        var fs = new FSEvent() { Type = Settings.EventType.Rename, FileInf = new FileInfo(pe.FullPath) };
-                        KernelFactory.Instance.Get<IEventManager>().AddEvent(fs);
-
-                        Logger.write("FSW Event - Renamed");
+                            Logger.write("FSW Event - Renamed");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.write("TempFile Atomic Update. Error: " + e.Message);
                     }
                     
                     //var fi = new FileInfo(pe.FullPath);
