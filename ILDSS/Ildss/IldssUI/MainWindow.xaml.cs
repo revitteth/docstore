@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,6 +21,7 @@ using Ildss.Index;
 using Ildss.Models;
 using Ildss.Storage;
 
+
 namespace IldssUI
 {
     /// <summary>
@@ -27,6 +29,7 @@ namespace IldssUI
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private Timer timer = new Timer(500);
         public MainWindow()
         {
             InitializeComponent();
@@ -109,10 +112,19 @@ namespace IldssUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+           // timer.Start();
+            //timer.Elapsed += new ElapsedEventHandler(BtnUpdate);
+           // GC.KeepAlive(timer);
             Task.Run(() =>
                 {
+                    
                     KernelFactory.Instance.Get<IEventManager>();
                 });
+        }
+
+        private void BtnUpdate(object source, ElapsedEventArgs e)
+        {
+         //   btnIntervalIndex.Content = KernelFactory.Instance.Get<IEventManager>().GetTimeRemaining();    
         }
 
 

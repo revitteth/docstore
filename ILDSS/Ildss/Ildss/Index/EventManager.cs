@@ -14,11 +14,18 @@ namespace Ildss.Index
     {
         private IList<FSEvent> _events = new List<FSEvent>();
         private Timer timer = new Timer(Settings.IndexInterval);
+        private DateTime timer_start;
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
         public void AddEvent(FSEvent eve)
         {
             _events.Add(eve);
+        }
+
+        public string GetTimeRemaining()
+        {
+            TimeSpan t = DateTime.Now - timer_start;
+            return t.ToString();
         }
 
         public void print()
@@ -35,16 +42,17 @@ namespace Ildss.Index
         public EventManager()
         {
             timer.Start();
+            timer_start = DateTime.Now;
             timer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(timer);
         }
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
-            //try
-            //{
+            timer.Enabled = false;
+            try
+            {
                 var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-                // add FSEvents for the following files:
 
                 // all based on path now - renaming is handled by the FSW
                 // go through directories comparing read/write times - if different add to events
@@ -55,25 +63,20 @@ namespace Ildss.Index
 
                 // TODO
                 // 1. delete documents with no paths DONE.
-                // 2. rename logic
+                // 2. rename directory logic is a bit wonky - seems ok now just give it a few more rename trials on directories
                 // 3. Take events from one doc to another on update (i.e. don't lose the history!)
-
-                // if different
-                // check to see if the file has more than one path
-                // if not just update its size + hash
-                // if it has, create a new document + remove path from old document and add to new one
-                // if don't exist
 
                 print();
 
                 MaintainDocuments();
 
-            //}
-           // catch (Exception ex)
-            //{
-           //     Logger.write(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Logger.write(ex.Message);
             //    // possibly dump all changes to DB?
-            //}
+            }
+            timer.Enabled = true;
         }
 
         private static IEnumerable<string> GetFiles(string path)

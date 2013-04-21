@@ -9,5 +9,6 @@ namespace Ildss.Index
     public interface IEventManager
     {
         void AddEvent(FSEvent Eve);
+        string GetTimeRemaining();
     }
 }
