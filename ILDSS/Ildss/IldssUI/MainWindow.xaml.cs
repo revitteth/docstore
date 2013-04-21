@@ -45,6 +45,11 @@ namespace IldssUI
                     this.Show();
                     this.WindowState = WindowState.Normal;
                 };
+
+            if (Settings.getFirstRun())
+            {
+                Settings.setFirstRun(false);
+            }
         }
 
         protected override void OnStateChanged(EventArgs e)
