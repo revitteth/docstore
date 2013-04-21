@@ -65,6 +65,8 @@ namespace Ildss.Index
 
                 print();
 
+                MaintainDocuments();
+
             }
             catch (Exception ex)
             {
@@ -295,6 +297,32 @@ namespace Ildss.Index
                 fic.SaveChanges();
             }
 
+        }
+
+
+
+
+        public void MaintainDocuments()
+        {
+            List<Document> docsToRemove = new List<Document>();
+
+            foreach (var docu in fic.Documents.Distinct())
+            {
+                if (!docu.DocPaths.Any())
+                {
+                    docsToRemove.Add(docu);
+                }
+            }
+
+            // this is dangerous atm
+            foreach (var docToRemove in docsToRemove)
+            {
+                fic.Documents.Remove(docToRemove);                
+                //Logger.write("Deleted (had no paths) " + docToRemove.DocumentId + " " + docToRemove.DocPaths.FirstOrDefault().Name);
+            }
+
+            fic.SaveChanges();
+            docsToRemove.Clear();
         }
 
     }
