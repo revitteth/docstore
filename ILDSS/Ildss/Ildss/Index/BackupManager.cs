@@ -12,14 +12,14 @@ namespace Ildss.Index
 {
     class BackupManager : IEventManager
     {
-        //private IList<FSEvent> _events = new List<FSEvent>();
+        private IList<FSEvent> _events = new List<FSEvent>();
         //private Timer _indexTimer = new Timer(Settings.IndexInterval);
         //private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-        //public void AddEvent(FSEvent eve)
-        //{
-        //    _events.Add(eve);
-        //}
+        public void AddEvent(FSEvent eve)
+        {
+            _events.Add(eve);
+        }
 
         //public void print()
         //{

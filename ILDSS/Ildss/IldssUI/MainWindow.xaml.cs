@@ -103,6 +103,11 @@ namespace IldssUI
             btnFullBackup.Content = "Full Backup";
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            StatsExport.Export();
+        }
+
 
     }
 }

@@ -225,3 +225,4 @@ packages/
 TestDir/*
 StorageDir/*
 log.txt
+output.csv
