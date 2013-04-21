@@ -16,7 +16,6 @@ namespace Ildss.Index
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class DirectoryMonitor : IMonitor
     {
-        private string _changedOffice = "";
         private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
 
         public void Monitor (string path)
@@ -24,109 +23,51 @@ namespace Ildss.Index
             Logger.write("Directory Monitor Started");
 
             var fsw = new FileSystemWatcher(path);
-            var freqChecker = KernelFactory.Instance.Get<IIndexChecker>();
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
-            fsw.InternalBufferSize = 64;
-
-            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
-            fswCreated.Subscribe(
-                pattern =>
-                {
-                    var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Created");
-
-                    try
-                    {
-                        if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
-                        {
-                            var fi = new FileInfo(pe.FullPath);
-                            if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
-                            {
-                                if (!_ignoredFiles.Any(pe.Name.Contains) && fi.Extension != "")
-                                {
-                                    freqChecker.RespondToEvent(pe.FullPath, "Created");
-                                }
-                                else
-                                {
-                                    Logger.write("Ignored file created" + path);
-                                }
-                            }
-                        }
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        Logger.write("FileNotFoundException " + e.Message);
-                    }
-                }
-            );
-
-            IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
-            fswDeleted.Subscribe(
-                pattern =>
-                {
-                    var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Deleted");
-                    if (!_ignoredFiles.Any(pe.Name.Contains) & pe.Name.Contains("."))
-                    {
-                        freqChecker.RespondToEvent(pe.FullPath, "Deleted");
-                    }
-                    else
-                    {
-                        Logger.write("Ignored file deleted " + path);
-                        if(_ignoredFiles.Any(pe.Name.Contains))
-                        {
-                            freqChecker.MaintainDocuments();
-                        }
-                    }
-                }
-            );
+            //fsw.InternalBufferSize = 32768;
 
             IObservable<EventPattern<RenamedEventArgs>> fswRenamed = Observable.FromEventPattern<RenamedEventArgs>(fsw, "Renamed");
             fswRenamed.Subscribe(
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Renamed");
-                    var fi = new FileInfo(pe.FullPath);
 
-                    Logger.write(pe.OldFullPath + "   " + pe.FullPath);
+                    if (!_ignoredFiles.Any(pe.OldFullPath.Contains) | pe.OldFullPath.Contains("."))
+                    {
+                        // THIS WILL NEED TO IGNORE OFFICE FILES ETC USING SAME LOGIC AS BEFORE
 
-                    if (_ignoredFiles.Any(pe.FullPath.Contains))
-                    {
-                        Logger.write("Renamed to an ignored file " + pe.Name);
-                        _changedOffice = pe.FullPath;
-                    }
-                    else if(_ignoredFiles.Any(pe.OldFullPath.Contains) | !pe.OldFullPath.Contains("."))
-                    {
-                        Logger.write("Changed file (atomic temp) " + pe.Name);
-                        freqChecker.RespondToEvent(pe.FullPath, "Changed");    
-                    }
-                    else if (!_ignoredFiles.Any(pe.Name.Contains))  // beware the extensionless excel temp - same as a directory!! :(
-                    {
-                        freqChecker.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
-                    }
-                }
-            );
+                        var fs = new FSEvent() { Type = Settings.EventType.Rename, FileInf = new FileInfo(pe.FullPath) };
+                        KernelFactory.Instance.Get<IEventManager>().AddEvent(fs);
 
-            IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
-            fswChanged.Subscribe(
-                pattern =>
-                {
-                    var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Changed");
-                    var fi = new FileInfo(pe.FullPath);
-                    if (!_ignoredFiles.Any(pe.Name.Contains) & fi.Extension != "")
-                    {
-                        if (!(File.GetAttributes(pe.FullPath) == FileAttributes.Directory))
-                        {
-                            freqChecker.RespondToEvent(pe.FullPath, "Changed");
-                        }
-                        else
-                        {
-                            Logger.write("Ignored file changed " + path);
-                        }
+                        Logger.write("FSW Event - Renamed");
                     }
+                    
+                    //var fi = new FileInfo(pe.FullPath);
+
+                    //Logger.write(pe.OldFullPath + " " + pe.FullPath);
+
+
+                    // RE_EVALUATE LOGIC HERE
+                    // if its a folder ... update all the paths
+                    // if its throwing an error its probably an excel file or something
+                    // if its a file... just update its path
+
+
+                    //if (_ignoredFiles.Any(pe.FullPath.Contains))
+                    //{
+                    //    Logger.write("Renamed to an ignored file " + pe.Name);
+                    //    _changedOffice = pe.FullPath;
+                    //}
+                    //else if (_ignoredFiles.Any(pe.OldFullPath.Contains) | !pe.OldFullPath.Contains("."))
+                    //{
+                    //    Logger.write("Changed file (atomic temp) " + pe.Name);
+                    //    freqChecker.RespondToEvent(pe.FullPath, "Changed");
+                    //}
+                    //else if (!_ignoredFiles.Any(pe.Name.Contains)) // beware the extensionless excel temp - same as a directory!! :(
+                    //{
+                    //    freqChecker.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
+                    //}
                 }
             );
 

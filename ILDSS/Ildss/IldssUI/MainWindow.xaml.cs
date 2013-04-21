@@ -109,8 +109,10 @@ namespace IldssUI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            KernelFactory.Instance.Get<IIndexer>("Frequent").IndexFiles(Settings.WorkingDir);
-            KernelFactory.Instance.Get<IIndexChecker>().MaintainDocuments();
+            Task.Run(() =>
+                {
+                    KernelFactory.Instance.Get<IEventManager>();
+                });
         }
 
 
