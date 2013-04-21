@@ -13,7 +13,7 @@ namespace Ildss
         public static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; //@"C:\Users\Max\Documents\GitHub\docstore\TestDir";
         public static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         public static bool FirstRun = true;
-        public static int IndexInterval = 20000;
+        public static int IndexInterval = 2000;
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived };
