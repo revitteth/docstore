@@ -14,7 +14,7 @@ namespace Ildss.Index
     {
         private IList<FSEvent> _events = new List<FSEvent>();
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
-        private Timer _indexTimer = new Timer(Settings.IndexInterval);
+        private Timer _indexTimer = new Timer(Settings.getIndexInterval());
 
         public void AddEvent(FSEvent eve)
         {
@@ -32,7 +32,7 @@ namespace Ildss.Index
 
         public IndexManager()
         {
-            Logger.write("Started Indexer with Interval " + Settings.IndexInterval / 1000 + " seconds");
+            Logger.write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
             _indexTimer.Start();
             _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(_indexTimer);
@@ -47,7 +47,7 @@ namespace Ildss.Index
 
                 // all based on path now - renaming is handled by the FSW
                 // go through directories comparing read/write times - if different add to events
-                DirectoryTraverse(Settings.WorkingDir);
+                DirectoryTraverse(Settings.getWorkingDir());
 
 
                 WriteChangesToDB();
@@ -114,7 +114,7 @@ namespace Ildss.Index
             {
                 foreach (string file in GetFiles(dir))
                 {
-                    if (!Settings.IgnoredExtensions.Any(file.Contains))
+                    if (!Settings.getIgnoredExtensions().Any(file.Contains))
                     {
                         // check here to see if read/write times different
                         if (fic.DocPaths.Any(i => i.Path == file))

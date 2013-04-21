@@ -76,7 +76,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
             {
-                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.WorkingDir);
+                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.getWorkingDir());
             });
         }
 

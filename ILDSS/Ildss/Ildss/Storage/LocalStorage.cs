@@ -16,7 +16,7 @@ namespace Ildss.Storage
     {
         private string ildssDir = @"C:\ildss\";
         private string tmp = @"C:\ildss\tmp\";
-        private string storageDir = Settings.StorageDir;
+        private string storageDir = Settings.getStorageDir();
 
         public LocalStorage()
         {

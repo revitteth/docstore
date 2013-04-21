@@ -10,17 +10,78 @@ namespace Ildss
 {
     public static class Settings
     {
-        public static IList<string> IgnoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", "~$", ".ildss" };
-        public static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; //@"C:\Users\Max\Documents\GitHub\docstore\TestDir";
-        public static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
-        public static bool FirstRun = true;
-        public static int IndexInterval = 2000;
-        public static int BackupInterval = 200000;
+        private static IList<string> IgnoredExtensions = new List<string> { ".tmp", ".TMP", ".gz", ".ini", "~$", ".ildss" };
+        private static string WorkingDir = @"E:\Documents\GitHub\docstore\TestDir"; //@"C:\Users\Max\Documents\GitHub\docstore\TestDir";
+        private static string StorageDir = @"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
+        private static bool FirstRun = true;
+        private static int IndexInterval = 2000;
+        private static int BackupInterval = 200000;
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived };
         public enum EventType { Read, Write, Create, Rename };
         public enum BackupType { Incremental, Full };
+
+
+        public static IList<string> getIgnoredExtensions()
+        {
+            return IgnoredExtensions;
+        }
+        public static void setIgnoredExtensions(IList<string> IE)
+        {
+            IgnoredExtensions = IE;
+            UpdateSettings();
+        }
+
+        public static string getWorkingDir()
+        {
+            return WorkingDir;
+        }
+        public static void setWorkingDir(string WD)
+        {
+            WorkingDir = WD;
+            UpdateSettings();
+        }
+
+        public static string getStorageDir()
+        {
+            return StorageDir;
+        }
+        public static void setStorageDir(string SD)
+        {
+            StorageDir = SD;
+            UpdateSettings();
+        }
+
+        public static bool getFirstRun()
+        {
+            return FirstRun;
+        }
+        public static void setFirstRun(bool FR)
+        {
+            FirstRun = FR;
+            UpdateSettings();
+        }
+
+        public static int getIndexInterval()
+        {
+            return IndexInterval;
+        }
+        public static void setIndexInterval(int II)
+        {
+            IndexInterval = II;
+            UpdateSettings();
+        }
+
+        public static int getBackupInterval()
+        {
+            return BackupInterval;
+        }
+        public static void setBackupInterval(int BI)
+        {
+            BackupInterval = BI;
+            UpdateSettings();
+        }
 
 
         public static void InitSettings()
@@ -76,5 +137,9 @@ namespace Ildss
             fic.SaveChanges();
 
         }
+
+
+
+
     }
 }

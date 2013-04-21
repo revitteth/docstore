@@ -16,7 +16,7 @@ namespace Ildss.Index
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class DirectoryMonitor : IMonitor
     {
-        private IList<string> _ignoredFiles = Settings.IgnoredExtensions;
+        private IList<string> _ignoredFiles = Settings.getIgnoredExtensions();
 
         public void Monitor (string path)
         {
