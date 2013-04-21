@@ -13,6 +13,7 @@ namespace Ildss.Models
         public DbSet<DocPath> DocPaths { get; set; }
         public DbSet<DocEvent> DocEvents { get; set; }
         public DbSet<Backup> Backups { get; set; }
+        public DbSet<StoredSettings> StoredSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

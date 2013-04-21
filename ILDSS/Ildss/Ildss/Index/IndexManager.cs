@@ -13,8 +13,8 @@ namespace Ildss.Index
     class IndexManager : IEventManager
     {
         private IList<FSEvent> _events = new List<FSEvent>();
-        private Timer _indexTimer = new Timer(Settings.IndexInterval);
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
+        private Timer _indexTimer = new Timer(Settings.IndexInterval);
 
         public void AddEvent(FSEvent eve)
         {

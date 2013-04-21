@@ -33,7 +33,7 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
-
+            Settings.InitSettings();
         }
 
         private async void btnIndex_Click(object sender, RoutedEventArgs e)

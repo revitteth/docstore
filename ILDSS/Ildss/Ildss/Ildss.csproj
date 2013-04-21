@@ -125,6 +125,7 @@
     <Compile Include="Index\FSEvent.cs" />
     <Compile Include="Index\IEventManager.cs" />
     <Compile Include="Index\DirectoryMonitor.cs" />
+    <Compile Include="Models\StoredSettings.cs" />
     <Compile Include="StatsExport.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Models\Backup.cs" />
