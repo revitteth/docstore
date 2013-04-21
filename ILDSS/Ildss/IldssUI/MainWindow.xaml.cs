@@ -20,6 +20,7 @@ using Ildss;
 using Ildss.Index;
 using Ildss.Models;
 using Ildss.Storage;
+using System.Drawing;
 
 
 namespace IldssUI
@@ -34,6 +35,24 @@ namespace IldssUI
         {
             InitializeComponent();
             Settings.InitSettings();
+
+            System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
+            ni.Icon = new System.Drawing.Icon("../../cloud.ico");
+            ni.Visible = true;
+            ni.DoubleClick +=
+                delegate(object sender, EventArgs args)
+                {
+                    this.Show();
+                    this.WindowState = WindowState.Normal;
+                };
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+                this.Hide();
+
+            base.OnStateChanged(e);
         }
 
         private async void btnIndex_Click(object sender, RoutedEventArgs e)
