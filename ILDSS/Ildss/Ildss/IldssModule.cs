@@ -17,7 +17,8 @@ namespace Ildss
     {
         public override void Load()
         {
-            this.Bind<IHash>().To<HashSHA512>();
+            //this.Bind<IHash>().To<HashSHA512>();
+            this.Bind<IHash>().To<HashMax>();
             this.Bind<IFileIndexContext>().To<FileIndexContext>();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
