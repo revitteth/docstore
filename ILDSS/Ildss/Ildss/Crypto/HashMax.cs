@@ -33,7 +33,7 @@ namespace Ildss.Crypto
                 var sha256 = new SHA256Managed();
 
                 FileStream fs = System.IO.File.OpenRead(path);
-                Logger.write("Hashing " + fi.Name + ", " + fi.Length);
+
                 if (fi.Length > 3072)
                 {
                     long middle = (long)Math.Floor((double)fi.Length / (double)2);
@@ -55,8 +55,6 @@ namespace Ildss.Crypto
                     hash = ByteToString(sha256.ComputeHash(fs)) + fi.Length.ToString();  
                 }
 
-                Logger.write("NewHash: " + hash);
-                
                 fs.Close();
                 return hash;
             }

@@ -58,8 +58,6 @@ namespace Ildss.Index
                 // 3. Take events from one doc to another on update (i.e. don't lose the history!)
                 // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
 
-                print();
-
                 MaintainDocuments();
 
             }
@@ -247,7 +245,7 @@ namespace Ildss.Index
                         var matchingDoc = fic.Documents.First(i => i.DocumentHash == hash);
                         matchingDoc.DocPaths.Add(fic.DocPaths.First(i => i.Path == e.FileInf.FullName));
                         matchingDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
-                        Logger.write("Changed (new hash matches existing document) " + e.FileInf.Name);
+                        //Logger.write("Changed (new hash matches existing document) " + e.FileInf.Name);
                     }
                     else
                     {
@@ -263,7 +261,7 @@ namespace Ildss.Index
                                 relatedDoc.Size = e.FileInf.Length;
                                 relatedDoc.Status = Settings.DocStatus.Indexed;
                                 relatedDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
-                                Logger.write("Changed (same document, updated hash, status indexed) " + e.FileInf.Name);
+                                //Logger.write("Changed (same document, updated hash, status indexed) " + e.FileInf.Name);
                             }
                             else if (relatedDoc.DocPaths.Count() > 1)
                             {
@@ -272,7 +270,7 @@ namespace Ildss.Index
                                 newDoc.DocPaths.Add(currentPath);
                                 newDoc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastWriteTime, Type = e.Type });
                                 fic.Documents.Add(newDoc);
-                                Logger.write("Changed (new hash, new document, status indexed");
+                                //Logger.write("Changed (new hash, new document, status indexed");
                             }
                             else
                             {
@@ -305,9 +303,10 @@ namespace Ildss.Index
                         renamed.Name = e.FileInf.Name;    
                     }
                 }
+                //fic.SaveChanges();
             }
             fic.SaveChanges();
-
+            Logger.write("Done");
         }
 
         public void MaintainDocuments()
@@ -328,7 +327,7 @@ namespace Ildss.Index
                         if (!File.Exists(path.Path))
                         {
                             pathsToRemove.Add(path);
-                            Logger.write("Deleting Path " + path.Name);
+                            //Logger.write("Deleting Path " + path.Name);
                         }
                     }
                 }
