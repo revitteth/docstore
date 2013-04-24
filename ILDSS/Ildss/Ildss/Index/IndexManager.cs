@@ -44,8 +44,8 @@ namespace Ildss.Index
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
             _indexTimer.Enabled = false;
-            //try
-            //{
+            try
+            {
                 if (IndexRequired == true)
                 {
                     IndexRequired = false;
@@ -58,21 +58,21 @@ namespace Ildss.Index
 
                     WriteChangesToDB();
 
+                    MaintainDocuments();  
+
                     // TODO
                     // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
                     // 2. rename directory logic is a bit wonky - seems ok now just give it a few more rename trials on directories
                     // 3. Take events from one doc to another on update (i.e. don't lose the history!)
                     // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
-
-                    MaintainDocuments();
+                                      
                 }
-
-           // }
-            //catch (Exception ex)
-            //{
-            //    Logger.write(ex.Message);
-            //    // possibly dump all changes to DB?
-            //}
+            }
+            catch (Exception ex)
+            {
+                Logger.write(ex.Message);
+                // possibly dump all changes to DB?
+            }
             _indexTimer.Enabled = true;
         }
 
@@ -322,24 +322,34 @@ namespace Ildss.Index
             List<Document> docsToRemove = new List<Document>();
             List<DocPath> pathsToRemove = new List<DocPath>();
 
-            foreach (var docu in fic.Documents.Distinct())
+
+            // Remove non-existant paths
+            foreach (var path in fic.DocPaths)
+            {
+                if (!File.Exists(path.Path))
+                {
+                    pathsToRemove.Add(path);
+                    //Logger.write("Deleting Path " + path.Name);
+                }
+            }
+
+            foreach (var pathToRemove in pathsToRemove)
+            {
+                fic.DocPaths.Remove(pathToRemove);
+            }
+
+            fic.SaveChanges();
+            pathsToRemove.Clear();
+
+
+            // Remove pathless documents (or update hashes if null hash but paths)
+            foreach (var docu in fic.Documents)
             {
                 if (!docu.DocPaths.Any())
                 {
                     docsToRemove.Add(docu);
                 }
-                else
-                {
-                    foreach (var path in docu.DocPaths)
-                    {
-                        if (!File.Exists(path.Path))
-                        {
-                            pathsToRemove.Add(path);
-                            //Logger.write("Deleting Path " + path.Name);
-                        }
-                    }
-                }
-                if (docu.DocumentHash == null & docu.DocPaths.Any())
+                else if (docu.DocumentHash == null)
                 {
                     Logger.write("NULL Hash - repairing");
                     docu.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(docu.DocPaths.FirstOrDefault().Path);
@@ -351,11 +361,6 @@ namespace Ildss.Index
             {
                 fic.Documents.Remove(docToRemove);                
                 //Logger.write("Deleted (had no paths) " + docToRemove.DocumentId + " " + docToRemove.DocPaths.FirstOrDefault().Name);
-            }
-
-            foreach (var pathToRemove in pathsToRemove)
-            {
-                fic.DocPaths.Remove(pathToRemove);
             }
 
             fic.SaveChanges();

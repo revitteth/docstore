@@ -29,9 +29,9 @@ namespace Ildss
                 foreach (var ev in doc.DocEvents)
                 {
                     line += doc.DocumentId + "," + doc.DocumentHash + "," + ev.Type.ToString() + "," + ev.Time;
-                    foreach (var path in fic.DocPaths)
+                    foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId))
                     {
-                        line += path.Path + ",";
+                        line += "," + path.Path;
                     }
                     file.WriteLine(line);
                     line = "";
