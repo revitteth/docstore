@@ -246,7 +246,6 @@ namespace Ildss.Index
                 {
                     var hash = KernelFactory.Instance.Get<IHash>().HashFile(e.FileInf.FullName);
                     // add the write event plus update the file hash, possibly branch it out to a new document too + check it hasn't updated to = another document
-                    var doc = fic.Documents.First();
                     if (fic.Documents.Any(i => i.DocumentHash == hash))
                     {
                         // file hash matches an existing document (move the path to the matching document)
