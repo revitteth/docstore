@@ -16,6 +16,8 @@ namespace Ildss.Index
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
         private Timer _indexTimer = new Timer(Settings.getIndexInterval());
 
+        public bool IndexRequired { get; set; }
+
         public void AddEvent(FSEvent eve)
         {
             _events.Add(eve);
@@ -33,6 +35,7 @@ namespace Ildss.Index
         public IndexManager()
         {
             Logger.write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
+            IntervalIndex(null, null);
             _indexTimer.Start();
             _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(_indexTimer);
@@ -41,31 +44,35 @@ namespace Ildss.Index
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
             _indexTimer.Enabled = false;
-            try
-            {
-                var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            //try
+            //{
+                if (IndexRequired == true)
+                {
+                    IndexRequired = false;
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-                // all based on path now - renaming is handled by the FSW
-                // go through directories comparing read/write times - if different add to events
-                DirectoryTraverse(Settings.getWorkingDir());
+                    // all based on path now - renaming is handled by the FSW
+                    // go through directories comparing read/write times - if different add to events
+                    DirectoryTraverse(Settings.getWorkingDir());
 
 
-                WriteChangesToDB();
+                    WriteChangesToDB();
 
-                // TODO
-                // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
-                // 2. rename directory logic is a bit wonky - seems ok now just give it a few more rename trials on directories
-                // 3. Take events from one doc to another on update (i.e. don't lose the history!)
-                // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
+                    // TODO
+                    // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
+                    // 2. rename directory logic is a bit wonky - seems ok now just give it a few more rename trials on directories
+                    // 3. Take events from one doc to another on update (i.e. don't lose the history!)
+                    // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
 
-                MaintainDocuments();
+                    MaintainDocuments();
+                }
 
-            }
-            catch (Exception ex)
-            {
-                Logger.write(ex.Message);
+           // }
+            //catch (Exception ex)
+            //{
+            //    Logger.write(ex.Message);
             //    // possibly dump all changes to DB?
-            }
+            //}
             _indexTimer.Enabled = true;
         }
 
@@ -108,6 +115,7 @@ namespace Ildss.Index
 
         public void DirectoryTraverse(string dir)
         {
+            Logger.write("Indexing...");
             try
             {
                 foreach (string file in GetFiles(dir))
@@ -202,11 +210,10 @@ namespace Ildss.Index
         {
             foreach (var e in _events)
             {
-                var hash = KernelFactory.Instance.Get<IHash>().HashFile(e.FileInf.FullName);
-                
                 // CREATE
                 if (e.Type == Settings.EventType.Create)
                 {
+                    var hash = KernelFactory.Instance.Get<IHash>().HashFile(e.FileInf.FullName);
                     // path doesn't exist - check against hash
                     if (fic.Documents.Any(i => i.DocumentHash == hash))
                     {
@@ -231,12 +238,13 @@ namespace Ildss.Index
                 else if (e.Type == Settings.EventType.Read)
                 {
                     // just add the read event
-                    var doc = fic.Documents.First(i => i.DocumentHash == hash);
+                    var doc = fic.DocPaths.First(j => j.Path == e.FileInf.FullName).Document;
                     doc.DocEvents.Add(new DocEvent() { Time = e.FileInf.LastAccessTime, Type = e.Type });
                 }
                 // WRITE
                 else if (e.Type == Settings.EventType.Write)
                 {
+                    var hash = KernelFactory.Instance.Get<IHash>().HashFile(e.FileInf.FullName);
                     // add the write event plus update the file hash, possibly branch it out to a new document too + check it hasn't updated to = another document
                     var doc = fic.Documents.First();
                     if (fic.Documents.Any(i => i.DocumentHash == hash))
@@ -300,12 +308,13 @@ namespace Ildss.Index
                         var renamed = fic.DocPaths.First(i => i.Path == e.OldPath);
                         renamed.Path = e.FileInf.FullName;
                         renamed.Directory = e.FileInf.FullName.Replace(e.FileInf.Name, "");
-                        renamed.Name = e.FileInf.Name;    
+                        renamed.Name = e.FileInf.Name;
                     }
                 }
                 //fic.SaveChanges();
             }
             fic.SaveChanges();
+            _events.Clear();
             Logger.write("Done");
         }
 

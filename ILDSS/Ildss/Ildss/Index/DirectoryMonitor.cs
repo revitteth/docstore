@@ -35,7 +35,7 @@ namespace Ildss.Index
 
                     try
                     {
-                        if (!_ignoredFiles.Any(pe.OldFullPath.Contains))
+                        if (!_ignoredFiles.Any(pe.OldFullPath.Contains) & !_ignoredFiles.Any(pe.FullPath.Contains))
                         {
                             bool isDir = false;
                             if (File.GetAttributes(pe.OldFullPath) == FileAttributes.Directory | File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
@@ -43,42 +43,44 @@ namespace Ildss.Index
                                 isDir = true;
                             }
                             var fs = new FSEvent() { Type = Settings.EventType.Rename, FileInf = new FileInfo(pe.FullPath), OldPath = pe.OldFullPath, isDirectory = isDir };
-                            KernelFactory.Instance.Get<IEventManager>().AddEvent(fs);
+                            // potential thread safety issue here!!!!
+                            KernelFactory.Instance.Get<IEventManager>("Index").AddEvent(fs);
 
-                            Logger.write("FSW Event - Renamed");
+                            Logger.write("FSW Event - Renamed " + pe.Name);
                         }
                     }
                     catch (Exception e)
                     {
-                        Logger.write("TempFile Atomic Update. Error: " + e.Message);
+                        Logger.write("Rename Exception: Now called:" + pe.Name + " Error msg: " + e.Message);
                     }
-                    
-                    //var fi = new FileInfo(pe.FullPath);
-
-                    //Logger.write(pe.OldFullPath + " " + pe.FullPath);
-
-
-                    // RE_EVALUATE LOGIC HERE
-                    // if its a folder ... update all the paths
-                    // if its throwing an error its probably an excel file or something
-                    // if its a file... just update its path
-
-
-                    //if (_ignoredFiles.Any(pe.FullPath.Contains))
-                    //{
-                    //    Logger.write("Renamed to an ignored file " + pe.Name);
-                    //    _changedOffice = pe.FullPath;
-                    //}
-                    //else if (_ignoredFiles.Any(pe.OldFullPath.Contains) | !pe.OldFullPath.Contains("."))
-                    //{
-                    //    Logger.write("Changed file (atomic temp) " + pe.Name);
-                    //    freqChecker.RespondToEvent(pe.FullPath, "Changed");
-                    //}
-                    //else if (!_ignoredFiles.Any(pe.Name.Contains)) // beware the extensionless excel temp - same as a directory!! :(
-                    //{
-                    //    freqChecker.RespondToEvent(pe.FullPath, "Renamed", pe.OldFullPath);
-                    //}
                 }
+            );
+
+            IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
+            fswCreated.Subscribe(
+                pattern =>
+                {
+                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                }
+
+            );
+
+            IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
+            fswDeleted.Subscribe(
+                pattern =>
+                {
+                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                }
+
+            );
+
+            IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
+            fswChanged.Subscribe(
+                pattern =>
+                {
+                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                }
+
             );
 
         }

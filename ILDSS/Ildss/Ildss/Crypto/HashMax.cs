@@ -58,10 +58,10 @@ namespace Ildss.Crypto
                 fs.Close();
                 return hash;
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
                 // file not found
-                Logger.write("Error, file not found");
+                Logger.write(ex.Message);
             }
             catch (IOException ex)
             {

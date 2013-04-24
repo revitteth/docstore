@@ -11,5 +11,6 @@ namespace Ildss.Index
     public interface IEventManager
     {
         void AddEvent(FSEvent Eve);
+        bool IndexRequired { get; set; }
     }
 }

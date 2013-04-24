@@ -16,6 +16,7 @@ namespace Ildss.Models
             this.Backups = new HashSet<Backup>();
         }
 
+        [Key]
         public int DocumentId { get; set; }
         public string DocumentHash { get; set; }
         public long Size { get; set; }

@@ -119,7 +119,6 @@
   <ItemGroup>
     <Compile Include="Crypto\EncryptionAES.cs" />
     <Compile Include="Crypto\HashMax.cs" />
-    <Compile Include="Index\BackupManager.cs" />
     <Compile Include="Index\DiscoMonitor.cs" />
     <Compile Include="Index\IndexManager.cs" />
     <Compile Include="Crypto\IEncryption.cs" />
