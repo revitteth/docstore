@@ -134,11 +134,13 @@ namespace Ildss.Index
                             // new document found
                             // add the event with the file info - this should mean the file is created on evaluation of events
                             var fi = new FileInfo(file);
+                            fi.Refresh();
                             _events.Add(new FSEvent() { 
                                 Type = Settings.EventType.Create, 
                                 FileInf = fi, 
                                 LastWrite = fi.LastWriteTime, 
-                                LastAccess = fi.LastAccessTime 
+                                LastAccess = fi.LastAccessTime,
+                                CreationTime = fi.CreationTime
                             });
                         }
                     }
@@ -167,7 +169,8 @@ namespace Ildss.Index
                         FileInf = fi, 
                         DocumentId = doc.DocumentId,
                         LastWrite = fi.LastWriteTime,
-                        LastAccess = fi.LastAccessTime
+                        LastAccess = fi.LastAccessTime,
+                        CreationTime = fi.CreationTime
                     });
                 }
             }
@@ -184,7 +187,8 @@ namespace Ildss.Index
                         FileInf = fi, 
                         DocumentId = doc.DocumentId,
                         LastWrite = fi.LastWriteTime,
-                        LastAccess = fi.LastAccessTime
+                        LastAccess = fi.LastAccessTime,
+                        CreationTime = fi.CreationTime
                     });
                 }
             }
@@ -225,7 +229,6 @@ namespace Ildss.Index
 
         public void RestoreFileTimes(FSEvent eve)
         {
-            Logger.write(eve.FileInf.LastAccessTime.ToString());
             eve.FileInf.LastAccessTime = eve.LastAccess;
             eve.FileInf.LastWriteTime = eve.LastWrite;
             eve.FileInf.CreationTime = eve.CreationTime;
@@ -245,7 +248,7 @@ namespace Ildss.Index
                         // if hash exists just add the path to the existing document
                         var doc = fic.Documents.First(i => i.DocumentHash == hash);
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
-                        doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.FileInf.CreationTime });
+                        doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.CreationTime });
                         UpdateReadWrite(doc, e);
                     }
                     else
@@ -253,7 +256,7 @@ namespace Ildss.Index
                         // no path or hash found in DB
                         var doc = new Document() { DocumentHash = hash, Size = e.FileInf.Length, Status = Settings.DocStatus.Indexed };
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
-                        doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.FileInf.CreationTime });
+                        doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.CreationTime });
                         UpdateReadWrite(doc, e);
                         fic.Documents.Add(doc);
                     }
