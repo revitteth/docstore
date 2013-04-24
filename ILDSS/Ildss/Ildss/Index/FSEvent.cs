@@ -15,5 +15,8 @@ namespace Ildss.Index
         public string OldPath { get; set; }
         public bool isDirectory { get; set; }
         public int DocumentId { get; set; }
+        public DateTime LastAccess { get; set; }
+        public DateTime LastWrite { get; set; }
+        public DateTime CreationTime { get; set; }
     }
 }

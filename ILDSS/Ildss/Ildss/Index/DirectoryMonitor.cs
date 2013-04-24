@@ -42,7 +42,15 @@ namespace Ildss.Index
                             {
                                 isDir = true;
                             }
-                            var fs = new FSEvent() { Type = Settings.EventType.Rename, FileInf = new FileInfo(pe.FullPath), OldPath = pe.OldFullPath, isDirectory = isDir };
+                            var fi = new FileInfo(pe.FullPath);
+                            var fs = new FSEvent() { 
+                                Type = Settings.EventType.Rename, 
+                                FileInf = fi, 
+                                OldPath = pe.OldFullPath, 
+                                isDirectory = isDir,
+                                LastWrite = fi.LastWriteTime,
+                                LastAccess = fi.LastAccessTime
+                            };
                             // potential thread safety issue here!!!!
                             KernelFactory.Instance.Get<IEventManager>("Index").AddEvent(fs);
 

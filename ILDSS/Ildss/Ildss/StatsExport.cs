@@ -22,13 +22,13 @@ namespace Ildss
 
             string line = "";
 
-            file.WriteLine("DocID, DocHash, Event Type, Event Time, Path1, Path2, Path3, Path4");
+            file.WriteLine("DocID, Size, DocHash, Event Type, Event Time, Path1, Path2, Path3, Path4");
 
             foreach (var doc in fic.Documents)
             {
                 foreach (var ev in doc.DocEvents)
                 {
-                    line += doc.DocumentId + "," + doc.DocumentHash + "," + ev.Type.ToString() + "," + ev.Time;
+                    line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + ev.Type.ToString() + "," + ev.Time;
                     foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId))
                     {
                         line += "," + path.Path;
