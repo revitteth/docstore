@@ -40,7 +40,7 @@ namespace Ildss
             {
                 foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId).OrderBy(j => j.DocPathId))
                 {
-                    line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + path.Path + "," + path.Name + "," + doc.DocEvents.Where(i => i.Type == Settings.EventType.Read).Count() + "," + doc.DocEvents.Where(i => i.Type == Settings.EventType.Write).Count();
+                    line += "\"" + doc.DocumentId + "\",\"" + doc.Size + "\",\"" + doc.DocumentHash + "\",\"" + path.Path + "\",\"" + path.Name + "\",\"" + doc.DocEvents.Where(i => i.Type == Settings.EventType.Read).Count() + "\",\"" + doc.DocEvents.Where(i => i.Type == Settings.EventType.Write).Count() + "\"";
                         file.WriteLine(line);
                         line = "";
                 }
@@ -56,7 +56,7 @@ namespace Ildss
                 {
                     foreach (var ev in doc.DocEvents.OrderBy(i => i.DocEventId))
                     {
-                        line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + path.Path + "," + path.Name + "," + ev.Type.ToString() + "," + ev.Time;
+                        line += "\"" + doc.DocumentId + "\",\"" + doc.Size + "\",\"" + doc.DocumentHash + "\",\"" + path.Path + "\",\"" + path.Name + "\",\"" + ev.Type.ToString() + "\",\"" + ev.Time + "\"";
                         file.WriteLine(line);
                         line = "";
                     }
