@@ -22,6 +22,20 @@ namespace Ildss
 
             string line = "";
 
+            file.WriteLine("Doc Count, Path Count, Event Count, Duplicate Count");
+            file.WriteLine(fic.Documents.Count() + "," + fic.DocPaths.Count() + "," + fic.DocEvents.Count() + "," + fic.Documents.Where(i => i.DocPaths.Count() > 1).Count());
+            file.WriteLine("");
+
+            string tempLine = "Duplicate DocumentId(s):";
+            foreach (var dupe in fic.Documents.Where(i => i.DocPaths.Count() > 1))
+            {
+                tempLine += "," + dupe.DocumentId;
+            }
+            file.WriteLine(tempLine);
+            file.WriteLine("");
+
+
+
             file.WriteLine("DocID, Size, DocHash, Path, Name, Event Type, Event Time");
 
             foreach (var doc in fic.Documents.OrderBy(i => i.DocumentId))
