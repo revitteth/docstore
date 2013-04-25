@@ -17,6 +17,9 @@ namespace Ildss.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // For speedup
+            Configuration.AutoDetectChangesEnabled = false;
+
             modelBuilder.Entity<DocPath>()
                         .HasRequired(dp => dp.Document)
                         .WithMany(d => d.DocPaths)

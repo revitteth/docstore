@@ -68,7 +68,10 @@ namespace Ildss.Index
             fswCreated.Subscribe(
                 pattern =>
                 {
-                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains))
+                    {
+                        KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    }
                 }
 
             );
@@ -77,7 +80,10 @@ namespace Ildss.Index
             fswDeleted.Subscribe(
                 pattern =>
                 {
-                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains))
+                    {
+                        KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    }
                 }
 
             );
@@ -86,7 +92,10 @@ namespace Ildss.Index
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains))
+                    {
+                        KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                    }
                 }
 
             );

@@ -4,18 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
 namespace Ildss.Index
 {
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class IndexManager : IEventManager
     {
         private IList<FSEvent> _events = new List<FSEvent>();
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
         private Timer _indexTimer = new Timer(Settings.getIndexInterval());
-
         public bool IndexRequired { get; set; }
 
         public void AddEvent(FSEvent eve)
@@ -23,17 +24,9 @@ namespace Ildss.Index
             _events.Add(eve);
         }
 
-        public void print()
-        {
-            foreach(var e in _events)
-            {
-                Logger.write(e.Type + " " + e.FileInf.FullName);
-            }
-            _events.Clear();
-        }
-
         public IndexManager()
         {
+            IndexRequired = true;
             Logger.write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
             IntervalIndex(null, null);
             _indexTimer.Start();
@@ -123,14 +116,18 @@ namespace Ildss.Index
                     if (!Settings.getIgnoredExtensions().Any(file.Contains))
                     {
                         // check here to see if read/write times different
-                        if (fic.DocPaths.Any(i => i.Path == file))
-                        {
+                        //if (fic.DocPaths.Any(i => i.Path == file))
+                        //{
+                        try{
                             // path matches
                             var doc = fic.DocPaths.First(i => i.Path == file).Document;
                             CheckReadWrite(file, doc);
                         }
-                        else
+                        catch (Exception ex)
+                        //}
+                        //else
                         {
+                            Logger.write("ERROR: : : " + ex.Message);
                             // new document found
                             // add the event with the file info - this should mean the file is created on evaluation of events
                             var fi = new FileInfo(file);
@@ -158,9 +155,9 @@ namespace Ildss.Index
             fi.Refresh();
 
             // READ Events
-            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Read && i.DocumentId == doc.DocumentId))
+            if (doc.DocEvents.Any(i => i.Type == Settings.EventType.Read))
             {
-                var recentRead = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
+                var recentRead = doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
                 if (DateTime.Compare(recentRead.Time, fi.LastAccessTime.AddMilliseconds(-fi.LastAccessTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Read'
@@ -176,9 +173,9 @@ namespace Ildss.Index
             }
 
             // WRITE Events
-            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Write && i.DocumentId == doc.DocumentId))
+            if (doc.DocEvents.Any(i => i.Type == Settings.EventType.Write))
             {
-                var recentWrite = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
+                var recentWrite = doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
                 if (DateTime.Compare(recentWrite.Time, fi.LastWriteTime.AddMilliseconds(-fi.LastWriteTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Write'
@@ -229,9 +226,16 @@ namespace Ildss.Index
 
         public void RestoreFileTimes(FSEvent eve)
         {
-            eve.FileInf.LastAccessTime = eve.LastAccess;
-            eve.FileInf.LastWriteTime = eve.LastWrite;
-            eve.FileInf.CreationTime = eve.CreationTime;
+            try
+            {
+                eve.FileInf.LastAccessTime = eve.LastAccess;
+                eve.FileInf.LastWriteTime = eve.LastWrite;
+                eve.FileInf.CreationTime = eve.CreationTime;
+            }
+            catch (Exception ex)
+            {
+                Logger.write("Error restoring times: " + ex.Message);
+            }
         }
 
         public void WriteChangesToDB()
@@ -336,7 +340,10 @@ namespace Ildss.Index
                         renamed.Name = e.FileInf.Name;
                     }
                 }
-                RestoreFileTimes(e);
+                if (e.Type != Settings.EventType.Rename)
+                {
+                    RestoreFileTimes(e);
+                }
             }
             fic.SaveChanges();
             _events.Clear();
