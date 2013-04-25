@@ -37,8 +37,8 @@ namespace Ildss.Index
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
             _indexTimer.Enabled = false;
-            try
-            {
+            //try
+            //{
                 if (IndexRequired == true)
                 {
                     IndexRequired = false;
@@ -63,12 +63,12 @@ namespace Ildss.Index
                     // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
                                       
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.write(ex.Message);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.write(ex.Message);
                 // possibly dump all changes to DB?
-            }
+            //}
             _indexTimer.Enabled = true;
         }
 
@@ -111,8 +111,8 @@ namespace Ildss.Index
 
         public void DirectoryTraverse(string dir)
         {
-            try
-            {
+            //try
+            //{
                 foreach (string file in GetFiles(dir))
                 {
                     if (!Settings.getIgnoredExtensions().Any(file.Contains))
@@ -144,11 +144,11 @@ namespace Ildss.Index
                         }
                     }
                 }
-            }
-            catch (System.Exception e)
-            {
-                Logger.write(e.Message);
-            }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    Logger.write(e.Message);
+            //}
         }
 
         public void CheckReadWrite(string path, Document doc)
@@ -234,9 +234,9 @@ namespace Ildss.Index
                 eve.FileInf.LastWriteTime = eve.LastWrite;
                 eve.FileInf.CreationTime = eve.CreationTime;
             }
-            catch (Exception ex)
+            catch (UnauthorizedAccessException ex)
             {
-                Logger.write("Error restoring times: " + ex.Message);
+                // this occurs when the time cannot be written (mostly files in .git?)
             }
         }
 
