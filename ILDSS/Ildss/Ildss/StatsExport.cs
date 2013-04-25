@@ -34,7 +34,19 @@ namespace Ildss
             file.WriteLine(tempLine);
             file.WriteLine("");
 
+            file.WriteLine("DocID, Size, DocHash, Path, Name, No. Reads, No. Writes");
 
+            foreach (var doc in fic.Documents.OrderBy(i => i.DocumentId))
+            {
+                foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId).OrderBy(j => j.DocPathId))
+                {
+                    line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + path.Path + "," + path.Name + "," + doc.DocEvents.Where(i => i.Type == Settings.EventType.Read).Count() + "," + doc.DocEvents.Where(i => i.Type == Settings.EventType.Write).Count();
+                        file.WriteLine(line);
+                        line = "";
+                }
+            }
+
+            file.WriteLine("");
 
             file.WriteLine("DocID, Size, DocHash, Path, Name, Event Type, Event Time");
 

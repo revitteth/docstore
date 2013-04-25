@@ -20,7 +20,7 @@ namespace Ildss.Index
         private IList<string> _ignoredFiles = Settings.getIgnoredExtensions();
         private string LastChanged { get; set; }
         private string LastCreated { get; set; }
-        private long FilesAffected = 0;
+        //private long FilesAffected = 0;
 
         public void Monitor (string path)
         {
@@ -45,8 +45,8 @@ namespace Ildss.Index
                             if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                             {
                                 //isDir = true;
-                                FilesAffected = new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
-                                Logger.write("File affected = " + FilesAffected.ToString());
+                                //FilesAffected = new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
+                                //Logger.write("File affected = " + FilesAffected.ToString());
 
                                 foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(pe.OldFullPath)))
                                 {
@@ -59,7 +59,7 @@ namespace Ildss.Index
                             }
                             else
                             {
-                                FilesAffected = 1;
+                                //FilesAffected = 1;
                                 
                                 var renamed = fic.DocPaths.First(i => i.Path == pe.OldFullPath);
                                 renamed.Path = pe.FullPath;
@@ -123,7 +123,7 @@ namespace Ildss.Index
             fswChanged.Subscribe(
                 pattern =>
                 {
-                    if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains) & FilesAffected == 0)
+                    if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains)) //& FilesAffected == 0)
                     {
                         KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         LastChanged = pattern.EventArgs.FullPath;
@@ -131,7 +131,7 @@ namespace Ildss.Index
                     }
                     else
                     {
-                        FilesAffected--;
+                        //FilesAffected--;
                     }
                 }
 
