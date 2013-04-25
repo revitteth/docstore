@@ -42,6 +42,7 @@ namespace Ildss.Index
                 if (IndexRequired == true)
                 {
                     IndexRequired = false;
+                    Logger.write("Indexing...");
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
                     // all based on path now - renaming is handled by the FSW
@@ -51,7 +52,9 @@ namespace Ildss.Index
 
                     WriteChangesToDB();
 
-                    MaintainDocuments();  
+                    MaintainDocuments();
+
+                    Logger.write("Finished Indexing");
 
                     // TODO
                     // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
@@ -108,7 +111,6 @@ namespace Ildss.Index
 
         public void DirectoryTraverse(string dir)
         {
-            Logger.write("Indexing...");
             try
             {
                 foreach (string file in GetFiles(dir))
@@ -127,7 +129,7 @@ namespace Ildss.Index
                         //}
                         //else
                         {
-                            Logger.write("ERROR: : : " + ex.Message);
+                            //Logger.write("ERROR: : : " + ex.Message);
                             // new document found
                             // add the event with the file info - this should mean the file is created on evaluation of events
                             var fi = new FileInfo(file);
@@ -194,9 +196,9 @@ namespace Ildss.Index
         public void UpdateReadWrite(Document doc, FSEvent eve)
         {
             // READ Events
-            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Read && i.DocumentId == doc.DocumentId))
+            if (doc.DocEvents.Any(i => i.Type == Settings.EventType.Read))
             {
-                var recentRead = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
+                var recentRead = doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Read);
                 if (DateTime.Compare(recentRead.Time, eve.FileInf.LastAccessTime.AddMilliseconds(-eve.FileInf.LastAccessTime.Millisecond)) < 0)
                 {
                     // add event to doc
@@ -209,9 +211,9 @@ namespace Ildss.Index
             }
 
             // WRITE Events
-            if (fic.DocEvents.Any(i => i.Type == Settings.EventType.Write && i.DocumentId == doc.DocumentId))
+            if (doc.DocEvents.Any(i => i.Type == Settings.EventType.Write))
             {
-                var recentWrite = fic.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
+                var recentWrite = doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
                 if (DateTime.Compare(recentWrite.Time, eve.FileInf.LastWriteTime.AddMilliseconds(-eve.FileInf.LastWriteTime.Millisecond)) < 0)
                 {
                     // add event to doc
@@ -347,7 +349,6 @@ namespace Ildss.Index
             }
             fic.SaveChanges();
             _events.Clear();
-            Logger.write("Done");
         }
 
         public void MaintainDocuments()

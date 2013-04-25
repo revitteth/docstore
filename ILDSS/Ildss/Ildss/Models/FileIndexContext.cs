@@ -19,6 +19,7 @@ namespace Ildss.Models
         {
             // For speedup
             Configuration.AutoDetectChangesEnabled = false;
+            Configuration.ValidateOnSaveEnabled = false;
 
             modelBuilder.Entity<DocPath>()
                         .HasRequired(dp => dp.Document)
