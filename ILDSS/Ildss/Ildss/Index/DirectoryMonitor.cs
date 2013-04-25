@@ -43,12 +43,12 @@ namespace Ildss.Index
                             if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                             {
                                 isDir = true;
-                                FilesAffected += new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
+                                FilesAffected = new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
                                 Logger.write("File affected = " + FilesAffected.ToString());
                             }
                             else
                             {
-                                FilesAffected++;
+                                FilesAffected = 1;
                             }
 
                             
