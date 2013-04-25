@@ -101,7 +101,7 @@ namespace Ildss.Index
                     {
                         KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         LastCreated = pattern.EventArgs.FullPath;
-                        Logger.write("DM Created");
+                        //Logger.write("DM Created");
                     }
                 }
 
@@ -114,7 +114,7 @@ namespace Ildss.Index
                     if (!_ignoredFiles.Any(pattern.EventArgs.Name.Contains))
                     {
                         KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
-                        Logger.write("DM Deleted");
+                        //Logger.write("DM Deleted");
                     }
                 }
             );
@@ -127,7 +127,7 @@ namespace Ildss.Index
                     {
                         KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         LastChanged = pattern.EventArgs.FullPath;
-                        Logger.write("DM Changed");
+                        //Logger.write("DM Changed");
                     }
                     else
                     {

@@ -16,7 +16,7 @@ namespace Ildss.Index
     {
         private IList<FSEvent> _events = new List<FSEvent>();
         private IFileIndexContext fic = KernelFactory.Instance.Get<IFileIndexContext>();
-        private Timer _indexTimer = new Timer(Settings.getIndexInterval());
+        private Timer _indexTimer = new Timer();
         public bool IndexRequired { get; set; }
 
         public void AddEvent(FSEvent eve)
@@ -29,6 +29,7 @@ namespace Ildss.Index
             IndexRequired = true;
             Logger.write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
             IntervalIndex(null, null);
+            _indexTimer.Interval = Settings.getIndexInterval();
             _indexTimer.Start();
             _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(_indexTimer);
@@ -36,6 +37,7 @@ namespace Ildss.Index
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
+            _indexTimer.Interval = Settings.getIndexInterval();
             _indexTimer.Enabled = false;
             try
             {
@@ -121,7 +123,7 @@ namespace Ildss.Index
                         {
                             // path matches
                             var doc = fic.DocPaths.First(i => i.Path == file).Document;
-                            CheckReadWrite(file, doc);
+                            CheckFileTimes(file, doc);
                         }
                         catch (Exception ex)
                         {
@@ -148,7 +150,7 @@ namespace Ildss.Index
             }
         }
 
-        public void CheckReadWrite(string path, Document doc)
+        public void CheckFileTimes(string path, Document doc)
         {
             var fi = new FileInfo(path);
             fi.Refresh();
@@ -190,7 +192,21 @@ namespace Ildss.Index
             }
         }
 
-        public void UpdateReadWrite(Document doc, FSEvent eve)
+        public void RestoreFileTimes(FSEvent eve)
+        {
+            try
+            {
+                eve.FileInf.LastAccessTime = eve.LastAccess;
+                eve.FileInf.LastWriteTime = eve.LastWrite;
+                eve.FileInf.CreationTime = eve.CreationTime;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                // this occurs when the time cannot be written (mostly files in .git?)
+            }
+        }
+
+        public void UpdateFileTimes(Document doc, FSEvent eve)
         {
             // READ Events
             if (doc.DocEvents.Any(i => i.Type == Settings.EventType.Read))
@@ -223,20 +239,6 @@ namespace Ildss.Index
             }
         }
 
-        public void RestoreFileTimes(FSEvent eve)
-        {
-            try
-            {
-                eve.FileInf.LastAccessTime = eve.LastAccess;
-                eve.FileInf.LastWriteTime = eve.LastWrite;
-                eve.FileInf.CreationTime = eve.CreationTime;
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // this occurs when the time cannot be written (mostly files in .git?)
-            }
-        }
-
         public void WriteChangesToDB()
         {
             foreach (var e in _events)
@@ -252,7 +254,7 @@ namespace Ildss.Index
                         var doc = fic.Documents.First(i => i.DocumentHash == hash);
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
                         doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.CreationTime });
-                        UpdateReadWrite(doc, e);
+                        UpdateFileTimes(doc, e);
                     }
                     else
                     {
@@ -260,7 +262,7 @@ namespace Ildss.Index
                         var doc = new Document() { DocumentHash = hash, Size = e.FileInf.Length, Status = Settings.DocStatus.Indexed };
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
                         doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.CreationTime });
-                        UpdateReadWrite(doc, e);
+                        UpdateFileTimes(doc, e);
                         fic.Documents.Add(doc);
                     }
                 }
@@ -319,9 +321,10 @@ namespace Ildss.Index
                 }
 
                 RestoreFileTimes(e);
-                fic.SaveChanges();
+                // does reading the fic also read the items in memory?
+                //fic.SaveChanges();
             }
-            //fic.SaveChanges();
+            fic.SaveChanges();
             _events.Clear();
         }
 

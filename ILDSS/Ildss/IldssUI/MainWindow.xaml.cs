@@ -206,5 +206,14 @@ namespace IldssUI
             txtStorageDir.Text = Settings.getStorageDir();
         }
 
+        private void btnSetInterval_Click(object sender, RoutedEventArgs e)
+        {
+            if (Convert.ToInt32(txtInterval.Text) > 1 & Convert.ToInt32(txtInterval.Text) < 6000)
+            {
+                Settings.setIndexInterval(Convert.ToInt32(txtInterval.Text) * 60000);
+            }
+            lblIndexFrequency.Text = "Index Runs Every " + Settings.getIndexInterval() / 60000 + " minutes";
+        }
+
     }
 }

@@ -59,6 +59,8 @@
                     <Label Content="Storage Dir:" HorizontalAlignment="Left" Height="26" Margin="0,55,0,0" VerticalAlignment="Top" Width="75"/>
                     <Button x:Name="btnFinish" Content="Finish" HorizontalAlignment="Left" Height="35" Margin="350,170,0,0" VerticalAlignment="Top" Width="100" Click="btnFinish_Click"/>
                     <Button x:Name="btnLoadDefaults" Content="Load Defaults" HorizontalAlignment="Left" Height="35" Margin="236,170,0,0" VerticalAlignment="Top" Width="100" Click="btnLoadDefaults_Click"/>
+                    <Button x:Name="btnSetInterval" Content="Set Interval" HorizontalAlignment="Left" Margin="99,115,0,0" VerticalAlignment="Top" Width="75" Click="btnSetInterval_Click"/>
+                    <TextBox x:Name="txtInterval" HorizontalAlignment="Left" Height="14" Margin="61,115,0,0" TextWrapping="Wrap" Text="60" VerticalAlignment="Top" Width="33"/>
                 </Grid>
             </TabItem>
         </TabControl>
