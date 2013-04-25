@@ -37,8 +37,8 @@ namespace Ildss.Index
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
             _indexTimer.Enabled = false;
-            //try
-            //{
+            try
+            {
                 if (IndexRequired == true)
                 {
                     IndexRequired = false;
@@ -63,12 +63,12 @@ namespace Ildss.Index
                     // 4. DONE. Work out where to update null hash (for office documents - IMPORTANT) & any open documents when indexing DONE.
                                       
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.write(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Logger.write(ex.Message);
                 // possibly dump all changes to DB?
-            //}
+            }
             _indexTimer.Enabled = true;
         }
 
@@ -111,29 +111,26 @@ namespace Ildss.Index
 
         public void DirectoryTraverse(string dir)
         {
-            //try
-            //{
+            try
+            {
                 foreach (string file in GetFiles(dir))
                 {
                     if (!Settings.getIgnoredExtensions().Any(file.Contains))
                     {
-                        // check here to see if read/write times different
-                        //if (fic.DocPaths.Any(i => i.Path == file))
-                        //{
-                        try{
+                        try
+                        {
                             // path matches
                             var doc = fic.DocPaths.First(i => i.Path == file).Document;
                             CheckReadWrite(file, doc);
                         }
                         catch (Exception ex)
-                        //}
-                        //else
                         {
                             //Logger.write("ERROR: : : " + ex.Message);
                             // new document found
                             // add the event with the file info - this should mean the file is created on evaluation of events
                             var fi = new FileInfo(file);
                             fi.Refresh();
+
                             _events.Add(new FSEvent() { 
                                 Type = Settings.EventType.Create, 
                                 FileInf = fi, 
@@ -144,11 +141,11 @@ namespace Ildss.Index
                         }
                     }
                 }
-            //}
-            //catch (System.Exception e)
-            //{
-            //    Logger.write(e.Message);
-            //}
+            }
+            catch (Exception e)
+            {
+                Logger.write(e.Message);
+            }
         }
 
         public void CheckReadWrite(string path, Document doc)
@@ -320,34 +317,11 @@ namespace Ildss.Index
                         }
                     }
                 }
-                else if (e.Type == Settings.EventType.Rename)
-                {
-                    if (e.isDirectory)
-                    {
-                        Logger.write("Rename Directory " + e.OldPath + " to " + e.FileInf.FullName);
-                        foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(e.OldPath)))
-                        {
-                            directory.Directory = directory.Directory.Replace(e.OldPath, e.FileInf.FullName); // subdirectories
-                        }
-                        foreach (var file in fic.DocPaths.Where(i => i.Path.Contains(e.OldPath)))
-                        {
-                            file.Path = file.Path.Replace(e.OldPath, e.FileInf.FullName);   // file paths
-                        }
-                    }
-                    else
-                    {
-                        var renamed = fic.DocPaths.First(i => i.Path == e.OldPath);
-                        renamed.Path = e.FileInf.FullName;
-                        renamed.Directory = e.FileInf.FullName.Replace(e.FileInf.Name, "");
-                        renamed.Name = e.FileInf.Name;
-                    }
-                }
-                if (e.Type != Settings.EventType.Rename)
-                {
-                    RestoreFileTimes(e);
-                }
+
+                RestoreFileTimes(e);
+                fic.SaveChanges();
             }
-            fic.SaveChanges();
+            //fic.SaveChanges();
             _events.Clear();
         }
 

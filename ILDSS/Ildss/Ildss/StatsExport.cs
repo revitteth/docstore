@@ -22,19 +22,18 @@ namespace Ildss
 
             string line = "";
 
-            file.WriteLine("DocID, Size, DocHash, Event Type, Event Time, Path1, Path2, Path3, Path4");
+            file.WriteLine("DocID, Size, DocHash, Path, Name, Event Type, Event Time");
 
-            foreach (var doc in fic.Documents)
+            foreach (var doc in fic.Documents.OrderBy(i => i.DocumentId))
             {
-                foreach (var ev in doc.DocEvents)
+                foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId).OrderBy(j => j.DocPathId))
                 {
-                    line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + ev.Type.ToString() + "," + ev.Time;
-                    foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId))
+                    foreach (var ev in doc.DocEvents.OrderBy(i => i.DocEventId))
                     {
-                        line += "," + path.Path;
+                        line += doc.DocumentId + "," + doc.Size + "," + doc.DocumentHash + "," + path.Path + "," + path.Name + "," + ev.Type.ToString() + "," + ev.Time;
+                        file.WriteLine(line);
+                        line = "";
                     }
-                    file.WriteLine(line);
-                    line = "";
                 }
             }
             file.Close();

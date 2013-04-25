@@ -10,6 +10,7 @@ using System.Reactive.Linq;
 using System.Reactive;
 
 using Ildss.Index;
+using Ildss.Models;
 
 namespace Ildss.Index
 {
@@ -34,38 +35,54 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
+                    var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
                     try
                     {
                         if (!_ignoredFiles.Any(pe.OldName.Contains) & !_ignoredFiles.Any(pe.Name.Contains))
                         {
-                            bool isDir = false;
+                            //bool isDir = false;
                             if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                             {
-                                isDir = true;
+                                //isDir = true;
                                 FilesAffected = new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
                                 Logger.write("File affected = " + FilesAffected.ToString());
+
+                                foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(pe.OldFullPath)))
+                                {
+                                    directory.Directory = directory.Directory.Replace(pe.OldFullPath, pe.FullPath); // subdirectories
+                                }
+                                foreach (var file in fic.DocPaths.Where(i => i.Path.Contains(pe.OldFullPath)))
+                                {
+                                    file.Path = file.Path.Replace(pe.OldFullPath, pe.FullPath);   // file paths
+                                }
                             }
                             else
                             {
                                 FilesAffected = 1;
+                                
+                                var renamed = fic.DocPaths.First(i => i.Path == pe.OldFullPath);
+                                renamed.Path = pe.FullPath;
+                                renamed.Directory = pe.FullPath.Replace(pe.Name, "");
+                                renamed.Name = pe.Name;
                             }
+                            fic.SaveChanges();
 
-                            
-                            var fi = new FileInfo(pe.FullPath);
-                            var fs = new FSEvent() { 
-                                Type = Settings.EventType.Rename, 
-                                FileInf = fi, 
-                                OldPath = pe.OldFullPath, 
-                                isDirectory = isDir,
-                                LastWrite = fi.LastWriteTime,
-                                LastAccess = fi.LastAccessTime
-                            };
-                            // potential thread safety issue here!!!!
-                            KernelFactory.Instance.Get<IEventManager>("Index").AddEvent(fs);
 
-                            Logger.write("DM Renamed " + pe.Name);
-                            KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
+                            //var fi = new FileInfo(pe.FullPath);
+                            //var fs = new FSEvent() { 
+                            //    Type = Settings.EventType.Rename, 
+                            //    FileInf = fi, 
+                            //    OldPath = pe.OldFullPath, 
+                            //    isDirectory = isDir,
+                            //    LastWrite = fi.LastWriteTime,
+                            //    LastAccess = fi.LastAccessTime
+                            //};
+                            //// potential thread safety issue here!!!!
+                            //KernelFactory.Instance.Get<IEventManager>("Index").AddEvent(fs);
+
+                            //Logger.write("DM Renamed " + pe.Name);
+                            //KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         }
                     }
                     catch (Exception e)
