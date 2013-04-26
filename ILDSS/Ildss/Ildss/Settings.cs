@@ -20,7 +20,7 @@ namespace Ildss
         private static int BackupInterval = 1;
   
         // enumerated variables
-        public enum DocStatus { Indexed, Current, Archived };
+        public enum DocStatus { Indexed, Current, Archived, Permanent };
         public enum EventType { Read, Write, Create, Rename };
         public enum BackupType { Incremental, Full };
 
