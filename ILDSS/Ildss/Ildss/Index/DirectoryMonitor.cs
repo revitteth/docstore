@@ -12,6 +12,8 @@ using System.Reactive;
 using Ildss.Index;
 using Ildss.Models;
 
+using Log;
+
 namespace Ildss.Index
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -24,7 +26,7 @@ namespace Ildss.Index
 
         public void Monitor (string path)
         {
-            Logger.write("Directory Monitor Started");
+            Logger.Write("Directory Monitor Started");
 
             var fsw = new FileSystemWatcher(path);
             fsw.IncludeSubdirectories = true;

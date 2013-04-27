@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Log;
+
 namespace Ildss
 {
     public static class StatsExport
@@ -15,7 +17,7 @@ namespace Ildss
             //read the database into a CSV file
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-            Logger.write("Exporting CSV!");
+            Logger.Write("Exporting CSV!");
 
             // open CSV
             StreamWriter file = new StreamWriter(Settings.getStorageDir() + @"\output.csv", false);
@@ -64,7 +66,7 @@ namespace Ildss
             }
             file.Close();
 
-            Logger.write("Finished Exporting CSV " + @"E:\Documents\GitHub\docstore\output.csv");
+            Logger.Write("Finished Exporting CSV " + @"E:\Documents\GitHub\docstore\output.csv");
 
         }
     }

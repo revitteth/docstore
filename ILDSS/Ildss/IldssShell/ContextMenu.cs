@@ -16,7 +16,7 @@ using Ildss;
 using Ildss.Properties;
 
 
-namespace DocstoreShell
+namespace IldssShell
 {
     [ComVisible(true)]
     [COMServerAssociation(AssociationType.Directory)]
@@ -61,7 +61,7 @@ namespace DocstoreShell
                         addMenuItem("File");
                     }
 
-                    
+
                     return MenuStrip;
                 }
             }

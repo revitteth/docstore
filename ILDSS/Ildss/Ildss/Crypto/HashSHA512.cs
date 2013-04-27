@@ -7,6 +7,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 
+using Log;
+
 namespace Ildss.Crypto
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -46,13 +48,13 @@ namespace Ildss.Crypto
             catch (FileNotFoundException)
             {
                 // file not found
-                Logger.write("Error, file not found");
+                Logger.Write("Error, file not found");
             }
             catch (IOException)
             {
                 // file could not be accessed
                 // warn user and try again on OK
-                Logger.write("Error, file not accessible " + fi.Name);
+                Logger.Write("Error, file not accessible " + fi.Name);
             }
             catch (UnauthorizedAccessException)
             {

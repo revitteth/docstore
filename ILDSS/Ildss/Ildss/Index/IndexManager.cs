@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
+using Log;
+
 namespace Ildss.Index
 {
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -27,7 +29,7 @@ namespace Ildss.Index
         public IndexManager()
         {
             IndexRequired = true;
-            Logger.write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
+            Logger.Write("Started Indexer with Interval " + Settings.getIndexInterval() / 1000 + " seconds");
             IntervalIndex(null, null);
             _indexTimer.Interval = Settings.getIndexInterval();
             _indexTimer.Start();
@@ -44,7 +46,7 @@ namespace Ildss.Index
                 if (IndexRequired == true)
                 {
                     IndexRequired = false;
-                    Logger.write("Indexing...");
+                    Logger.Write("Indexing...");
                     var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
                     // all based on path now - renaming is handled by the FSW
@@ -56,7 +58,7 @@ namespace Ildss.Index
 
                     MaintainDocuments();
 
-                    Logger.write("Finished Indexing");
+                    Logger.Write("Finished Indexing");
 
                     // TODO
                     // 1. delete documents with no paths DONE. -> convert this to ARCHIVING
@@ -68,7 +70,7 @@ namespace Ildss.Index
             }
             catch (Exception ex)
             {
-                Logger.write(ex.Message);
+                Logger.Write(ex.Message);
                 // possibly dump all changes to DB?
             }
             _indexTimer.Enabled = true;
@@ -90,7 +92,7 @@ namespace Ildss.Index
                 }
                 catch (Exception ex)
                 {
-                    Logger.write(ex.Message);
+                    Logger.Write(ex.Message);
                 }
                 string[] files = null;
                 try
@@ -99,7 +101,7 @@ namespace Ildss.Index
                 }
                 catch (Exception ex)
                 {
-                    Logger.write(ex.Message);
+                    Logger.Write(ex.Message);
                 }
                 if (files != null)
                 {
@@ -146,7 +148,7 @@ namespace Ildss.Index
             }
             catch (Exception e)
             {
-                Logger.write(e.Message);
+                Logger.Write(e.Message);
             }
         }
 
@@ -314,7 +316,7 @@ namespace Ildss.Index
                             else
                             {
                                 // can't happen
-                                Logger.write("Error, impossible logic");
+                                Logger.Write("Error, impossible logic");
                             }
                         }
                     }
@@ -362,7 +364,7 @@ namespace Ildss.Index
                 }
                 else if (docu.DocumentHash == null)
                 {
-                    Logger.write("NULL Hash - repairing");
+                    Logger.Write("NULL Hash - repairing");
                     docu.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(docu.DocPaths.FirstOrDefault().Path);
                 }
             }

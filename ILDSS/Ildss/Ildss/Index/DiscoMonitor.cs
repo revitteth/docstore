@@ -8,6 +8,8 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 
+using Log;
+
 namespace Ildss.Index
 {
     class DiscoMonitor : IMonitor
@@ -21,14 +23,14 @@ namespace Ildss.Index
             // REMOVE THIS FOR NON TIME BASED USAGE!
             Thread.Sleep(10);
 
-            Logger.write("Test Monitor Started");
+            Logger.Write("Test Monitor Started");
 
             IObservable<EventPattern<FileSystemEventArgs>> fswCreated = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Created");
             fswCreated.Subscribe(
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Created " + pe.Name);
+                    Logger.Write("FSW Event - Created " + pe.Name);
                 }
             );
             IObservable<EventPattern<FileSystemEventArgs>> fswChanged = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Changed");
@@ -36,7 +38,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Changed " + pe.Name);
+                    Logger.Write("FSW Event - Changed " + pe.Name);
                 }
             );
             IObservable<EventPattern<FileSystemEventArgs>> fswDeleted = Observable.FromEventPattern<FileSystemEventArgs>(fsw, "Deleted");
@@ -44,7 +46,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Deleted " + pe.Name);
+                    Logger.Write("FSW Event - Deleted " + pe.Name);
                 }
             );
 
@@ -53,7 +55,7 @@ namespace Ildss.Index
                 pattern =>
                 {
                     var pe = pattern.EventArgs;
-                    Logger.write("FSW Event - Renamed " + pe.OldName + " to " + pe.Name);
+                    Logger.Write("FSW Event - Renamed " + pe.OldName + " to " + pe.Name);
                 }
             );
         }

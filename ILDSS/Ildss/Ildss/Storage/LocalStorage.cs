@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Log;
+
 using Ildss.Models;
 
 namespace Ildss.Storage
@@ -81,16 +83,16 @@ namespace Ildss.Storage
                     backupname = zipFile.Name;
                     backupsize = zipFile.Length;
 
-                    Logger.write("Success Created " + type.ToString() + " Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
+                    Logger.Write("Success Created " + type.ToString() + " Backup \'" + zipFile.Name + "\' containing " + toStore.Count() + " files");
                 }
                 else
                 {
-                    Logger.write("No files to be backed up");
+                    Logger.Write("No files to be backed up");
                 }
             }
             catch (Exception e)
             {
-                Logger.write("Error " + e.Message);
+                Logger.Write("Error " + e.Message);
                 return;
             }
 

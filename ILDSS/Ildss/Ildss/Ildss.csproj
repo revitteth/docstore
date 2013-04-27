@@ -67,7 +67,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Ildss.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>cloud.ico</ApplicationIcon>
@@ -127,7 +128,6 @@
     <Compile Include="Index\DirectoryMonitor.cs" />
     <Compile Include="Models\StoredSettings.cs" />
     <Compile Include="StatsExport.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Models\Backup.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Models\DocEvent.cs" />
@@ -153,7 +153,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="Ildss.snk" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\DataSources\DocEvent.datasource" />
@@ -196,6 +195,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="cloud.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logger\Log.csproj">
+      <Project>{49fab48b-6591-4c0a-a9fd-badb932b7d8b}</Project>
+      <Name>Log</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

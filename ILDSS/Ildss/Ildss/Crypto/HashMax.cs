@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Log;
+
 namespace Ildss.Crypto
 {
     class HashMax : IHash
@@ -61,13 +63,13 @@ namespace Ildss.Crypto
             catch (FileNotFoundException ex)
             {
                 // file not found
-                Logger.write(ex.Message);
+                Logger.Write(ex.Message);
             }
             catch (IOException ex)
             {
                 // file could not be accessed
                 // warn user and try again on OK
-                Logger.write("Error, " + ex.Message);
+                Logger.Write("Error, " + ex.Message);
             }
             return null;
         }

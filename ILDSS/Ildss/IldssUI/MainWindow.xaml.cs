@@ -92,12 +92,11 @@ namespace IldssUI
 
         private async void btnMonitor_Click(object sender, RoutedEventArgs e)
         {
-            var progress = new Progress<int>(i => Logger.write(i + " %"));
-            await foo2(progress);
+            await foo2();
             btnMonitor.Content = "Working...";
         }
 
-        private Task foo2(IProgress<int> onProgressPercentChanged)
+        private Task foo2()
         {
             return Task.Run(() =>
             {
