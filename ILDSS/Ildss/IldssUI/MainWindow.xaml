@@ -48,6 +48,7 @@
                     <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="378,51,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
                     <TextBlock x:Name="lblIndexFrequency" HorizontalAlignment="Left" Height="40" Margin="5,95,0,0" TextWrapping="Wrap" Text="{Binding Text, ElementName=txtInterval, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="329" FontSize="24"/>
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="375,91,0,0" VerticalAlignment="Top" Width="93" Click="btnS3_Click"/>
+                    <ProgressBar x:Name="prgUpload" HorizontalAlignment="Left" Height="20" Margin="266,159,0,0" VerticalAlignment="Top" Width="191"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" Name="tabSettings">

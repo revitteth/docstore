@@ -216,7 +216,8 @@ namespace IldssUI
             List<string> files = new List<string>() { @"c:\test\test.txt", @"C:\test\test1.txt", @"C:\test\test2.txt", @"C:\test\test3.txt" };
 
             btnS3.IsEnabled = false;
-            var progress = new Progress<int>(i => btnS3.Content = (i + "/" + files.Count).ToString());
+            prgUpload.Maximum = files.Count;
+            var progress = new Progress<int>(i => prgUpload.Value = (i));
             await CloudInterface.Program.UploadAsync(files, progress);
             btnS3.IsEnabled = true;
         }
