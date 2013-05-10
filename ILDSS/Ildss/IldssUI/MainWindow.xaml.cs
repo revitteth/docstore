@@ -214,14 +214,12 @@ namespace IldssUI
             lblIndexFrequency.Text = "Index Runs Every " + Settings.getIndexInterval() / 60000 + " minutes";
         }
 
-        private void btnS3_Click(object sender, RoutedEventArgs e)
+        private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
-            CloudInterface.Program.Upload();
-        }
-
-        async Task<int> UploadPicturesAsync(List<Image> imageList, IProgress<int> progress)
-        {
-            
+            btnS3.IsEnabled = false;
+            int size = await CloudInterface.Program.UploadFileAsync(@"E:\Dropbox\Camera Uploads\2012-03-17 13.01.50.jpg");
+            btnS3.IsEnabled = true;
+            btnS3.Content = size.ToString();
         }
 
     }

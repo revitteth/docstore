@@ -38,8 +38,6 @@
     </Controls:MetroWindow.WindowCommands>
 
     <Grid Margin="9,0,-9,0">
-        <Button x:Name="btnEmptyDb" Content="Empty DB" HorizontalAlignment="Left" Height="30" Margin="417,278,0,0" VerticalAlignment="Top" Width="90" Click="btnEmptyDb_Click"/>
-        <Label Content="DO NOT TOUCH" HorizontalAlignment="Left" Height="33" Margin="322,280,0,0" VerticalAlignment="Top" Width="90" FontSize="11"/>
         <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="10,278,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <TabControl HorizontalAlignment="Left" Height="140" Margin="10,10,0,0" VerticalAlignment="Top" Width="500">
             <TabItem Header="Dashboard" Name="tabDashboard">
