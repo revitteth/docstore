@@ -216,10 +216,12 @@ namespace IldssUI
 
         private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
+            List<string> files = new List<string>() { @"c:\test\test.txt", @"C:\test\test1.txt", @"C:\test\test2.txt", @"C:\test\test3.txt" };
+
             btnS3.IsEnabled = false;
-            int size = await CloudInterface.Program.UploadFileAsync(@"E:\Dropbox\Camera Uploads\2012-03-17 13.01.50.jpg");
+            var progress = new Progress<int>(i => btnS3.Content = (i + "/" + files.Count).ToString());
+            await CloudInterface.Program.UploadAsync(files, progress);
             btnS3.IsEnabled = true;
-            btnS3.Content = size.ToString();
         }
 
     }

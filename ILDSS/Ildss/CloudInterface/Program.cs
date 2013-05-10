@@ -16,9 +16,7 @@ namespace CloudInterface
     {
         static string existingBucketName = "ildss";
 
-        // LONG RUNNING TASK FOR UPLOADS?
-
-        public static int UploadFile(string file)
+        public static void UploadFile(string file)
         {
             NameValueCollection appConfig = ConfigurationManager.AppSettings;
             string accessKeyID = appConfig["AWSAccessKey"];
@@ -42,15 +40,12 @@ namespace CloudInterface
                 fileTransferUtility.Upload(uploadRequest);
 
                 Console.WriteLine("Upload completed");
-
-                return 1000;
             }
 
             catch (AmazonS3Exception e)
             {
                 Console.WriteLine(e.Message + e.InnerException);
             }
-            return 100;
         }
 
         static void uploadRequest_UploadPartProgressEvent(
@@ -60,10 +55,24 @@ namespace CloudInterface
             Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
         }
 
-        public static Task<int> UploadFileAsync(string file)
+        public static Task UploadAsync(string file)
         {
-            return Task<int>.Run(() =>
+            return Task.Run(() =>
                 UploadFile(file));
+        }
+
+        public static Task UploadAsync(List<string> files, IProgress<int> progress)
+        {
+            return Task.Run(() =>
+                {
+                    int uploaded = 0;                   
+                    foreach (var file in files)
+                    {
+                        UploadFile(file);
+                        uploaded++;
+                        progress.Report(uploaded);
+                    }
+                });
         }
     }
 }
