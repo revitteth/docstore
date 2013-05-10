@@ -152,6 +152,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CloudInterface\CloudInterface.csproj">
+      <Project>{a4db3a6a-7959-4517-844b-4d00ae09436c}</Project>
+      <Name>CloudInterface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ildss\Ildss.csproj">
       <Project>{300c02f3-de60-4bf6-aff9-86e676874d89}</Project>
       <Name>Ildss</Name>

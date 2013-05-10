@@ -214,5 +214,15 @@ namespace IldssUI
             lblIndexFrequency.Text = "Index Runs Every " + Settings.getIndexInterval() / 60000 + " minutes";
         }
 
+        private void btnS3_Click(object sender, RoutedEventArgs e)
+        {
+            CloudInterface.Program.Upload();
+        }
+
+        async Task<int> UploadPicturesAsync(List<Image> imageList, IProgress<int> progress)
+        {
+            
+        }
+
     }
 }
