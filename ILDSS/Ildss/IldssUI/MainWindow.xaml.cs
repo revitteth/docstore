@@ -37,8 +37,6 @@ namespace IldssUI
             InitializeComponent();
             Settings.InitSettings();
 
-            lblIndexFrequency.Text = lblIndexFrequency.Text + Settings.getIndexInterval() / 60000 + " minutes";
-
             if (Settings.getFirstRun())
             {
                 TabControl.SetIsSelected(tabSettings, true);
@@ -211,7 +209,6 @@ namespace IldssUI
             {
                 Settings.setIndexInterval(Convert.ToInt32(txtInterval.Text) * 60000);
             }
-            lblIndexFrequency.Text = "Index Runs Every " + Settings.getIndexInterval() / 60000 + " minutes";
         }
 
         private async void btnS3_Click(object sender, RoutedEventArgs e)

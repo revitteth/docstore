@@ -46,7 +46,7 @@
                     <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="101,6,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
                     <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="378,14,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
                     <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="378,51,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
-                    <TextBlock x:Name="lblIndexFrequency" HorizontalAlignment="Left" Height="40" Margin="5,95,0,0" TextWrapping="Wrap" Text="Index Runs Every " VerticalAlignment="Top" Width="329" FontSize="24"/>
+                    <TextBlock x:Name="lblIndexFrequency" HorizontalAlignment="Left" Height="40" Margin="5,95,0,0" TextWrapping="Wrap" Text="{Binding Text, ElementName=txtInterval, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="329" FontSize="24"/>
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="375,91,0,0" VerticalAlignment="Top" Width="93" Click="btnS3_Click"/>
                 </Grid>
             </TabItem>
