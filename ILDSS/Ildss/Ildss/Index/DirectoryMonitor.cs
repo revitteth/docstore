@@ -22,7 +22,6 @@ namespace Ildss.Index
         private IList<string> _ignoredFiles = Settings.getIgnoredExtensions();
         private string LastChanged { get; set; }
         private string LastCreated { get; set; }
-        //private long FilesAffected = 0;
 
         public void Monitor (string path)
         {
@@ -43,13 +42,8 @@ namespace Ildss.Index
                     {
                         if (!_ignoredFiles.Any(pe.OldName.Contains) & !_ignoredFiles.Any(pe.Name.Contains))
                         {
-                            //bool isDir = false;
                             if (File.GetAttributes(pe.FullPath) == FileAttributes.Directory)
                             {
-                                //isDir = true;
-                                //FilesAffected = new DirectoryInfo(path).EnumerateFiles("*", SearchOption.AllDirectories).Count();
-                                //Logger.write("File affected = " + FilesAffected.ToString());
-
                                 foreach (var directory in fic.DocPaths.Where(i => i.Directory.Contains(pe.OldFullPath)))
                                 {
                                     directory.Directory = directory.Directory.Replace(pe.OldFullPath, pe.FullPath); // subdirectories
@@ -60,9 +54,7 @@ namespace Ildss.Index
                                 }
                             }
                             else
-                            {
-                                //FilesAffected = 1;
-                                
+                            {                                
                                 var renamed = fic.DocPaths.First(i => i.Path == pe.OldFullPath);
                                 renamed.Path = pe.FullPath;
                                 renamed.Directory = pe.FullPath.Replace(pe.Name, "");
@@ -70,21 +62,6 @@ namespace Ildss.Index
                             }
                             fic.SaveChanges();
 
-
-                            //var fi = new FileInfo(pe.FullPath);
-                            //var fs = new FSEvent() { 
-                            //    Type = Settings.EventType.Rename, 
-                            //    FileInf = fi, 
-                            //    OldPath = pe.OldFullPath, 
-                            //    isDirectory = isDir,
-                            //    LastWrite = fi.LastWriteTime,
-                            //    LastAccess = fi.LastAccessTime
-                            //};
-                            //// potential thread safety issue here!!!!
-                            //KernelFactory.Instance.Get<IEventManager>("Index").AddEvent(fs);
-
-                            //Logger.write("DM Renamed " + pe.Name);
-                            //KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         }
                     }
                     catch (Exception e)
@@ -130,10 +107,6 @@ namespace Ildss.Index
                         KernelFactory.Instance.Get<IEventManager>("Index").IndexRequired = true;
                         LastChanged = pattern.EventArgs.FullPath;
                         //Logger.write("DM Changed");
-                    }
-                    else
-                    {
-                        //FilesAffected--;
                     }
                 }
 

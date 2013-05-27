@@ -40,6 +40,9 @@
     <Grid Margin="9,0,-9,0">
         <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="10,278,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
         <TabControl HorizontalAlignment="Left" Height="140" Margin="10,10,0,0" VerticalAlignment="Top" Width="500">
+            <TabItem Header="Search" Name="tabSearch">
+                <Grid Background="White" Margin="0,0,0,-125"/>
+            </TabItem>
             <TabItem Header="Dashboard" Name="tabDashboard">
                 <Grid Background="White" Margin="0,0,0,-125">
                     <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="Index" HorizontalAlignment="Left" Height="75" Margin="6,6,0,0" VerticalAlignment="Top" Width="75" Click="btnIndex_Click"/>

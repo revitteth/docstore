@@ -90,11 +90,11 @@ namespace IldssUI
 
         private async void btnMonitor_Click(object sender, RoutedEventArgs e)
         {
-            await foo2();
+            await Monitor();
             btnMonitor.Content = "Working...";
         }
 
-        private Task foo2()
+        private Task Monitor()
         {
             return Task.Run(() =>
             {

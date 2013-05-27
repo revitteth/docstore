@@ -323,8 +323,6 @@ namespace Ildss.Index
                 }
 
                 RestoreFileTimes(e);
-                // does reading the fic also read the items in memory?
-                //fic.SaveChanges();
             }
             fic.SaveChanges();
             _events.Clear();
