@@ -25,6 +25,7 @@ namespace Ildss
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
             this.Bind<IEventManager>().To<IndexManager>().InSingletonScope().Named("Index");
             this.Bind<IStorage>().To<LocalStorage>();
+            this.Bind<IReader>().To<Reader>();
 
             // from external projects
             this.Bind<ICloudManager>().To<CloudManager>().InSingletonScope();

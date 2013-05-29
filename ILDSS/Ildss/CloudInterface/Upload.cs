@@ -13,7 +13,12 @@ namespace CloudInterface
 {
     public static class Upload
     {
-        static string existingBucketName = "ildss";
+        public static string existingBucketName;
+
+        public static void SetBucketName(string bn)
+        {
+            existingBucketName = bn;
+        }
 
         public static void UploadFile(string file)
         {

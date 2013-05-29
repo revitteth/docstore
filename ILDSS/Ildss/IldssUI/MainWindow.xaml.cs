@@ -214,20 +214,25 @@ namespace IldssUI
 
         private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
+            List<string> files = new List<string>();
             await Task.Run(() =>
             {
-                KernelFactory.Instance.Get<ICloudManager>().CreateBucketIfNotExists("wobwobwob");
+                var cm = KernelFactory.Instance.Get<ICloudManager>();
+                cm.CreateBucketIfNotExists("wobwobwob");
+                CloudInterface.Upload.SetBucketName("wobwobwob");
+                var reader = KernelFactory.Instance.Get<IReader>();
+                files = reader.GetFilesForIncrementalBackup();
             });
-            
-            
-            
-            //List<string> files = new List<string>() { @"c:\test\test.txt", @"C:\test\test1.txt", @"C:\test\test2.txt", @"C:\test\test3.txt" };
 
-            //btnS3.IsEnabled = false;
-            //prgUpload.Maximum = files.Count;
-            //var progress = new Progress<int>(i => prgUpload.Value = (i));
-            //await CloudInterface.Upload.UploadAsync(files, progress);
-            //btnS3.IsEnabled = true;
+            //TODO:
+            // once complete
+            // mark each file as current in database
+
+            btnS3.IsEnabled = false;
+            prgUpload.Maximum = files.Count;
+            var progress = new Progress<int>(i => prgUpload.Value = (i));
+            await CloudInterface.Upload.UploadAsync(files, progress);
+            btnS3.IsEnabled = true;
         }
 
     }
