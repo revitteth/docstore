@@ -11,6 +11,8 @@ using Ildss.Index;
 using Ildss.Crypto;
 using Ildss.Storage;
 
+using CloudInterface;
+
 namespace Ildss
 {
     public class IldssModule : NinjectModule
@@ -23,6 +25,9 @@ namespace Ildss
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
             this.Bind<IEventManager>().To<IndexManager>().InSingletonScope().Named("Index");
             this.Bind<IStorage>().To<LocalStorage>();
+
+            // from external projects
+            this.Bind<ICloudManager>().To<CloudManager>().InSingletonScope();
         }
     }
 }

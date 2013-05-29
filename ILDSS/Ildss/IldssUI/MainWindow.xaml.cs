@@ -22,6 +22,7 @@ using Ildss.Index;
 using Ildss.Models;
 using Ildss.Storage;
 using System.Drawing;
+using CloudInterface;
 
 
 namespace IldssUI
@@ -213,13 +214,20 @@ namespace IldssUI
 
         private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
-            List<string> files = new List<string>() { @"c:\test\test.txt", @"C:\test\test1.txt", @"C:\test\test2.txt", @"C:\test\test3.txt" };
+            await Task.Run(() =>
+            {
+                KernelFactory.Instance.Get<ICloudManager>().CreateBucketIfNotExists("wobwobwob");
+            });
+            
+            
+            
+            //List<string> files = new List<string>() { @"c:\test\test.txt", @"C:\test\test1.txt", @"C:\test\test2.txt", @"C:\test\test3.txt" };
 
-            btnS3.IsEnabled = false;
-            prgUpload.Maximum = files.Count;
-            var progress = new Progress<int>(i => prgUpload.Value = (i));
-            await CloudInterface.Program.UploadAsync(files, progress);
-            btnS3.IsEnabled = true;
+            //btnS3.IsEnabled = false;
+            //prgUpload.Maximum = files.Count;
+            //var progress = new Progress<int>(i => prgUpload.Value = (i));
+            //await CloudInterface.Upload.UploadAsync(files, progress);
+            //btnS3.IsEnabled = true;
         }
 
     }

@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 
-
 namespace CloudInterface
 {
-    public static class Program
+    public static class Upload
     {
         static string existingBucketName = "ildss";
 
@@ -32,6 +31,9 @@ namespace CloudInterface
                     new TransferUtilityUploadRequest()
                     .WithBucketName(existingBucketName)
                     .WithFilePath(file);
+
+                //AmazonS3Client aws = new AmazonS3Client().PutBucketPolicy().;
+
 
                 uploadRequest.UploadProgressEvent +=
                     new EventHandler<UploadProgressArgs>
