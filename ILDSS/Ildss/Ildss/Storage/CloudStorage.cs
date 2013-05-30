@@ -25,25 +25,17 @@ namespace Ildss.Storage
             // find bucket/create if it doesn't exist (use settings to store bucket name?)
             // upload files & mark uploaded succesfully as 'current'
 
-
             var reader = KernelFactory.Instance.Get<IReader>();
-            Upload.SetBucketName(Settings.BucketName);
-            await Upload.UploadAsync(reader.GetFilesForIncrementalBackup(), new Progress<int>());            
+            await Upload.UploadAsync(reader.GetFilesForIncrementalBackup(), new Progress<int>(), Settings.BucketName);
+            // update database using reader
         }
 
-        public void StoreFull()
+        public async void RemoveUnusedDocumentsAsync()
         {
-            throw new NotImplementedException();
-        }
-
-        public void RetrieveIncr()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RetrieveFull()
-        {
-            throw new NotImplementedException();
+            var reader = KernelFactory.Instance.Get<IReader>();
+            
+            await Remove.RemoveLocal(reader.GetUnusedFilesForLocalDeletion());
+            // update database using reader - set status to archived
         }
     }
 }

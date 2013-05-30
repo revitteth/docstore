@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ildss.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace Ildss.Index
     {
         List<string> GetFilesForIncrementalBackup();
         List<string> GetFilesForFullBackup();
+        List<string> GetUnusedFilesForLocalDeletion();
     }
 }

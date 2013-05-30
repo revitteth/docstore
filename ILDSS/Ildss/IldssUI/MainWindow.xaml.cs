@@ -136,7 +136,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
             {
-                KernelFactory.Instance.Get<IStorage>().StoreFull();
+                //KernelFactory.Instance.Get<IStorage>().StoreFull();
             });
         }
 

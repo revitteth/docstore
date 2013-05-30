@@ -89,6 +89,7 @@
     <Compile Include="CloudManager.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="ICloudManager.cs" />
+    <Compile Include="Remove.cs" />
     <Compile Include="Upload.cs" />
     <Compile Include="assemblyinfo.cs" />
   </ItemGroup>
