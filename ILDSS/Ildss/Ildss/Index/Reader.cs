@@ -21,7 +21,8 @@ namespace Ildss.Index
             foreach (var doc in fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed))
             {
                 incFiles.Add(doc.DocPaths.First().Path);
-                doc.Status = Settings.DocStatus.Current;
+                //doc.Status = Settings.DocStatus.Current;
+                // THIS SHOULD BE DONE ON UPLOAD COMPLETED!
             }
             fic.SaveChanges();
 

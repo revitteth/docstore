@@ -18,6 +18,7 @@ namespace Ildss
         private static bool FirstRun = true;
         private static int IndexInterval = 3000; // default to 1 hour
         private static int BackupInterval = 1;
+        public static string BucketName = "maxrevittildss";
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived, Permanent };

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CloudInterface;
+using Ildss.Index;
+
 namespace Ildss.Storage
 {
     class CloudStorage : IStorage
@@ -11,12 +14,21 @@ namespace Ildss.Storage
         public CloudStorage()
         {
             // create bucket if it doesn't exist & set policies
-
+            // read bucket name from settings
+            var manager = KernelFactory.Instance.Get<ICloudManager>();
+            manager.CreateBucketIfNotExists(Settings.BucketName);
         }
 
-        public void StoreIncr()
+        public async void StoreIncrAsync()
         {
-                        
+            // get list of files which need backing up
+            // find bucket/create if it doesn't exist (use settings to store bucket name?)
+            // upload files & mark uploaded succesfully as 'current'
+
+
+            var reader = KernelFactory.Instance.Get<IReader>();
+            Upload.SetBucketName(Settings.BucketName);
+            await Upload.UploadAsync(reader.GetFilesForIncrementalBackup(), new Progress<int>());            
         }
 
         public void StoreFull()

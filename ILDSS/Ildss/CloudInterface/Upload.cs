@@ -46,7 +46,7 @@ namespace CloudInterface
 
                 fileTransferUtility.Upload(uploadRequest);
 
-                Console.WriteLine("Upload completed");
+                //Console.WriteLine("Upload completed");
             }
 
             catch (AmazonS3Exception e)
@@ -58,7 +58,7 @@ namespace CloudInterface
         static void uploadRequest_UploadPartProgressEvent(object sender, UploadProgressArgs e)
         {
             // Process event.
-            Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
+            //Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
         }
 
         public static Task UploadAsync(List<string> files, IProgress<int> progress)

@@ -18,5 +18,6 @@ namespace Ildss.Models
         public bool FirstRun { get; set; }
         public int IndexInterval { get; set; }
         public int BackupInterval { get; set; }
+        public string BucketName { get; set; }
     }
 }

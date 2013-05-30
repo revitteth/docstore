@@ -8,7 +8,7 @@ namespace Ildss.Storage
 {
     public interface IStorage
     {
-        void StoreIncr();
+        void StoreIncrAsync();
         void StoreFull();
         void RetrieveIncr();
         void RetrieveFull();

@@ -32,7 +32,7 @@ namespace Ildss.Storage
             }
         }
 
-        public void StoreIncr()
+        public void StoreIncrAsync()
         {
             Store(Settings.BackupType.Incremental);
         }

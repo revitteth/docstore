@@ -121,7 +121,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
                 {
-                    KernelFactory.Instance.Get<IStorage>().StoreIncr();
+                    KernelFactory.Instance.Get<IStorage>().StoreIncrAsync();
                 });
         }
 
@@ -212,26 +212,10 @@ namespace IldssUI
             }
         }
 
-        private async void btnS3_Click(object sender, RoutedEventArgs e)
+        private void btnS3_Click(object sender, RoutedEventArgs e)
         {
-            List<string> files = new List<string>();
-            await Task.Run(() =>
-            {
-                var cm = KernelFactory.Instance.Get<ICloudManager>();
-                cm.CreateBucketIfNotExists("wobwobwob");
-                CloudInterface.Upload.SetBucketName("wobwobwob");
-                var reader = KernelFactory.Instance.Get<IReader>();
-                files = reader.GetFilesForIncrementalBackup();
-            });
-
-            //TODO:
-            // once complete
-            // mark each file as current in database
-
             btnS3.IsEnabled = false;
-            prgUpload.Maximum = files.Count;
-            var progress = new Progress<int>(i => prgUpload.Value = (i));
-            await CloudInterface.Upload.UploadAsync(files, progress);
+            KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync(); 
             btnS3.IsEnabled = true;
         }
 
