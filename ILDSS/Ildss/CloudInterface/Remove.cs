@@ -9,7 +9,7 @@ namespace CloudInterface
 {
     public static class Remove
     {
-        public static Task RemoveLocal(List<string> files)
+        public static Task RemoveLocalAsync(List<string> files)
         {
             return Task.Run(() =>
                 {

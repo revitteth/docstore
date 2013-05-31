@@ -35,7 +35,7 @@ namespace Ildss.Storage
             // get list of unused files
             // delete from local drive
             var reader = KernelFactory.Instance.Get<IReader>();
-            await Remove.RemoveLocal(reader.GetUnusedFilesForLocalDeletion());
+            await Remove.RemoveLocalAsync(reader.GetUnusedFilesForLocalDeletion());
 
             // update database using reader - set status to archived
         }
