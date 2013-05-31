@@ -215,7 +215,9 @@ namespace IldssUI
         private void btnS3_Click(object sender, RoutedEventArgs e)
         {
             btnS3.IsEnabled = false;
-            KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync(); 
+            // need an index here - also ensure all files closed or make not as upload will fail
+            KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
+            KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync(); 
             btnS3.IsEnabled = true;
         }
 
