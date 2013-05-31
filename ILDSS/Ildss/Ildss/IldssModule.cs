@@ -28,7 +28,7 @@ namespace Ildss
             this.Bind<IStorage>().To<CloudStorage>().InSingletonScope().Named("Cloud");
             this.Bind<IReader>().To<Reader>();
 
-            // from external projects
+            // from class libraries
             this.Bind<ICloudManager>().To<CloudManager>().InSingletonScope();
         }
     }

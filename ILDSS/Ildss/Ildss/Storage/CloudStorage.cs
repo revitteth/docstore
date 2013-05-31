@@ -22,19 +22,21 @@ namespace Ildss.Storage
         public async void StoreIncrAsync()
         {
             // get list of files which need backing up
-            // find bucket/create if it doesn't exist (use settings to store bucket name?)
-            // upload files & mark uploaded succesfully as 'current'
+            // upload files
 
             var reader = KernelFactory.Instance.Get<IReader>();
             await Upload.UploadAsync(reader.GetFilesForIncrementalBackup(), new Progress<int>(), Settings.BucketName);
-            // update database using reader
+
+            // update database using reader - set status to current
         }
 
         public async void RemoveUnusedDocumentsAsync()
         {
+            // get list of unused files
+            // delete from local drive
             var reader = KernelFactory.Instance.Get<IReader>();
-            
             await Remove.RemoveLocal(reader.GetUnusedFilesForLocalDeletion());
+
             // update database using reader - set status to archived
         }
     }
