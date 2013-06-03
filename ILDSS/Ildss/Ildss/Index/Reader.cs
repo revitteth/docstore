@@ -21,11 +21,9 @@ namespace Ildss.Index
             foreach (var doc in fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed))
             {
                 // Generate the unique version name + get the path of the file to be uploaded
-
-                // TODO - STORE THIS IN THE DATABASE!!!! - VERSION TABLE
-
                 var ev = GetLastWriteEvent(doc);
-                var temp = new Tuple<string, string>(doc.DocPaths.First().Path, doc.DocumentHash + ev.Time.ToString());
+
+                var temp = new Tuple<string, string>(doc.DocPaths.First().Path, doc.DocumentHash + "-" + ev.Time.ToString("ddMMyyyyhhmmss"));
                 incFiles.Add(temp);
             }
 
