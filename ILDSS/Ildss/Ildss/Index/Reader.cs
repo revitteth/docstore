@@ -14,17 +14,20 @@ namespace Ildss.Index
             // instantiate the reader
         }
 
-        public List<string> GetFilesForIncrementalBackup()
+        public List<Tuple<string,string> > GetFilesForIncrementalBackup()
         {
-            var incFiles = new List<string>();
+            var incFiles = new List<Tuple<string, string> >();
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             foreach (var doc in fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed))
             {
-                incFiles.Add(doc.DocPaths.First().Path);
-                //doc.Status = Settings.DocStatus.Current;
-                // THIS SHOULD BE DONE ON UPLOAD COMPLETED!
+                // Generate the unique version name + get the path of the file to be uploaded
+
+                // TODO - STORE THIS IN THE DATABASE!!!! - VERSION TABLE
+
+                var ev = GetLastWriteEvent(doc);
+                var temp = new Tuple<string, string>(doc.DocPaths.First().Path, doc.DocumentHash + ev.Time.ToString());
+                incFiles.Add(temp);
             }
-            fic.SaveChanges();
 
             return incFiles;
         }
@@ -95,6 +98,11 @@ namespace Ildss.Index
             // if hard drive space target - get files in order of increasing usage until quota met
             // if time based target - get files with no events since x time
             // if based on decision - find all files marked for removal (this may not be necessary to implement for project) 
+        }
+
+        private DocEvent GetLastWriteEvent(Document doc)
+        {
+            return doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
         }
     }
 }

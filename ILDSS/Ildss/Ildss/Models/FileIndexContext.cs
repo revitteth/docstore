@@ -13,6 +13,7 @@ namespace Ildss.Models
         public DbSet<DocPath> DocPaths { get; set; }
         public DbSet<DocEvent> DocEvents { get; set; }
         public DbSet<Backup> Backups { get; set; }
+        public DbSet<DocVersion> DocVersions { get; set; }
         public DbSet<StoredSettings> StoredSettings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -44,6 +45,12 @@ namespace Ildss.Models
                                 m.ToTable("DocumentBackups");
                             }
                         );
+
+            modelBuilder.Entity<DocVersion>()
+                        .HasRequired(dv => dv.Document)
+                        .WithMany(d => d.DocVersions)
+                        .HasForeignKey(dv => dv.DocumentId)
+                        .WillCascadeOnDelete();
         }
     }
 }

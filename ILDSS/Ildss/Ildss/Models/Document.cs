@@ -13,6 +13,7 @@ namespace Ildss.Models
         {
             this.DocPaths = new HashSet<DocPath>();
             this.DocEvents = new HashSet<DocEvent>();
+            this.DocVersions = new HashSet<DocVersion>();
             this.Backups = new HashSet<Backup>();
         }
 
@@ -24,6 +25,7 @@ namespace Ildss.Models
 
         public virtual ICollection<DocPath> DocPaths { get; set; }
         public virtual ICollection<DocEvent> DocEvents { get; set; }
+        public virtual ICollection<DocVersion> DocVersions { get; set; }
         public virtual ICollection<Backup> Backups { get; set; }
 
     }

@@ -13,8 +13,7 @@ namespace CloudInterface
 {
     public static class Upload
     {
-
-        public static void UploadFile(string file, string existingBucketName)
+        public static void UploadFile(System.Tuple<string,string> file, string existingBucketName)
         {
             NameValueCollection appConfig = ConfigurationManager.AppSettings;
             string accessKeyID = appConfig["AWSAccessKey"];
@@ -29,17 +28,15 @@ namespace CloudInterface
                 TransferUtilityUploadRequest uploadRequest =
                     new TransferUtilityUploadRequest()
                     .WithBucketName(existingBucketName)
-                    .WithFilePath(file)
-                    .WithServerSideEncryptionMethod(ServerSideEncryptionMethod.AES256);
-                    // to set file name -> .WithKey("GEOFF");
+                    .WithFilePath(file.Item1)
+                    .WithServerSideEncryptionMethod(ServerSideEncryptionMethod.AES256)
+                    .WithKey(file.Item2);
 
                 uploadRequest.UploadProgressEvent +=
                     new EventHandler<UploadProgressArgs>
                         (uploadRequest_UploadPartProgressEvent);
 
                 fileTransferUtility.Upload(uploadRequest);
-
-                //Console.WriteLine("Upload completed");
             }
 
             catch (AmazonS3Exception e)
@@ -54,7 +51,7 @@ namespace CloudInterface
             //Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
         }
 
-        public static Task UploadAsync(List<string> files, IProgress<int> progress, string existingBucketName)
+        public static Task UploadAsync(List<System.Tuple<string,string> > files, IProgress<int> progress, string existingBucketName)
         {
             return Task.Run(() =>
                 {

@@ -127,9 +127,10 @@
     <Compile Include="Index\IEventManager.cs" />
     <Compile Include="Index\DirectoryMonitor.cs" />
     <Compile Include="Index\IReader.cs" />
-    <Compile Include="Index\IStatusChanger.cs" />
+    <Compile Include="Index\IVersionManager.cs" />
     <Compile Include="Index\Reader.cs" />
-    <Compile Include="Index\StatusChanger.cs" />
+    <Compile Include="Index\VersionManager.cs" />
+    <Compile Include="Models\DocVersion.cs" />
     <Compile Include="Models\StoredSettings.cs" />
     <Compile Include="StatsExport.cs" />
     <Compile Include="Models\Backup.cs" />

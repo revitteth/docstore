@@ -29,8 +29,8 @@ namespace Ildss.Storage
             await Upload.UploadAsync(documents, new Progress<int>(), Settings.BucketName);
 
             // update database using StatusChanger - set status to current
-            var statuschanger = KernelFactory.Instance.Get<IStatusChanger>();
-            statuschanger.UpdateStatus(Settings.DocStatus.Current, documents);
+            var versionManager = KernelFactory.Instance.Get<IVersionManager>();
+            versionManager.AddVersion(Settings.DocStatus.Current, documents);
         }
 
         public async void RemoveUnusedDocumentsAsync()
