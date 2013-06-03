@@ -20,13 +20,14 @@ namespace Ildss
         public override void Load()
         {
             this.Bind<IHash>().To<HashMax>();
-            this.Bind<IFileIndexContext>().To<FileIndexContext>();
+            this.Bind<IFileIndexContext>().To<FileIndexContext>();//.InSingletonScope();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
             this.Bind<IEventManager>().To<IndexManager>().InSingletonScope().Named("Index");
             this.Bind<IStorage>().To<LocalStorage>().InSingletonScope().Named("Local");
             this.Bind<IStorage>().To<CloudStorage>().InSingletonScope().Named("Cloud");
             this.Bind<IReader>().To<Reader>();
+            this.Bind<IStatusChanger>().To<StatusChanger>();
 
             // from class libraries
             this.Bind<ICloudManager>().To<CloudManager>().InSingletonScope();

@@ -127,7 +127,9 @@
     <Compile Include="Index\IEventManager.cs" />
     <Compile Include="Index\DirectoryMonitor.cs" />
     <Compile Include="Index\IReader.cs" />
+    <Compile Include="Index\IStatusChanger.cs" />
     <Compile Include="Index\Reader.cs" />
+    <Compile Include="Index\StatusChanger.cs" />
     <Compile Include="Models\StoredSettings.cs" />
     <Compile Include="StatsExport.cs" />
     <Compile Include="Models\Backup.cs" />

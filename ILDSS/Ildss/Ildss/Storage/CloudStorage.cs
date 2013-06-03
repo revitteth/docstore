@@ -25,9 +25,12 @@ namespace Ildss.Storage
             // upload files
 
             var reader = KernelFactory.Instance.Get<IReader>();
-            await Upload.UploadAsync(reader.GetFilesForIncrementalBackup(), new Progress<int>(), Settings.BucketName);
+            var documents = reader.GetFilesForIncrementalBackup();
+            await Upload.UploadAsync(documents, new Progress<int>(), Settings.BucketName);
 
-            // update database using reader - set status to current
+            // update database using StatusChanger - set status to current
+            var statuschanger = KernelFactory.Instance.Get<IStatusChanger>();
+            statuschanger.UpdateStatus(Settings.DocStatus.Current, documents);
         }
 
         public async void RemoveUnusedDocumentsAsync()

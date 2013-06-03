@@ -139,6 +139,10 @@ namespace Ildss.Storage
             }
         }
 
+        public void RemoveUnusedDocumentsAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
