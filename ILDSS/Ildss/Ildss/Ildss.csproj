@@ -120,6 +120,7 @@
   <ItemGroup>
     <Compile Include="Crypto\EncryptionAES.cs" />
     <Compile Include="Crypto\HashMax.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Index\DiscoMonitor.cs" />
     <Compile Include="Index\IndexManager.cs" />
     <Compile Include="Crypto\IEncryption.cs" />
@@ -130,10 +131,15 @@
     <Compile Include="Index\IVersionManager.cs" />
     <Compile Include="Index\Reader.cs" />
     <Compile Include="Index\VersionManager.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="Models\DocVersion.cs" />
     <Compile Include="Models\StoredSettings.cs" />
+    <Compile Include="Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="StatsExport.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />
     <Compile Include="Models\Document.cs" />
@@ -172,6 +178,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

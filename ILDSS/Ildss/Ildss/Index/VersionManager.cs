@@ -9,7 +9,7 @@ namespace Ildss.Index
 {
     class VersionManager : IVersionManager
     {
-        public void AddVersion(Settings.DocStatus status, List<Tuple<Document, string, DateTime>> documents)
+        public void AddVersion(Enums.DocStatus status, List<Tuple<Document, string, DateTime>> documents)
         {
             foreach (var document in documents)
             {
@@ -17,7 +17,7 @@ namespace Ildss.Index
             }
         }
 
-        public void AddVersion(Settings.DocStatus status, List<Tuple<string, string, DateTime>> paths)
+        public void AddVersion(Enums.DocStatus status, List<Tuple<string, string, DateTime>> paths)
         {
             foreach (var path in paths)
             {
@@ -25,7 +25,7 @@ namespace Ildss.Index
             }
         }
 
-        public void AddVersion(Settings.DocStatus status, Tuple<Document, string, DateTime> document)
+        public void AddVersion(Enums.DocStatus status, Tuple<Document, string, DateTime> document)
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             Console.WriteLine("SAVING");
@@ -42,7 +42,7 @@ namespace Ildss.Index
             Console.WriteLine("Saved");
         }
 
-        public void AddVersion(Settings.DocStatus status, Tuple<string, string, DateTime> path)
+        public void AddVersion(Enums.DocStatus status, Tuple<string, string, DateTime> path)
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var doc = fic.DocPaths.First(i => i.Path == path.Item1).Document;

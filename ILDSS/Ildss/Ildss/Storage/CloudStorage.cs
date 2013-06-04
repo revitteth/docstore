@@ -16,7 +16,7 @@ namespace Ildss.Storage
             // create bucket if it doesn't exist & set policies
             // read bucket name from settings
             var manager = KernelFactory.Instance.Get<ICloudManager>();
-            manager.CreateBucketIfNotExists(Settings.BucketName);
+            manager.CreateBucketIfNotExists(Settings.Default.BucketName);
         }
 
         public async void StoreIncrAsync()
@@ -26,11 +26,11 @@ namespace Ildss.Storage
 
             var reader = KernelFactory.Instance.Get<IReader>();
             var documents = reader.GetFilesForIncrementalBackup();
-            await Upload.UploadAsync(documents, new Progress<int>(), Settings.BucketName);
+            await Upload.UploadAsync(documents, new Progress<int>(), Settings.Default.BucketName);
 
             // update database using StatusChanger - set status to current
             var versionManager = KernelFactory.Instance.Get<IVersionManager>();
-            versionManager.AddVersion(Settings.DocStatus.Current, documents);
+            versionManager.AddVersion(Enums.DocStatus.Current, documents);
         }
 
         public async void RemoveUnusedDocumentsAsync()

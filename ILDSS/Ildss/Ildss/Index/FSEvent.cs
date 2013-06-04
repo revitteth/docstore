@@ -10,7 +10,7 @@ namespace Ildss.Index
 {
     public class FSEvent
     {
-        public Settings.EventType Type { get; set; }
+        public Enums.EventType Type { get; set; }
         public FileInfo FileInf { get; set; }
         public string OldPath { get; set; }
         public bool isDirectory { get; set; }

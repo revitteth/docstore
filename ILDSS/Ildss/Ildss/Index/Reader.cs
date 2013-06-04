@@ -19,7 +19,7 @@ namespace Ildss.Index
         {
             var incFiles = new List<Tuple<string, string, DateTime>>();
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            foreach (var doc in fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed))
+            foreach (var doc in fic.Documents.Where(i => i.Status == Enums.DocStatus.Indexed))
             {
                 // Generate the unique version name + get the path of the file to be uploaded
                 var ev = GetLastWriteEvent(doc);
@@ -58,8 +58,8 @@ namespace Ildss.Index
         private List<Document> FindUnusedDocuments()
         {
             // get size/tim/both constraints from settings
-            var util = Settings.TargetDiskUtilisation;
-            var age = Settings.TargetDocumentMaxAge;
+            var util = Settings.Default.TargetDiskUtilisation;
+            var age = Settings.Default.TargetDocumentMaxAge;
 
             DateTime from = DateTime.Now;
 
@@ -69,7 +69,7 @@ namespace Ildss.Index
 
             long sizeaccum = 0;
 
-            var documents = fic.Documents.OrderByDescending(i => i.Status == Settings.DocStatus.Current);
+            var documents = fic.Documents.OrderByDescending(i => i.Status == Enums.DocStatus.Current);
 
             foreach (var doc in documents)
             {

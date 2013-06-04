@@ -36,26 +36,20 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
-            Settings.InitSettings();
+            //Settings.Default.InitialiseSettings();
 
-            if (Settings.getFirstRun())
+            if (Ildss.Settings.Default.FirstRun)
             {
                 TabControl.SetIsSelected(tabSettings, true);
                 this.WindowState = WindowState.Normal;
             }
             else
             {
-                txtWorkingDir.IsEnabled = false;
-                txtStorageDir.IsEnabled = false;
-                btnFinish.IsEnabled = false;
-                btnLoadDefaults.IsEnabled = false;
-                txtWorkingDir.Text = Settings.getWorkingDir();
-                txtStorageDir.Text = Settings.getStorageDir();
                 this.Hide();
                 Task.Run(() =>
                 {
                     KernelFactory.Instance.Get<IEventManager>("Index");
-                    KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.getWorkingDir());
+                    KernelFactory.Instance.Get<IMonitor>().Monitor(Ildss.Settings.Default.WorkingDir);
                 });
             }
 
@@ -82,33 +76,7 @@ namespace IldssUI
         {
             return Task.Run(() =>
             {
-                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.getWorkingDir());
-            });
-        }
-
-        private void btnEmptyDb_Click(object sender, RoutedEventArgs e)
-        {
-            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            foreach (var d in fic.Documents)
-            {
-                fic.Documents.Remove(d);
-            }
-            fic.SaveChanges();
-        }
-
-        private Task IncrementalBackup()
-        {
-            return Task.Run(() =>
-                {
-                    KernelFactory.Instance.Get<IStorage>().StoreIncrAsync();
-                });
-        }
-
-        private Task FullBackup()
-        {
-            return Task.Run(() =>
-            {
-                //KernelFactory.Instance.Get<IStorage>().StoreFull();
+                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
             });
         }
 
@@ -122,61 +90,6 @@ namespace IldssUI
             btnExportCSV.Content = "Export CSV";
         }
 
-        private void txtWorkingDir_LostFocus(object sender, EventArgs e)
-        {
-            if (Directory.Exists(txtWorkingDir.Text))
-            {
-                txtWorkingDir.Background = System.Windows.Media.Brushes.LightGreen;
-                txtStorageDir.Focus();
-            }
-            else
-            {
-                txtWorkingDir.Background = System.Windows.Media.Brushes.LightPink;
-            }
-        }
-
-        private void txtStorageDir_LostFocus(object sender, EventArgs e)
-        {
-            if (Directory.Exists(txtStorageDir.Text))
-            {
-                txtStorageDir.Background = System.Windows.Media.Brushes.LightGreen;
-                btnFinish.Focus();
-            }
-            else
-            {
-                txtStorageDir.Background = System.Windows.Media.Brushes.LightPink;
-            }
-        }
-
-        private void btnFinish_Click(object sender, RoutedEventArgs e)
-        {
-            if (Directory.Exists(txtStorageDir.Text) & Directory.Exists(txtWorkingDir.Text))
-            {
-                Settings.setFirstRun(false);
-                Settings.setStorageDir(txtStorageDir.Text);
-                Settings.setWorkingDir(txtWorkingDir.Text);
-                btnFinish.IsEnabled = false;
-                btnLoadDefaults.IsEnabled = false;
-                txtWorkingDir.IsEnabled = false;
-                txtStorageDir.IsEnabled = false;
-                TabControl.SetIsSelected(tabDashboard, true);
-            }
-        }
-
-        private void btnLoadDefaults_Click(object sender, RoutedEventArgs e)
-        {
-            txtWorkingDir.Text = Settings.getWorkingDir();
-            txtStorageDir.Text = Settings.getStorageDir();
-        }
-
-        private void btnSetInterval_Click(object sender, RoutedEventArgs e)
-        {
-            if (Convert.ToInt32(txtInterval.Text) > 1 & Convert.ToInt32(txtInterval.Text) < 6000)
-            {
-                Settings.setIndexInterval(Convert.ToInt32(txtInterval.Text) * 60000);
-            }
-        }
-
         private void btnS3_Click(object sender, RoutedEventArgs e)
         {
             btnS3.IsEnabled = false;
@@ -185,17 +98,5 @@ namespace IldssUI
             //KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync(); 
             btnS3.IsEnabled = true;
         }
-
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            System.Windows.Data.CollectionViewSource docVersionViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("docVersionViewSource")));
-            // Load data by setting the CollectionViewSource.Source property:
-            // docVersionViewSource.Source = [generic data source]
-            System.Windows.Data.CollectionViewSource storedSettingsViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("storedSettingsViewSource")));
-            // Load data by setting the CollectionViewSource.Source property:
-            // storedSettingsViewSource.Source = [generic data source]
-        }
-
     }
 }

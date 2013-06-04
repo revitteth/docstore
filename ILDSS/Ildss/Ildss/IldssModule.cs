@@ -20,7 +20,7 @@ namespace Ildss
         public override void Load()
         {
             this.Bind<IHash>().To<HashMax>();
-            this.Bind<IFileIndexContext>().To<FileIndexContext>();//.InSingletonScope();
+            this.Bind<IFileIndexContext>().To<FileIndexContext>().InSingletonScope();
             this.Bind<IMonitor>().To<DirectoryMonitor>().InSingletonScope();
             //this.Bind<IMonitor>().To<DiscoMonitor>().InSingletonScope();
             this.Bind<IEventManager>().To<IndexManager>().InSingletonScope().Named("Index");

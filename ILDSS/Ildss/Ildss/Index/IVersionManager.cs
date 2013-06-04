@@ -10,9 +10,9 @@ namespace Ildss.Index
     {
         // pass a status and a document and this sets that status on the document 
         // or pass a path - find the corresponding document and update its status
-        void AddVersion(Settings.DocStatus status, List<Tuple<Models.Document, string, DateTime>> documents);
-        void AddVersion(Settings.DocStatus status, List<Tuple<string, string, DateTime>> paths);
-        void AddVersion(Settings.DocStatus status, Tuple<Models.Document, string, DateTime> document);                 
-        void AddVersion(Settings.DocStatus status, Tuple<string, string, DateTime> path);
+        void AddVersion(Enums.DocStatus status, List<Tuple<Models.Document, string, DateTime>> documents);
+        void AddVersion(Enums.DocStatus status, List<Tuple<string, string, DateTime>> paths);
+        void AddVersion(Enums.DocStatus status, Tuple<Models.Document, string, DateTime> document);                 
+        void AddVersion(Enums.DocStatus status, Tuple<string, string, DateTime> path);
     }
 }
