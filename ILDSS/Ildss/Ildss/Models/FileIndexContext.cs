@@ -12,7 +12,6 @@ namespace Ildss.Models
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocPath> DocPaths { get; set; }
         public DbSet<DocEvent> DocEvents { get; set; }
-        public DbSet<Backup> Backups { get; set; }
         public DbSet<DocVersion> DocVersions { get; set; }
         public DbSet<StoredSettings> StoredSettings { get; set; }
 
@@ -33,18 +32,6 @@ namespace Ildss.Models
                         .WithMany(d => d.DocEvents)
                         .HasForeignKey(de => de.DocumentId)
                         .WillCascadeOnDelete();
-
-            modelBuilder.Entity<Backup>()
-                        .HasMany(d => d.Documents)
-                        .WithMany(b => b.Backups)
-                        .Map(
-                            m =>
-                            {
-                                m.MapLeftKey("BackupId");
-                                m.MapRightKey("DocumentId");
-                                m.ToTable("DocumentBackups");
-                            }
-                        );
 
             modelBuilder.Entity<DocVersion>()
                         .HasRequired(dv => dv.Document)

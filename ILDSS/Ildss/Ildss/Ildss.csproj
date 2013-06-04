@@ -133,7 +133,6 @@
     <Compile Include="Models\DocVersion.cs" />
     <Compile Include="Models\StoredSettings.cs" />
     <Compile Include="StatsExport.cs" />
-    <Compile Include="Models\Backup.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Models\DocEvent.cs" />
     <Compile Include="Models\DocPath.cs" />

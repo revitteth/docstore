@@ -17,6 +17,7 @@ namespace Ildss.Models
         public string DocumentHash { get; set; }
         [Required]
         public DateTime DocEventTime { get; set; }
+        [Required]
         public string VersionKey { get; set; }
         
         // need to also store hash and datetime - makes it easier to go through history

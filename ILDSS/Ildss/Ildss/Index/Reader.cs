@@ -1,4 +1,5 @@
 ﻿using Ildss.Models;
+using Log;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,14 +58,8 @@ namespace Ildss.Index
         private List<Document> FindUnusedDocuments()
         {
             // get size/tim/both constraints from settings
-
-            // is it possible to calculate them using code?
-            // ENSURE that documents are not already archived - status must be set once deleted from local
-
-            // fake timespan - 30 seconds for testing
-            TimeSpan Mandem = new TimeSpan();
-            Mandem = TimeSpan.FromSeconds(30);
-
+            var util = Settings.TargetDiskUtilisation;
+            var age = Settings.TargetDocumentMaxAge;
 
             DateTime from = DateTime.Now;
 
@@ -72,19 +67,30 @@ namespace Ildss.Index
 
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-            var documents = fic.Documents.Where(i => i.Status == Settings.DocStatus.Current);
+            long sizeaccum = 0;
+
+            var documents = fic.Documents.OrderByDescending(i => i.Status == Settings.DocStatus.Current);
 
             foreach (var doc in documents)
             {
                 // check time constraint (if there is one e.g. 3 months)
                 // find most recent event - if within last x then ignore else add document to list
-                if (doc.DocEvents.Any(i => i.Time > (from - Mandem)))
+                if (doc.DocEvents.Any(i => i.Time > (from - age)))
                 {
                     // document has been used recently so ignore it
                 }
                 else
                 {
-                    unused.Add(doc);
+                    if (doc.Size + sizeaccum > util)
+                    { 
+                        break; 
+                    }
+                    else
+                    {
+                        unused.Add(doc);
+                        sizeaccum += doc.Size;
+                        Logger.Write(sizeaccum.ToString() + " sizeaccum");
+                    }
                 }
             }
 

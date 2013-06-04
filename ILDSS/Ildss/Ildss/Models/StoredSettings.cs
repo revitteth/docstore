@@ -17,7 +17,6 @@ namespace Ildss.Models
         public string StorageDir { get; set; } //@"E:\Documents\GitHub\docstore\StorageDir"; //@"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         public bool FirstRun { get; set; }
         public int IndexInterval { get; set; }
-        public int BackupInterval { get; set; }
         public string BucketName { get; set; }
     }
 }

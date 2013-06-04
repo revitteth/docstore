@@ -17,8 +17,10 @@ namespace Ildss
         private static string StorageDir = @"C:\Users\Max\Documents\GitHub\docstore\StorageDir";
         private static bool FirstRun = true;
         private static int IndexInterval = 3000; // default to 1 hour
-        private static int BackupInterval = 1;
+        private static int IncrementalBackupInterval = 1;
         public static string BucketName = "maxrevittildss";
+        public static long TargetDiskUtilisation = 1024; // default to 1MB (more like 30 gig)
+        public static TimeSpan TargetDocumentMaxAge = TimeSpan.FromSeconds(120); // default to 120 seconds (more like 30 days)
   
         // enumerated variables
         public enum DocStatus { Indexed, Current, Archived, Permanent };
@@ -78,11 +80,11 @@ namespace Ildss
 
         public static int getBackupInterval()
         {
-            return BackupInterval;
+            return IncrementalBackupInterval;
         }
         public static void setBackupInterval(int BI)
         {
-            BackupInterval = BI;
+            IncrementalBackupInterval = BI;
             UpdateSettings();
         }
 
@@ -111,7 +113,6 @@ namespace Ildss
             StorageDir = dbSettings.StorageDir;
             FirstRun = dbSettings.FirstRun;
             IndexInterval = dbSettings.IndexInterval;
-            BackupInterval = dbSettings.BackupInterval;
         }
 
         public static void UpdateSettings()
@@ -134,7 +135,6 @@ namespace Ildss
             dbSettings.StorageDir = StorageDir;
             dbSettings.FirstRun = FirstRun;
             dbSettings.IndexInterval = IndexInterval;
-            dbSettings.BackupInterval = BackupInterval;
 
             fic.SaveChanges();
 

@@ -1,10 +1,11 @@
-﻿<Controls:MetroWindow x:Class="IldssUI.MainWindow"
+﻿<Controls:MetroWindow
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Manage ILDSS" Height="350" Width="525" Icon="cloud.png">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Models="clr-namespace:Ildss.Models;assembly=Ildss" mc:Ignorable="d" x:Class="IldssUI.MainWindow"
+        Title="Manage ILDSS" Height="350" Width="525" Icon="cloud.png" Loaded="MetroWindow_Loaded">
 
-    <Window.Resources>
+    <Controls:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
@@ -15,8 +16,10 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="docVersionViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:DocVersion}, CreateList=True}"/>
+            <CollectionViewSource x:Key="storedSettingsViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:StoredSettings}, CreateList=True}"/>
         </ResourceDictionary>
-    </Window.Resources>
+    </Controls:MetroWindow.Resources>
 
     <Controls:MetroWindow.WindowCommands>
         <Controls:WindowCommands>
@@ -37,22 +40,16 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.WindowCommands>
 
-    <Grid Margin="9,0,-9,0">
+    <Grid Margin="9,0,2,0">
         <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="10,278,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
-        <TabControl HorizontalAlignment="Left" Height="140" Margin="10,10,0,0" VerticalAlignment="Top" Width="500">
-            <TabItem Header="Dashboard" Name="tabDashboard">
-                <Grid Background="White" Margin="0,0,0,-125">
-                    <Button x:Name="btnIndex" Style="{DynamicResource MetroCircleButtonStyle}" Content="Index" HorizontalAlignment="Left" Height="75" Margin="6,6,0,0" VerticalAlignment="Top" Width="75" Click="btnIndex_Click"/>
-                    <Button x:Name="btnMonitor" Style="{DynamicResource MetroCircleButtonStyle}" Content="Monitor" HorizontalAlignment="Left" Height="75" Margin="101,6,0,0" VerticalAlignment="Top" Width="75" Click="btnMonitor_Click"/>
-                    <Button x:Name="btnIncremental" Content="Incr Backup" HorizontalAlignment="Left" Height="30" Margin="378,14,0,0" VerticalAlignment="Top" Width="90" Click="btnIncremental_Click"/>
-                    <Button x:Name="btnFullBackup" Content="Full Backup" HorizontalAlignment="Left" Height="30" Margin="378,51,0,0" VerticalAlignment="Top" Width="90" Click="btnFullBackup_Click"/>
-                    <TextBlock x:Name="lblIndexFrequency" HorizontalAlignment="Left" Height="40" Margin="5,95,0,0" TextWrapping="Wrap" Text="{Binding Text, ElementName=txtInterval, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="329" FontSize="24"/>
+        <TabControl HorizontalAlignment="Left" Height="140" Margin="0,10,-4,0" VerticalAlignment="Top" Width="510">
+            <TabItem Header="Dashboard" x:Name="tabDashboard">
+                <Grid Background="White" Margin="-5,0,0,-125">
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="375,91,0,0" VerticalAlignment="Top" Width="93" Click="btnS3_Click"/>
-                    <ProgressBar x:Name="prgUpload" HorizontalAlignment="Left" Height="20" Margin="266,159,0,0" VerticalAlignment="Top" Width="191"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings" Name="tabSettings">
-                <Grid Background="White" Margin="0,0,0,-125">
+            <TabItem Header="Settings" x:Name="tabSettings">
+                <Grid Background="White" Margin="0,0,0,-125" DataContext="{StaticResource docVersionViewSource}">
                     <TextBox Controls:TextboxHelper.Watermark="e.g. C:\IldssWorkingDir" x:Name="txtWorkingDir" HorizontalAlignment="Left" Height="26" Margin="80,25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="405" LostFocus="txtWorkingDir_LostFocus"/>
                     <Label Content="Work Dir:" HorizontalAlignment="Left" Height="26" Margin="0,24,0,0" VerticalAlignment="Top" Width="75"/>
                     <TextBox Controls:TextboxHelper.Watermark="e.g. D:\IldssStorageDir" x:Name="txtStorageDir" HorizontalAlignment="Left" Height="26" Margin="80,55,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="405" LostFocus="txtStorageDir_LostFocus"/>

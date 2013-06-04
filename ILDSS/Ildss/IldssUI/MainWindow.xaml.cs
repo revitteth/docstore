@@ -49,8 +49,6 @@ namespace IldssUI
                 txtStorageDir.IsEnabled = false;
                 btnFinish.IsEnabled = false;
                 btnLoadDefaults.IsEnabled = false;
-                btnIndex.IsEnabled = false;
-                btnMonitor.IsEnabled = false;
                 txtWorkingDir.Text = Settings.getWorkingDir();
                 txtStorageDir.Text = Settings.getStorageDir();
                 this.Hide();
@@ -80,21 +78,6 @@ namespace IldssUI
             base.OnStateChanged(e);
         }
 
-        private async void btnIndex_Click(object sender, RoutedEventArgs e)
-        {
-            btnIndex.Content = "Working...";
-            await Task.Run(() =>
-            {
-                KernelFactory.Instance.Get<IEventManager>("Index");
-            });
-        }
-
-        private async void btnMonitor_Click(object sender, RoutedEventArgs e)
-        {
-            await Monitor();
-            btnMonitor.Content = "Working...";
-        }
-
         private Task Monitor()
         {
             return Task.Run(() =>
@@ -110,10 +93,6 @@ namespace IldssUI
             {
                 fic.Documents.Remove(d);
             }
-            foreach (var b in fic.Backups)
-            {
-                fic.Backups.Remove(b);
-            }
             fic.SaveChanges();
         }
 
@@ -125,26 +104,12 @@ namespace IldssUI
                 });
         }
 
-        private async void btnIncremental_Click(object sender, RoutedEventArgs e)
-        {
-            btnIncremental.Content = "In Progress...";
-            await IncrementalBackup();
-            btnIncremental.Content = "Incr Backup";
-        }
-
         private Task FullBackup()
         {
             return Task.Run(() =>
             {
                 //KernelFactory.Instance.Get<IStorage>().StoreFull();
             });
-        }
-
-        private async void btnFullBackup_Click(object sender, RoutedEventArgs e)
-        {
-            btnFullBackup.Content = "In Progress...";
-            await FullBackup();
-            btnFullBackup.Content = "Full Backup";
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -219,6 +184,17 @@ namespace IldssUI
             KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
             //KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync(); 
             btnS3.IsEnabled = true;
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+
+            System.Windows.Data.CollectionViewSource docVersionViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("docVersionViewSource")));
+            // Load data by setting the CollectionViewSource.Source property:
+            // docVersionViewSource.Source = [generic data source]
+            System.Windows.Data.CollectionViewSource storedSettingsViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("storedSettingsViewSource")));
+            // Load data by setting the CollectionViewSource.Source property:
+            // storedSettingsViewSource.Source = [generic data source]
         }
 
     }
