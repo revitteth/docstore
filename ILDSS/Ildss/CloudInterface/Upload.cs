@@ -13,7 +13,7 @@ namespace CloudInterface
 {
     public static class Upload
     {
-        public static void UploadFile(System.Tuple<string,string> file, string existingBucketName)
+        public static void UploadFile(System.Tuple<string,string, DateTime> file, string existingBucketName)
         {
             NameValueCollection appConfig = ConfigurationManager.AppSettings;
             string accessKeyID = appConfig["AWSAccessKey"];
@@ -51,7 +51,7 @@ namespace CloudInterface
             //Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
         }
 
-        public static Task UploadAsync(List<System.Tuple<string,string> > files, IProgress<int> progress, string existingBucketName)
+        public static Task UploadAsync(List<System.Tuple<string,string, DateTime>> files, IProgress<int> progress, string existingBucketName)
         {
             return Task.Run(() =>
                 {

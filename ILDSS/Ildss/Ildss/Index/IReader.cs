@@ -9,7 +9,7 @@ namespace Ildss.Index
 {
     public interface IReader
     {
-        List<Tuple<string, string>> GetFilesForIncrementalBackup();
+        List<Tuple<string, string, DateTime>> GetFilesForIncrementalBackup();
         List<string> GetFilesForFullBackup();
         List<string> GetUnusedFilesForLocalDeletion();
     }

@@ -14,16 +14,16 @@ namespace Ildss.Index
             // instantiate the reader
         }
 
-        public List<Tuple<string,string> > GetFilesForIncrementalBackup()
+        public List<Tuple<string,string, DateTime>> GetFilesForIncrementalBackup()
         {
-            var incFiles = new List<Tuple<string, string> >();
+            var incFiles = new List<Tuple<string, string, DateTime>>();
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             foreach (var doc in fic.Documents.Where(i => i.Status == Settings.DocStatus.Indexed))
             {
                 // Generate the unique version name + get the path of the file to be uploaded
                 var ev = GetLastWriteEvent(doc);
 
-                var temp = new Tuple<string, string>(doc.DocPaths.First().Path, doc.DocumentHash + "-" + ev.Time.ToString("ddMMyyyyhhmmss"));
+                var temp = new Tuple<string, string, DateTime>(doc.DocPaths.First().Path, doc.DocumentHash, ev.Time);
                 incFiles.Add(temp);
             }
 

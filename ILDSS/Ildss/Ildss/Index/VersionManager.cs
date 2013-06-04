@@ -9,7 +9,7 @@ namespace Ildss.Index
 {
     class VersionManager : IVersionManager
     {
-        public void AddVersion(Settings.DocStatus status, List<Tuple<Document, string>> documents)
+        public void AddVersion(Settings.DocStatus status, List<Tuple<Document, string, DateTime>> documents)
         {
             foreach (var document in documents)
             {
@@ -17,7 +17,7 @@ namespace Ildss.Index
             }
         }
 
-        public void AddVersion(Settings.DocStatus status, List<Tuple<string, string>> paths)
+        public void AddVersion(Settings.DocStatus status, List<Tuple<string, string, DateTime>> paths)
         {
             foreach (var path in paths)
             {
@@ -25,7 +25,7 @@ namespace Ildss.Index
             }
         }
 
-        public void AddVersion(Settings.DocStatus status, Tuple<Document, string> document)
+        public void AddVersion(Settings.DocStatus status, Tuple<Document, string, DateTime> document)
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             Console.WriteLine("SAVING");
@@ -33,19 +33,28 @@ namespace Ildss.Index
             // update status
             doc.Status = status;
             // add a version
-            doc.DocVersions.Add(new DocVersion() { VersionKey = document.Item2 });
+            doc.DocVersions.Add(new DocVersion() { 
+                DocumentHash = document.Item2, 
+                DocEventTime = document.Item3, 
+                VersionKey = document.Item2 + document.Item3.ToString("ddmmyyyymmmmhhss")
+            });
             fic.SaveChanges();
             Console.WriteLine("Saved");
         }
 
-        public void AddVersion(Settings.DocStatus status, Tuple<string, string> path)
+        public void AddVersion(Settings.DocStatus status, Tuple<string, string, DateTime> path)
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
-            var document = fic.DocPaths.First(i => i.Path == path.Item1).Document;
+            var doc = fic.DocPaths.First(i => i.Path == path.Item1).Document;
             // update status
-            document.Status = status;
+            doc.Status = status;
             // add a version
-            document.DocVersions.Add(new DocVersion() { VersionKey = path.Item2});
+            doc.DocVersions.Add(new DocVersion()
+            {
+                DocumentHash = path.Item2,
+                DocEventTime = path.Item3,
+                VersionKey = path.Item2 + path.Item3.ToString("ddmmyyyymmmmhhss")
+            });
             fic.SaveChanges();
         }
     }
