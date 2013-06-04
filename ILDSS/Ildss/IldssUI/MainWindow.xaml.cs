@@ -24,7 +24,6 @@ using Ildss.Storage;
 using System.Drawing;
 using CloudInterface;
 
-
 namespace IldssUI
 {
     /// <summary>
@@ -38,7 +37,7 @@ namespace IldssUI
             InitializeComponent();
             //Settings.Default.InitialiseSettings();
 
-            if (Ildss.Settings.Default.FirstRun)
+            if (Settings.Default.FirstRun)
             {
                 TabControl.SetIsSelected(tabSettings, true);
                 this.WindowState = WindowState.Normal;
@@ -49,7 +48,7 @@ namespace IldssUI
                 Task.Run(() =>
                 {
                     KernelFactory.Instance.Get<IEventManager>("Index");
-                    KernelFactory.Instance.Get<IMonitor>().Monitor(Ildss.Settings.Default.WorkingDir);
+                    KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
                 });
             }
 

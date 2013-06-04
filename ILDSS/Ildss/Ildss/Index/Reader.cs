@@ -58,8 +58,8 @@ namespace Ildss.Index
         private List<Document> FindUnusedDocuments()
         {
             // get size/tim/both constraints from settings
-            var util = Settings.Default.TargetDiskUtilisation;
-            var age = Settings.Default.TargetDocumentMaxAge;
+            var util = Settings.Default.TargetDiskUtil;
+            var age = Settings.Default.TargetDocMaxAge;
 
             DateTime from = DateTime.Now;
 
@@ -67,7 +67,7 @@ namespace Ildss.Index
 
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-            long sizeaccum = 0;
+            long sizeacc = 0;
 
             var documents = fic.Documents.OrderByDescending(i => i.Status == Enums.DocStatus.Current);
 
@@ -81,15 +81,15 @@ namespace Ildss.Index
                 }
                 else
                 {
-                    if (doc.Size + sizeaccum > util)
+                    if (doc.Size + sizeacc > util)
                     { 
                         break; 
                     }
                     else
                     {
                         unused.Add(doc);
-                        sizeaccum += doc.Size;
-                        Logger.Write(sizeaccum.ToString() + " sizeaccum");
+                        sizeacc += doc.Size;
+                        Logger.Write(sizeacc.ToString() + " sizeacc");
                     }
                 }
             }
@@ -106,7 +106,7 @@ namespace Ildss.Index
 
         private DocEvent GetLastWriteEvent(Document doc)
         {
-            return doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Settings.EventType.Write);
+            return doc.DocEvents.OrderByDescending(i => i.Time).First(j => j.Type == Enums.EventType.Write);
         }
     }
 }

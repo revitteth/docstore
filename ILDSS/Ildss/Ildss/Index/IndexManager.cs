@@ -25,9 +25,9 @@ namespace Ildss.Index
         {
             _fic = KernelFactory.Instance.Get<IFileIndexContext>();
             IndexRequired = true;
-            Logger.Write("Started Indexer with Interval " + Settings.Default.IndexInterval / 1000 + " seconds");
+            Logger.Write("Started Indexer with Interval " + Settings.Default.IndexInterval.ToString("c"));
             IntervalIndex(null, null);
-            _indexTimer.Interval = Settings.Default.IndexInterval;
+            _indexTimer.Interval = Settings.Default.IndexInterval.TotalMilliseconds;
             _indexTimer.Start();
             _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(_indexTimer);
@@ -40,7 +40,7 @@ namespace Ildss.Index
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
-            _indexTimer.Interval = Settings.Default.IndexInterval;
+            _indexTimer.Interval = Settings.Default.IndexInterval.TotalMilliseconds;
             _indexTimer.Enabled = false;
             try
             {
@@ -119,7 +119,7 @@ namespace Ildss.Index
             {
                 foreach (string file in GetFiles(dir))
                 {
-                    if (!Settings.Default.IgnoredExtensions.Any(file.Contains))
+                    if (!Settings.Default.IgnoredExtensions.Cast<string>().ToList().Any(file.Contains))
                     {
                         try
                         {

@@ -42,7 +42,7 @@ namespace Ildss
             {
                 foreach (var path in fic.DocPaths.Where(i => i.DocumentId == doc.DocumentId).OrderBy(j => j.DocPathId))
                 {
-                    line += "\"" + doc.DocumentId + "\",\"" + doc.Size + "\",\"" + doc.DocumentHash + "\",\"" + path.Path + "\",\"" + path.Name + "\",\"" + doc.DocEvents.Where(i => i.Type == Settings.EventType.Read).Count() + "\",\"" + doc.DocEvents.Where(i => i.Type == Settings.EventType.Write).Count() + "\"";
+                    line += "\"" + doc.DocumentId + "\",\"" + doc.Size + "\",\"" + doc.DocumentHash + "\",\"" + path.Path + "\",\"" + path.Name + "\",\"" + doc.DocEvents.Where(i => i.Type == Enums.EventType.Read).Count() + "\",\"" + doc.DocEvents.Where(i => i.Type == Enums.EventType.Write).Count() + "\"";
                         file.WriteLine(line);
                         line = "";
                 }

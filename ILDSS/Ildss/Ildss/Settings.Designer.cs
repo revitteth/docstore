@@ -23,79 +23,103 @@ namespace Ildss {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool FirstRun {
             get {
                 return ((bool)(this["FirstRun"]));
             }
+            set {
+                this["FirstRun"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Max\\Documents\\GitHub\\docstore\\TestDir")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\TestDir")]
         public string WorkingDir {
             get {
                 return ((string)(this["WorkingDir"]));
             }
+            set {
+                this["WorkingDir"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Max\\Documents\\GitHub\\docstore\\StorageDir")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\StorageDir")]
         public string StorageDir {
             get {
                 return ((string)(this["StorageDir"]));
             }
+            set {
+                this["StorageDir"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("maxrevittildss")]
         public string S3BucketName {
             get {
                 return ((string)(this["S3BucketName"]));
             }
+            set {
+                this["S3BucketName"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1024")]
         public long TargetDiskUtil {
             get {
                 return ((long)(this["TargetDiskUtil"]));
             }
+            set {
+                this["TargetDiskUtil"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
         public global::System.TimeSpan TargetDocMaxAge {
             get {
                 return ((global::System.TimeSpan)(this["TargetDocMaxAge"]));
             }
+            set {
+                this["TargetDocMaxAge"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:05:00")]
         public global::System.TimeSpan IndexInterval {
             get {
                 return ((global::System.TimeSpan)(this["IndexInterval"]));
             }
+            set {
+                this["IndexInterval"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:30:00")]
         public global::System.TimeSpan BackupInterval {
             get {
                 return ((global::System.TimeSpan)(this["BackupInterval"]));
             }
+            set {
+                this["BackupInterval"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
@@ -109,6 +133,9 @@ namespace Ildss {
         public global::System.Collections.Specialized.StringCollection IgnoredExtensions {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["IgnoredExtensions"]));
+            }
+            set {
+                this["IgnoredExtensions"] = value;
             }
         }
     }
