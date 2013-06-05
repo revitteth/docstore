@@ -131,7 +131,6 @@
     <Compile Include="Index\IVersionManager.cs" />
     <Compile Include="Index\Reader.cs" />
     <Compile Include="Index\VersionManager.cs" />
-    <Compile Include="ISettings.cs" />
     <Compile Include="Models\DocVersion.cs" />
     <Compile Include="Settings.Designer.cs">
       <AutoGen>True</AutoGen>
