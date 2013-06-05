@@ -43,8 +43,8 @@
         <TabControl HorizontalAlignment="Left" Height="140" Margin="0,10,-4,0" VerticalAlignment="Top" Width="510">
             <TabItem Header="Dashboard" x:Name="tabDashboard">
                 <Grid Background="White" Margin="-5,0,0,-125">
-                    <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="93" Click="btnS3_Click"/>
-                    <Button x:Name="btnIntelligence" Content="Intelligence" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click"/>
+                    <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="96" Click="btnS3_Click"/>
+                    <Button x:Name="btnIntelligence" Content="Remove Local" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click" Height="31"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">
