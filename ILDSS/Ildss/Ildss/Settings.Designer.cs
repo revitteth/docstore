@@ -37,7 +37,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\TestDir")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\nvvp_workspace")]
         public string WorkingDir {
             get {
                 return ((string)(this["WorkingDir"]));
@@ -73,7 +73,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1024")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2048")]
         public long TargetDiskUtil {
             get {
                 return ((long)(this["TargetDiskUtil"]));
@@ -85,7 +85,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:20:00")]
         public global::System.TimeSpan TargetDocMaxAge {
             get {
                 return ((global::System.TimeSpan)(this["TargetDocMaxAge"]));

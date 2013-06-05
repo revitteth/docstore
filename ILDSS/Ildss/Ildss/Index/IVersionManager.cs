@@ -14,5 +14,7 @@ namespace Ildss.Index
         void AddVersion(Enums.DocStatus status, List<Tuple<string, string, DateTime>> paths);
         void AddVersion(Enums.DocStatus status, Tuple<Models.Document, string, DateTime> document);                 
         void AddVersion(Enums.DocStatus status, Tuple<string, string, DateTime> path);
+        void UpdateStatus(Enums.DocStatus status, Models.Document doc);
+        void UpdateStatus(Enums.DocStatus docStatus, List<Models.Document> unusedDocuments);
     }
 }

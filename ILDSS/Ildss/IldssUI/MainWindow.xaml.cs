@@ -35,22 +35,12 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
-            //Settings.Default.InitialiseSettings();
-
-            if (Settings.Default.FirstRun)
-            {
-                TabControl.SetIsSelected(tabSettings, true);
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
                 this.Hide();
-                Task.Run(() =>
-                {
-                    KernelFactory.Instance.Get<IEventManager>("Index");
-                    KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
-                });
-            }
+            Task.Run(() =>
+            {
+                KernelFactory.Instance.Get<IEventManager>("Index");
+                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
+            });
 
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = new System.Drawing.Icon("../../cloud.ico");
@@ -71,14 +61,6 @@ namespace IldssUI
             base.OnStateChanged(e);
         }
 
-        private Task Monitor()
-        {
-            return Task.Run(() =>
-            {
-                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
-            });
-        }
-
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             btnExportCSV.Content = "Exporting...";
@@ -89,13 +71,25 @@ namespace IldssUI
             btnExportCSV.Content = "Export CSV";
         }
 
-        private void btnS3_Click(object sender, RoutedEventArgs e)
+        private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
             btnS3.IsEnabled = false;
-            // need an index here - also ensure all files closed or make not as upload will fail
-            KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
-            //KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync(); 
+            await Task.Run(() =>
+                {
+                    // need an index here - also ensure all files closed or make not as upload will fail
+                    KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
+                });
             btnS3.IsEnabled = true;
+        }
+
+        private async void btnIntelligence_Click(object sender, RoutedEventArgs e)
+        {
+            btnIntelligence.IsEnabled = false;
+            await Task.Run(() =>
+                {
+                    KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync();
+                });
+            btnIntelligence.IsEnabled = true;
         }
     }
 }

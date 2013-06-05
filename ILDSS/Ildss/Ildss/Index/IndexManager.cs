@@ -356,26 +356,14 @@ namespace Ildss.Index
             // Remove pathless documents (or update hashes if null hash but paths)
             foreach (var docu in _fic.Documents)
             {
-                if (!docu.DocPaths.Any())
-                {
-                    docsToRemove.Add(docu);
-                }
-                else if (docu.DocumentHash == null)
+                if (docu.DocumentHash == null)
                 {
                     Logger.Write("NULL Hash - repairing");
                     docu.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(docu.DocPaths.FirstOrDefault().Path);
                 }
             }
 
-            // this is dangerous atm
-            foreach (var docToRemove in docsToRemove)
-            {
-                _fic.Documents.Remove(docToRemove);                
-                //Logger.write("Deleted (had no paths) " + docToRemove.DocumentId + " " + docToRemove.DocPaths.FirstOrDefault().Name);
-            }
-
             _fic.SaveChanges();
-            docsToRemove.Clear();
         }
 
     }

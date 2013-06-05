@@ -24,10 +24,10 @@ namespace IldssShell
     public class ContextMenu : SharpContextMenu
     {
         string thetext = "dunno";
-        string ildssDirectory = Settings.getWorkingDir();
+        string ildssDirectory = Settings.Default.WorkingDir;
 
         // possibly query main program for this at startup (as with the above)
-        private IList<string> _ignoredFiles = Settings.getIgnoredExtensions();
+        private IList<string> _ignoredFiles = Settings.Default.IgnoredExtensions.Cast<string>().ToList();
         ContextMenuStrip MenuStrip = new ContextMenuStrip();
 
         protected override bool CanShowMenu()

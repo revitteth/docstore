@@ -42,17 +42,22 @@ namespace Ildss.Index
             return allFiles;  
         }
 
-        // REMEMBER IT IS DOING 30 SECOND UNUSED TEST CONDITION
+        public List<Document> GetUnusedDocumentsForLocalDeletion()
+        {
+            var unused = FindUnusedDocuments();
+            return unused;
+        }
+
+        // Intelligence logic
         public List<string> GetUnusedFilesForLocalDeletion()
         {
             var unused = FindUnusedDocuments();
-
-            List<string> files = new List<string>();
-            foreach (var doc in unused)
+            List<string> unusedFiles = new List<string>();
+            foreach (var un in unused)
             {
-                files.Add(doc.DocPaths.First().Path);   
+                unusedFiles.Add(un.DocPaths.First().Path);   
             }
-            return files;
+            return unusedFiles;
         }
 
         private List<Document> FindUnusedDocuments()
@@ -61,7 +66,7 @@ namespace Ildss.Index
             var util = Settings.Default.TargetDiskUtil;
             var age = Settings.Default.TargetDocMaxAge;
 
-            DateTime from = DateTime.Now;
+            DateTime now = DateTime.Now;
 
             List<Document> unused = new List<Document>();
 
@@ -75,22 +80,15 @@ namespace Ildss.Index
             {
                 // check time constraint (if there is one e.g. 3 months)
                 // find most recent event - if within last x then ignore else add document to list
-                if (doc.DocEvents.Any(i => i.Time > (from - age)))
+                if (doc.DocEvents.Any(i => i.Time > (now - age)))
                 {
                     // document has been used recently so ignore it
+                    Logger.Write("Used recently");
                 }
                 else
                 {
-                    if (doc.Size + sizeacc > util)
-                    { 
-                        break; 
-                    }
-                    else
-                    {
-                        unused.Add(doc);
-                        sizeacc += doc.Size;
-                        Logger.Write(sizeacc.ToString() + " sizeacc");
-                    }
+                    Logger.Write("Deleting");
+                    unused.Add(doc);
                 }
             }
 

@@ -57,5 +57,21 @@ namespace Ildss.Index
             });
             fic.SaveChanges();
         }
+
+        public void UpdateStatus(Enums.DocStatus status, Document doc)
+        {
+            var fic = KernelFactory.Instance.Get<IFileIndexContext>();
+            var document = fic.Documents.First(i => i.DocumentId == doc.DocumentId);
+            document.Status = Enums.DocStatus.Archived;
+            fic.SaveChanges();
+        }
+
+        public void UpdateStatus(Enums.DocStatus status, List<Document> docs)
+        {
+            foreach (var doc in docs)
+            {
+                UpdateStatus(status, doc);    
+            }
+        }
     }
 }

@@ -16,8 +16,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <CollectionViewSource x:Key="docVersionViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:DocVersion}, CreateList=True}"/>
-            <CollectionViewSource x:Key="storedSettingsViewSource" d:DesignSource="{d:DesignInstance {x:Type Models:StoredSettings}, CreateList=True}"/>
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
 
@@ -46,10 +44,11 @@
             <TabItem Header="Dashboard" x:Name="tabDashboard">
                 <Grid Background="White" Margin="-5,0,0,-125">
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="93" Click="btnS3_Click"/>
+                    <Button x:Name="btnIntelligence" Content="Intelligence" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">
-                <Grid Background="White" Margin="0,0,0,-125" DataContext="{StaticResource docVersionViewSource}"/>
+                <Grid Background="White" Margin="0,0,0,-125"/>
             </TabItem>
         </TabControl>
     </Grid>
