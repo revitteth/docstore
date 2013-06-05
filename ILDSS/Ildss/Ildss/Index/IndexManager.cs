@@ -330,28 +330,7 @@ namespace Ildss.Index
 
         public void MaintainDocuments()
         {
-            List<Document> docsToRemove = new List<Document>();
-            List<DocPath> pathsToRemove = new List<DocPath>();
-
-
-            // Remove non-existant paths
-            foreach (var path in _fic.DocPaths)
-            {
-                if (!File.Exists(path.Path))
-                {
-                    pathsToRemove.Add(path);
-                    //Logger.write("Deleting Path " + path.Name);
-                }
-            }
-
-            foreach (var pathToRemove in pathsToRemove)
-            {
-                _fic.DocPaths.Remove(pathToRemove);
-            }
-
-            _fic.SaveChanges();
-            pathsToRemove.Clear();
-
+            // don't remove any paths - these are required for restoring documents
 
             // Remove pathless documents (or update hashes if null hash but paths)
             foreach (var docu in _fic.Documents)

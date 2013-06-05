@@ -55,40 +55,50 @@ namespace Ildss.Index
             List<string> unusedFiles = new List<string>();
             foreach (var un in unused)
             {
-                unusedFiles.Add(un.DocPaths.First().Path);   
+                foreach(var path in un.DocPaths)
+                {
+                    unusedFiles.Add(path.Path);   
+                }
             }
             return unusedFiles;
         }
 
         private List<Document> FindUnusedDocuments()
         {
-            // get size/tim/both constraints from settings
-            var util = Settings.Default.TargetDiskUtil;
-            var age = Settings.Default.TargetDocMaxAge;
-
             DateTime now = DateTime.Now;
-
             List<Document> unused = new List<Document>();
 
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
 
-            long sizeacc = 0;
+            var documents = fic.Documents.Where(i => i.Status == Enums.DocStatus.Current);
 
-            var documents = fic.Documents.OrderByDescending(i => i.Status == Enums.DocStatus.Current);
+            long sizeOnDisk = 1000; // documents.Sum(i => i.Size);
+            var sizeAcc = sizeOnDisk;
 
             foreach (var doc in documents)
             {
-                // check time constraint (if there is one e.g. 3 months)
-                // find most recent event - if within last x then ignore else add document to list
-                if (doc.DocEvents.Any(i => i.Time > (now - age)))
+                Logger.Write("document " + doc.DocPaths.First());
+                sizeAcc -= doc.Size;
+                // if size target is met stop looping, no more documents are required to be removed
+                if (sizeAcc <= Settings.Default.TargetDiskUtil)
                 {
-                    // document has been used recently so ignore it
-                    Logger.Write("Used recently");
+                    Logger.Write("Size quota met ");
+                    break;
                 }
                 else
                 {
-                    Logger.Write("Deleting");
-                    unused.Add(doc);
+                    // Size constraint is not met - search for documents older than a certain age to delete
+                    // find most recent event - if within last x then ignore else add document to list
+                    if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.TargetDocMaxAge)))
+                    {
+                        // document has been used recently so ignore it
+                        Logger.Write("Used recently");
+                    }
+                    else
+                    {
+                        Logger.Write("Deleting " + doc.DocumentId);
+                        unused.Add(doc);
+                    }
                 }
             }
 
