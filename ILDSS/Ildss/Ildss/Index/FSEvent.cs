@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ildss.Index
 {
-    public class FSEvent
+    public class FileSystemEvent
     {
         public Enums.EventType Type { get; set; }
         public FileInfo FileInf { get; set; }

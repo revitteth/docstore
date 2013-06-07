@@ -10,7 +10,7 @@ namespace Ildss.Index
 {
     public interface IEventManager
     {
-        void AddEvent(FSEvent Eve);
+        void AddEvent(FileSystemEvent Eve);
         bool IndexRequired { get; set; }
     }
 }

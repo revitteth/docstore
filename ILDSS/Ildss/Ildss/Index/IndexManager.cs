@@ -16,7 +16,7 @@ namespace Ildss.Index
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     class IndexManager : IEventManager
     {
-        private IList<FSEvent> _events = new List<FSEvent>();
+        private IList<FileSystemEvent> _events = new List<FileSystemEvent>();
         private IFileIndexContext _fic;
         private Timer _indexTimer = new Timer();
         public bool IndexRequired { get; set; }
@@ -33,7 +33,7 @@ namespace Ildss.Index
             GC.KeepAlive(_indexTimer);
         }
 
-        public void AddEvent(FSEvent eve)
+        public void AddEvent(FileSystemEvent eve)
         {
             _events.Add(eve);
         }
@@ -135,7 +135,7 @@ namespace Ildss.Index
                             var fi = new FileInfo(file);
                             fi.Refresh();
 
-                            _events.Add(new FSEvent() { 
+                            _events.Add(new FileSystemEvent() { 
                                 Type = Enums.EventType.Create, 
                                 FileInf = fi, 
                                 LastWrite = fi.LastWriteTime, 
@@ -164,7 +164,7 @@ namespace Ildss.Index
                 if (DateTime.Compare(recentRead.Time, fi.LastAccessTime.AddMilliseconds(-fi.LastAccessTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Read'
-                    _events.Add(new FSEvent() { 
+                    _events.Add(new FileSystemEvent() { 
                         Type = Enums.EventType.Read, 
                         FileInf = fi, 
                         DocumentId = doc.DocumentId,
@@ -182,7 +182,7 @@ namespace Ildss.Index
                 if (DateTime.Compare(recentWrite.Time, fi.LastWriteTime.AddMilliseconds(-fi.LastWriteTime.Millisecond)) < 0)
                 {
                     // add the event to the list with the Type 'Write'
-                    _events.Add(new FSEvent() { 
+                    _events.Add(new FileSystemEvent() { 
                         Type = Enums.EventType.Write, 
                         FileInf = fi, 
                         DocumentId = doc.DocumentId,
@@ -194,7 +194,7 @@ namespace Ildss.Index
             }
         }
 
-        public void RestoreFileTimes(FSEvent eve)
+        public void RestoreFileTimes(FileSystemEvent eve)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace Ildss.Index
             }
         }
 
-        public void UpdateFileTimes(Document doc, FSEvent eve)
+        public void UpdateFileTimes(Document doc, FileSystemEvent eve)
         {
             // READ Events
             if (doc.DocEvents.Any(i => i.Type == Enums.EventType.Read))
