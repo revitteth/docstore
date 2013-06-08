@@ -323,8 +323,9 @@ namespace Ildss.Index
                 }
 
                 RestoreFileTimes(e);
+                _fic.SaveChanges();
             }
-            _fic.SaveChanges();
+            
             _events.Clear();
         }
 

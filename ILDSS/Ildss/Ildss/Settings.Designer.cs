@@ -37,7 +37,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\nvvp_workspace")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TestDir")]
         public string WorkingDir {
             get {
                 return ((string)(this["WorkingDir"]));
@@ -49,7 +49,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\StorageDir")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\OutputDir")]
         public string StorageDir {
             get {
                 return ((string)(this["StorageDir"]));
