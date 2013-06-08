@@ -18,7 +18,7 @@
       <Value Profile="(Default)">54000</Value>
     </Setting>
     <Setting Name="TargetDocMaxAge" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:03:00</Value>
+      <Value Profile="(Default)">00:01:00</Value>
     </Setting>
     <Setting Name="IndexInterval" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:05:00</Value>

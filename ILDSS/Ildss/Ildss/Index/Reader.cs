@@ -74,19 +74,19 @@ namespace Ildss.Index
 
             foreach (var doc in documents)
             {
-                Logger.Write("document " + doc.DocPaths.First());
-                    // Size constraint is not met - search for documents older than a certain age to delete
-                    // find most recent event - if within last x then ignore else add document to list
-                    if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.TargetDocMaxAge)))
-                    {
-                        // document has been used recently so ignore it
-                        Logger.Write("Used recently");
-                    }
-                    else
-                    {
-                        Logger.Write("Deleting " + doc.DocumentId);
-                        unused.Add(doc);
-                    }
+                Logger.Write("Document " + doc.DocPaths.First().Path);
+                // Size constraint is not met - search for documents older than a certain age to delete
+                // find most recent event - if within last x then ignore else add document to list
+                if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.TargetDocMaxAge)))
+                {
+                    // document has been used recently so ignore it
+                    Logger.Write("Used recently");
+                }
+                else
+                {
+                    Logger.Write("Unused - " + doc.DocumentId);
+                    unused.Add(doc);
+                }
             }
 
             // order oldest to newest
@@ -105,6 +105,7 @@ namespace Ildss.Index
                 }
                 else
                 {
+                    Logger.Write("Actually deleting - " + u.DocPaths.First().Path);
                     toBeDeleted.Add(u);
                 }
             }

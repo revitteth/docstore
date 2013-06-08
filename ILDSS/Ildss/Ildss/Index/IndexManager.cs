@@ -254,6 +254,12 @@ namespace Ildss.Index
                     {
                         // if hash exists just add the path to the existing document
                         var doc = _fic.Documents.First(i => i.DocumentHash == hash);
+                        
+                        if (doc.Status == Enums.DocStatus.Archived)
+                        {
+                            doc.Status = Enums.DocStatus.Current;
+                        }
+
                         doc.DocPaths.Add(new DocPath() { Path = e.FileInf.FullName, Directory = e.FileInf.DirectoryName, Name = e.FileInf.Name });
                         doc.DocEvents.Add(new DocEvent() { Type = e.Type, Time = e.CreationTime });
                         UpdateFileTimes(doc, e);
@@ -284,6 +290,12 @@ namespace Ildss.Index
                     {
                         // file hash matches an existing document (move the path to the matching document)
                         var matchingDoc = _fic.Documents.First(i => i.DocumentHash == hash);
+
+                        if (matchingDoc.Status == Enums.DocStatus.Archived)
+                        {
+                            matchingDoc.Status = Enums.DocStatus.Current;
+                        }
+
                         matchingDoc.DocPaths.Add(_fic.DocPaths.First(i => i.Path == e.FileInf.FullName));
                         matchingDoc.DocEvents.Add(new DocEvent() { Time = e.LastWrite, Type = e.Type });
                         //Logger.write("Changed (new hash matches existing document) " + e.FileInf.Name);
