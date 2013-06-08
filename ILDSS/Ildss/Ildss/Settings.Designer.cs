@@ -73,7 +73,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2048")]
+        [global::System.Configuration.DefaultSettingValueAttribute("54000")]
         public long TargetDiskUtil {
             get {
                 return ((long)(this["TargetDiskUtil"]));
@@ -85,7 +85,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:20:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:03:00")]
         public global::System.TimeSpan TargetDocMaxAge {
             get {
                 return ((global::System.TimeSpan)(this["TargetDocMaxAge"]));

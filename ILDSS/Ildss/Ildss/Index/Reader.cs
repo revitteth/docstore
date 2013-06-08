@@ -72,21 +72,9 @@ namespace Ildss.Index
 
             var documents = fic.Documents.Where(i => i.Status == Enums.DocStatus.Current);
 
-            long sizeOnDisk = 1000; // documents.Sum(i => i.Size);
-            var sizeAcc = sizeOnDisk;
-
             foreach (var doc in documents)
             {
                 Logger.Write("document " + doc.DocPaths.First());
-                sizeAcc -= doc.Size;
-                // if size target is met stop looping, no more documents are required to be removed
-                if (sizeAcc <= Settings.Default.TargetDiskUtil)
-                {
-                    Logger.Write("Size quota met ");
-                    break;
-                }
-                else
-                {
                     // Size constraint is not met - search for documents older than a certain age to delete
                     // find most recent event - if within last x then ignore else add document to list
                     if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.TargetDocMaxAge)))
@@ -99,10 +87,29 @@ namespace Ildss.Index
                         Logger.Write("Deleting " + doc.DocumentId);
                         unused.Add(doc);
                     }
+            }
+
+            // order oldest to newest
+            unused.OrderBy(i => i.DocEvents.OrderBy(j => j.Time));
+
+            long accumulator = 0;
+
+            var toBeDeleted = new List<Document>();
+
+            foreach (var u in unused)
+            {
+                // add to total until quota met
+                if (accumulator > Settings.Default.TargetDiskUtil)
+                {
+                    break;
+                }
+                else
+                {
+                    toBeDeleted.Add(u);
                 }
             }
 
-            return unused;
+            return toBeDeleted;
 
             // go through events for each document 
             // use evidence in research to retrieve the ones which are under utilised
