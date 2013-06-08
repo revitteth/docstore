@@ -17,8 +17,8 @@ namespace Ildss.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // For speedup
-            Configuration.AutoDetectChangesEnabled = false;
-            Configuration.ValidateOnSaveEnabled = false;
+            //Configuration.AutoDetectChangesEnabled = false;
+            //Configuration.ValidateOnSaveEnabled = false;
 
             modelBuilder.Entity<DocPath>()
                         .HasRequired(dp => dp.Document)
