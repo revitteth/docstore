@@ -105,6 +105,10 @@ namespace IldssUI
 
         private void verList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            btnRetrieve.IsEnabled = false;
+            btnRetrieveAll.IsEnabled = false;
+            btnDelete.IsEnabled = false;
+
             if (e.AddedItems.Count != 0)
             {
                 var version = e.AddedItems[0] as DocVersion;
@@ -115,21 +119,12 @@ namespace IldssUI
                     btnDelete.IsEnabled = true;
                 }
             }
-            else
-            {
-                btnRetrieve.IsEnabled = false;
-                btnRetrieveAll.IsEnabled = false;
-                btnDelete.IsEnabled = false;
-            }
         }
 
         private void btnRetrieve_Click(object sender, RoutedEventArgs e)
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
-
-            Console.WriteLine(path.Path);
-            Console.WriteLine(version.VersionKey);
 
             // initialise s3 download of version.versionkey
             var cs = KernelFactory.Instance.Get<IStorage>();
@@ -142,9 +137,6 @@ namespace IldssUI
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
-
-            Console.WriteLine(path.Path);
-            Console.WriteLine(version.VersionKey);
 
             // initialise s3 download of version.versionkey
             var cs = KernelFactory.Instance.Get<IStorage>();

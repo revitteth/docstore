@@ -85,7 +85,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:01:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:05:00")]
         public global::System.TimeSpan TargetDocMaxAge {
             get {
                 return ((global::System.TimeSpan)(this["TargetDocMaxAge"]));
@@ -97,7 +97,7 @@ namespace Ildss {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:20")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:10:00")]
         public global::System.TimeSpan IndexInterval {
             get {
                 return ((global::System.TimeSpan)(this["IndexInterval"]));
