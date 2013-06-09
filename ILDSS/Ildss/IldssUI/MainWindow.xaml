@@ -3,10 +3,23 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Models="clr-namespace:Ildss.Models;assembly=Ildss" mc:Ignorable="d" x:Class="IldssUI.MainWindow"
-        Title="Manage ILDSS" Height="350" Width="525" Icon="cloud.png">
+        Title="Manage ILDSS" Height="535" Width="700" Icon="cloud.png">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
+
+            <DataTemplate DataType="{x:Type Models:DocPath}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Path}"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type Models:DocVersion}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding DocEventTime}"/>
+                </StackPanel>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -39,12 +52,20 @@
     </Controls:MetroWindow.WindowCommands>
 
     <Grid Margin="9,0,2,0">
-        <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="10,278,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
-        <TabControl HorizontalAlignment="Left" Height="140" Margin="0,10,-4,0" VerticalAlignment="Top" Width="510">
+        <TabControl HorizontalAlignment="Left" Height="400" Margin="0,10,-4,0" VerticalAlignment="Top" Width="690">
             <TabItem Header="Dashboard" x:Name="tabDashboard">
-                <Grid Background="White" Margin="-5,0,0,-125">
+                <Grid Background="White" Margin="-5,0,14,-50">
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="96" Click="btnS3_Click"/>
                     <Button x:Name="btnIntelligence" Content="Remove Local" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click" Height="31"/>
+                    <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="25,110,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Retrieve" x:Name="tabRetrieve">
+                <Grid Background="White" Margin="0,0,0,-125">
+                    <ListBox Name="docList" HorizontalAlignment="Left" Height="187" Margin="10,144,0,0" VerticalAlignment="Top" Width="668" SelectionChanged="docList_SelectionChanged"/>
+                    <ListBox Name="verList" HorizontalAlignment="Left" Height="105" Margin="10,336,0,0" VerticalAlignment="Top" Width="368" SelectionChanged="verList_SelectionChanged" />
+                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="577,416,0,0" VerticalAlignment="Top" Width="75" Click="btnRetrieve_Click"/>
+                    <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="57" Margin="40,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="596" FontSize="36" TextChanged="txtSearch_Changed"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">

@@ -35,6 +35,9 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
+            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
+            //verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.ToList();
+
                 this.Hide();
             Task.Run(() =>
             {
@@ -91,5 +94,45 @@ namespace IldssUI
                 });
             btnIntelligence.IsEnabled = true;
         }
+
+        private void docList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var path = e.AddedItems[0] as DocPath;
+            Console.WriteLine(path);
+            verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
+                Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
+                OrderByDescending(k => k.DocEventTime).ToList();
+        }
+
+        private void verList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            btnRetrieve.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void btnRetrieve_Click(object sender, RoutedEventArgs e)
+        {
+            var path = docList.SelectedItem as DocPath;
+            var version = verList.SelectedItem as DocVersion;
+
+            Console.WriteLine(path.Path);
+            Console.WriteLine(version.VersionKey);
+
+            // initialise s3 download of version.versionkey
+        }
+
+        private void txtSearch_Changed(object sender, TextChangedEventArgs e)
+        {
+            if (txtSearch.Text.Count() > 2)
+            {
+                // search the db
+                var paths = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Path.Contains(txtSearch.Text)).ToList();
+                docList.ItemsSource = paths;
+            }
+            else
+            {
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
+            }
+        }
+
     }
 }
