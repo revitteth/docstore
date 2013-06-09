@@ -99,9 +99,7 @@ namespace IldssUI
             if (e.AddedItems.Count != 0)
             {
                 var path = e.AddedItems[0] as DocPath;
-                verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
-                    Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
-                    OrderByDescending(k => k.DocEventTime).ToList();
+                UpdateVersionList(path);
             }
         }
 
@@ -109,8 +107,12 @@ namespace IldssUI
         {
             if (e.AddedItems.Count != 0)
             {
-                btnRetrieve.IsEnabled = true;
-                btnDelete.IsEnabled = true;
+                var version = e.AddedItems[0] as DocVersion;
+                if (version.Document.Status == Enums.DocStatus.Archived | (version.Document.Status == Enums.DocStatus.Current))
+                {
+                    btnRetrieve.IsEnabled = true;
+                    btnDelete.IsEnabled = true;
+                }
             }
             else
             {
@@ -128,6 +130,10 @@ namespace IldssUI
             Console.WriteLine(version.VersionKey);
 
             // initialise s3 download of version.versionkey
+            var cs = KernelFactory.Instance.Get<IStorage>();
+            cs.Retrieve(version.VersionKey, path.Path, path.Document);
+
+            UpdateDocList();
         }
 
         private void txtSearch_Changed(object sender, TextChangedEventArgs e)
@@ -137,17 +143,11 @@ namespace IldssUI
             if (txtSearch.Text.Count() > 2)
             {
                 // search the db
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
-                    Where(i => i.Path.Contains(txtSearch.Text) & (i.Document.Status == Enums.DocStatus.Archived |
-                    (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1))).
-                    ToList();
+                UpdateDocList(txtSearch.Text);
             }
             else
             {
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
-                  Where(i => i.Document.Status == Enums.DocStatus.Archived |
-                  (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1)).
-                  ToList();
+                UpdateDocList();
             }
         }
 
@@ -169,11 +169,26 @@ namespace IldssUI
         {
             if (!tabRetrieve.IsSelected)
             {
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
-                    Where(i => i.Document.Status == Enums.DocStatus.Archived |
-                    (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1)).
-                    ToList();
+                UpdateDocList();
             }
+        }
+
+        private void UpdateDocList()
+        {
+            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
+        }
+
+        private void UpdateDocList(string query)
+        {
+            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
+                       Where(i => i.Path.Contains(txtSearch.Text)).ToList();
+        }
+
+        private void UpdateVersionList(DocPath path)
+        {
+            verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
+                                Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
+                                OrderByDescending(k => k.DocEventTime).ToList();
         }
     }
 }

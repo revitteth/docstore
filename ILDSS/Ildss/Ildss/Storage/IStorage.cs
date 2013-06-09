@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ildss.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace Ildss.Storage
     public interface IStorage
     {
         void StoreIncrAsync();
+        void Retrieve(string key, string dest, Document doc);
         void RemoveUnusedDocumentsAsync();
     }
 }

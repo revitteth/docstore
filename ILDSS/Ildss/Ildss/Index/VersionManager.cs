@@ -62,7 +62,7 @@ namespace Ildss.Index
         {
             var fic = KernelFactory.Instance.Get<IFileIndexContext>();
             var document = fic.Documents.First(i => i.DocumentId == doc.DocumentId);
-            document.Status = Enums.DocStatus.Archived;
+            document.Status = status;
             fic.SaveChanges();
         }
 

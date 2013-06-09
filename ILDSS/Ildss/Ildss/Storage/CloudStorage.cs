@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using CloudInterface;
 using Ildss.Index;
+using Ildss.Models;
 
 namespace Ildss.Storage
 {
@@ -31,6 +32,13 @@ namespace Ildss.Storage
             // update database using StatusChanger - set status to current
             var versionManager = KernelFactory.Instance.Get<IVersionManager>();
             versionManager.AddVersion(Enums.DocStatus.Current, documents);
+        }
+
+        public void Retrieve(string key, string dest, Document doc)
+        {
+            Download.DownloadFile(key, Settings.Default.S3BucketName, dest);
+            var vm = KernelFactory.Instance.Get<IVersionManager>();
+            vm.UpdateStatus(Enums.DocStatus.Current, doc);
         }
 
         public async void RemoveUnusedDocumentsAsync()

@@ -30,7 +30,7 @@ namespace CloudInterface
                     .WithBucketName(existingBucketName)
                     .WithFilePath(file.Item1)
                     .WithServerSideEncryptionMethod(ServerSideEncryptionMethod.AES256)
-                    .WithKey(file.Item2);
+                    .WithKey(file.Item2 + file.Item3.ToString("ddmmyyyymmmmhhss"));
 
                 uploadRequest.UploadProgressEvent +=
                     new EventHandler<UploadProgressArgs>
