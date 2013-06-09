@@ -45,6 +45,8 @@
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="96" Click="btnS3_Click"/>
                     <Button x:Name="btnIntelligence" Content="Remove Local" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click" Height="31"/>
                     <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="22,103,0,0" VerticalAlignment="Top" Width="96" Click="Button_Click"/>
+                    <TextBlock x:Name="txtblkUsage" HorizontalAlignment="Left" Height="55" Margin="238,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="530" FontSize="36"/>
+                    <TextBlock x:Name="txtblkCloudUsage" HorizontalAlignment="Left" Height="55" Margin="238,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="530" FontSize="36"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Retrieve" x:Name="tabRetrieve">

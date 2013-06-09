@@ -171,6 +171,36 @@ namespace IldssUI
             {
                 UpdateDocList();
             }
+            if (tabDashboard.IsSelected)
+            {                
+                if (KernelFactory.Instance.Get<IFileIndexContext>().Documents.Any(i => i.Status == Enums.DocStatus.Current | i.Status == Enums.DocStatus.Indexed))
+                {
+                    long totalSize = 0;
+                    foreach (var doc in KernelFactory.Instance.Get<IFileIndexContext>().Documents.Where(i => i.Status == Enums.DocStatus.Current | i.Status == Enums.DocStatus.Indexed))
+                    {
+                        totalSize += doc.Size * doc.DocPaths.Count();
+                    }
+                    txtblkUsage.Text = "Local Disk Space Used: " + (totalSize / (1024 * 1024)).ToString() + " MB";
+                } 
+                else
+                {
+                    txtblkUsage.Text = "Local Disk Space Used: 0 MB";
+                }
+                if(KernelFactory.Instance.Get<IFileIndexContext>().Documents.Any(i => i.Status == Enums.DocStatus.Archived))
+                {
+                    long totalSize = 0;
+                    foreach (var doc in KernelFactory.Instance.Get<IFileIndexContext>().Documents.Where(i => i.Status == Enums.DocStatus.Archived | i.Status == Enums.DocStatus.Current))
+                    {
+                        totalSize += doc.Size * doc.DocVersions.Count();
+                    }
+                    txtblkCloudUsage.Text = "Cloud Space Used: " +  (totalSize / (1024 * 1024)).ToString() + " MB";
+                }
+                else
+                {
+                    txtblkCloudUsage.Text = "Cloud Space Used: 0 MB";    
+                }
+                
+            }
         }
 
         private void UpdateDocList()

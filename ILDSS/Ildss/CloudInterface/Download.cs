@@ -28,15 +28,20 @@ namespace CloudInterface
 
             using (GetObjectResponse response = client.GetObject(request))
             {
-                string title = response.Metadata["x-amz-meta-title"];
-                Console.WriteLine("The object's title is {0}", title);
-
                 if (File.Exists(dest))
                 {
                     Logger.Write("Overwriting " + dest);
                 }
 
                 response.WriteResponseStreamToFile(dest);
+            }
+        }
+
+        public static void DownloadFiles(List<Tuple<string, string, string>> files)
+        {
+            foreach(var file in files)
+            {
+                DownloadFile(file.Item1, file.Item2, file.Item3);
             }
         }
     }
