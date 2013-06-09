@@ -23,9 +23,6 @@
     <Setting Name="IndexInterval" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:20</Value>
     </Setting>
-    <Setting Name="BackupInterval" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:30:00</Value>
-    </Setting>
     <Setting Name="IgnoredExtensions" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;

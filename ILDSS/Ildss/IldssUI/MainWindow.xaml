@@ -3,23 +3,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Models="clr-namespace:Ildss.Models;assembly=Ildss" mc:Ignorable="d" x:Class="IldssUI.MainWindow"
-        Title="Manage ILDSS" Height="535" Width="700" Icon="cloud.png">
+        Title="Manage ILDSS" Height="535" Width="800" Icon="cloud.png">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
-
-            <DataTemplate DataType="{x:Type Models:DocPath}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Path}"/>
-                </StackPanel>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type Models:DocVersion}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding DocEventTime}"/>
-                </StackPanel>
-            </DataTemplate>
-
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colours.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -52,7 +39,7 @@
     </Controls:MetroWindow.WindowCommands>
 
     <Grid Margin="9,0,2,0">
-        <TabControl HorizontalAlignment="Left" Height="400" Margin="0,10,-4,0" VerticalAlignment="Top" Width="690" SelectionChanged="tabControl_SelectionChanged">
+        <TabControl HorizontalAlignment="Left" Height="400" Margin="0,10,-4,0" VerticalAlignment="Top" Width="790" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="Dashboard" x:Name="tabDashboard">
                 <Grid Background="White" Margin="-5,0,14,-50">
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="96" Click="btnS3_Click"/>
@@ -62,13 +49,33 @@
             </TabItem>
             <TabItem Header="Retrieve" x:Name="tabRetrieve">
                 <Grid Background="White" Margin="0,0,0,-125">
-                    <ListBox Name="docList" HorizontalAlignment="Left" Height="190" Margin="10,120,0,0" VerticalAlignment="Top" Width="660" SelectionChanged="docList_SelectionChanged"/>
-                    <ListBox Name="verList" HorizontalAlignment="Left" Height="100" Margin="10,330,0,0" VerticalAlignment="Top" Width="440" SelectionChanged="verList_SelectionChanged" />
-                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="486,330,0,0" VerticalAlignment="Top" Width="164" Click="btnRetrieve_Click" Visibility="Visible" IsEnabled="False" Background="#FF49C52D"/>
+                    <ListView Name="docList" HorizontalAlignment="Left" Height="190" Margin="10,120,0,0" VerticalAlignment="Top" Width="760" SelectionChanged="docList_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Status" Width="75" DisplayMemberBinding="{Binding Document.Status}" />
+                                <GridViewColumn Header="Name" Width="200" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="Path" Width="450">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ListView Name="verList" HorizontalAlignment="Left" Height="100" Margin="10,330,0,0" VerticalAlignment="Top" Width="416" SelectionChanged="verList_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date and Time" Width="175" DisplayMemberBinding="{Binding DocEventTime}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="612,330,0,0" VerticalAlignment="Top" Width="164" Click="btnRetrieve_Click" Visibility="Visible" IsEnabled="False" Background="#FF49C52D"/>
                     <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="60" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="640" FontSize="38" TextChanged="txtSearch_Changed"/>
                     <Label Content="Files" Margin="10,95,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <Label Content="Versions" HorizontalAlignment="Center" Margin="10,305,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                    <Button x:Name="btnDelete" Content="Delete Permanently" HorizontalAlignment="Left" Margin="486,360,0,0" VerticalAlignment="Top" Width="164" Click="btnDelete_Click" Visibility="Visible" IsEnabled="False" Background="#FFEE7777"/>
+                    <Label Content="Versions" HorizontalAlignment="Center" Margin="186,304,542,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Button x:Name="btnDelete" Content="Delete Permanently" HorizontalAlignment="Left" Margin="612,360,0,0" VerticalAlignment="Top" Width="164" Click="btnDelete_Click" Visibility="Visible" IsEnabled="False" Background="#FFEE7777"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">

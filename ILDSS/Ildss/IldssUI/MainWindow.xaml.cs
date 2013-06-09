@@ -31,11 +31,10 @@ namespace IldssUI
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        
+
         public MainWindow()
         {
             InitializeComponent();
-            //docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
             this.Hide();
             Task.Run(() =>
             {
@@ -133,19 +132,22 @@ namespace IldssUI
 
         private void txtSearch_Changed(object sender, TextChangedEventArgs e)
         {
-            docList.SelectedItem = null;
-            verList.SelectedItem = null;
             verList.ItemsSource = null;
 
             if (txtSearch.Text.Count() > 2)
             {
                 // search the db
-                var paths = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Path.Contains(txtSearch.Text) && i.Document.Status == Enums.DocStatus.Archived).ToList();
-                docList.ItemsSource = paths;
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
+                    Where(i => i.Path.Contains(txtSearch.Text) & (i.Document.Status == Enums.DocStatus.Archived |
+                    (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1))).
+                    ToList();
             }
             else
             {
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
+                  Where(i => i.Document.Status == Enums.DocStatus.Archived |
+                  (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1)).
+                  ToList();
             }
         }
 
@@ -155,7 +157,7 @@ namespace IldssUI
                 "Confirmation", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
             if (result == MessageBoxResult.OK)
             {
-                // Yes code here
+                // Yes code here - use downloader
             }
             else
             {
@@ -165,13 +167,13 @@ namespace IldssUI
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TabItem item = sender as TabItem;
-            //Console.WriteLine("Changed Tab " + item);
-            //if (item == tabRetrieve)
-            //{
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
-                //Console.WriteLine("OK BABY LETS GO " + item.Name);
-            //}
+            if (!tabRetrieve.IsSelected)
+            {
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
+                    Where(i => i.Document.Status == Enums.DocStatus.Archived |
+                    (i.Document.Status == Enums.DocStatus.Current & i.Document.DocVersions.Count > 1)).
+                    ToList();
+            }
         }
     }
 }
