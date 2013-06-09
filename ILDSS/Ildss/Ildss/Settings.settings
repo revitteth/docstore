@@ -21,7 +21,7 @@
       <Value Profile="(Default)">00:01:00</Value>
     </Setting>
     <Setting Name="IndexInterval" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:10:00</Value>
+      <Value Profile="(Default)">00:00:20</Value>
     </Setting>
     <Setting Name="BackupInterval" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:30:00</Value>

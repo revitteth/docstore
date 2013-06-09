@@ -52,22 +52,23 @@
     </Controls:MetroWindow.WindowCommands>
 
     <Grid Margin="9,0,2,0">
-        <TabControl HorizontalAlignment="Left" Height="400" Margin="0,10,-4,0" VerticalAlignment="Top" Width="690">
+        <TabControl HorizontalAlignment="Left" Height="400" Margin="0,10,-4,0" VerticalAlignment="Top" Width="690" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="Dashboard" x:Name="tabDashboard">
                 <Grid Background="White" Margin="-5,0,14,-50">
                     <Button x:Name="btnS3" Content="To S3" HorizontalAlignment="Left" Height="31" Margin="22,31,0,0" VerticalAlignment="Top" Width="96" Click="btnS3_Click"/>
                     <Button x:Name="btnIntelligence" Content="Remove Local" HorizontalAlignment="Left" Margin="22,67,0,0" VerticalAlignment="Top" Width="96" Click="btnIntelligence_Click" Height="31"/>
-                    <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="25,110,0,0" VerticalAlignment="Top" Width="90" Click="Button_Click"/>
+                    <Button x:Name="btnExportCSV" Content="Export CSV" HorizontalAlignment="Left" Height="30" Margin="22,103,0,0" VerticalAlignment="Top" Width="96" Click="Button_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Retrieve" x:Name="tabRetrieve">
                 <Grid Background="White" Margin="0,0,0,-125">
                     <ListBox Name="docList" HorizontalAlignment="Left" Height="190" Margin="10,120,0,0" VerticalAlignment="Top" Width="660" SelectionChanged="docList_SelectionChanged"/>
                     <ListBox Name="verList" HorizontalAlignment="Left" Height="100" Margin="10,330,0,0" VerticalAlignment="Top" Width="440" SelectionChanged="verList_SelectionChanged" />
-                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="570,415,0,0" VerticalAlignment="Top" Width="75" Click="btnRetrieve_Click"/>
+                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="486,330,0,0" VerticalAlignment="Top" Width="164" Click="btnRetrieve_Click" Visibility="Visible" IsEnabled="False" Background="#FF49C52D"/>
                     <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="60" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="640" FontSize="38" TextChanged="txtSearch_Changed"/>
-                    <Label Content="Files" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                    <Label Content="Versions" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label Content="Files" Margin="10,95,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    <Label Content="Versions" HorizontalAlignment="Center" Margin="10,305,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Button x:Name="btnDelete" Content="Delete Permanently" HorizontalAlignment="Left" Margin="486,360,0,0" VerticalAlignment="Top" Width="164" Click="btnDelete_Click" Visibility="Visible" IsEnabled="False" Background="#FFEE7777"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">

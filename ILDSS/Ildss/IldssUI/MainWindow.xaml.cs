@@ -35,7 +35,7 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
-            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
+            //docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
             this.Hide();
             Task.Run(() =>
             {
@@ -95,10 +95,11 @@ namespace IldssUI
 
         private void docList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            btnRetrieve.IsEnabled = false;
+            btnDelete.IsEnabled = false;
             if (e.AddedItems.Count != 0)
             {
                 var path = e.AddedItems[0] as DocPath;
-                Console.WriteLine(path);
                 verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
                     Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
                     OrderByDescending(k => k.DocEventTime).ToList();
@@ -107,7 +108,16 @@ namespace IldssUI
 
         private void verList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnRetrieve.Visibility = System.Windows.Visibility.Visible;
+            if (e.AddedItems.Count != 0)
+            {
+                btnRetrieve.IsEnabled = true;
+                btnDelete.IsEnabled = true;
+            }
+            else
+            {
+                btnRetrieve.IsEnabled = false;
+                btnDelete.IsEnabled = false;
+            }
         }
 
         private void btnRetrieve_Click(object sender, RoutedEventArgs e)
@@ -137,6 +147,31 @@ namespace IldssUI
             {
                 docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
             }
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(this, "This file version will be delete from cloud storage forever, do you wish to continue?",
+                "Confirmation", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.OK)
+            {
+                // Yes code here
+            }
+            else
+            {
+                // No code here
+            } 
+        }
+
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TabItem item = sender as TabItem;
+            //Console.WriteLine("Changed Tab " + item);
+            //if (item == tabRetrieve)
+            //{
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
+                //Console.WriteLine("OK BABY LETS GO " + item.Name);
+            //}
         }
     }
 }
