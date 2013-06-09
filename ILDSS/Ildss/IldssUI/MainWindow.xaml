@@ -77,7 +77,8 @@
                     <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="60" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="640" FontSize="38" TextChanged="txtSearch_Changed"/>
                     <Label Content="Files" Margin="10,95,0,0" VerticalAlignment="Top" FontWeight="Bold" HorizontalAlignment="Center"/>
                     <Label Content="Versions" HorizontalAlignment="Center" Margin="186,304,542,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                    <Button x:Name="btnDelete" Content="Delete Permanently" HorizontalAlignment="Left" Margin="612,360,0,0" VerticalAlignment="Top" Width="164" Click="btnDelete_Click" Visibility="Visible" IsEnabled="False" Background="#FFEE7777"/>
+                    <Button x:Name="btnDelete" Content="Delete Permanently" HorizontalAlignment="Left" Margin="612,390,0,0" VerticalAlignment="Top" Width="164" Click="btnDelete_Click" Visibility="Visible" IsEnabled="False" Background="#FFEE7777"/>
+                    <Button x:Name="btnRetrieveAll" Content="Retrieve All" HorizontalAlignment="Left" Margin="612,360,0,0" VerticalAlignment="Top" Width="164" Background="#FF49C52D" IsEnabled="False" Click="btnRetrieveAll_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">

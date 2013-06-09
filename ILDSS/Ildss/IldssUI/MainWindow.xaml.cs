@@ -111,12 +111,14 @@ namespace IldssUI
                 if (version.Document.Status == Enums.DocStatus.Archived | (version.Document.Status == Enums.DocStatus.Current))
                 {
                     btnRetrieve.IsEnabled = true;
+                    btnRetrieveAll.IsEnabled = true;
                     btnDelete.IsEnabled = true;
                 }
             }
             else
             {
                 btnRetrieve.IsEnabled = false;
+                btnRetrieveAll.IsEnabled = false;
                 btnDelete.IsEnabled = false;
             }
         }
@@ -132,6 +134,25 @@ namespace IldssUI
             // initialise s3 download of version.versionkey
             var cs = KernelFactory.Instance.Get<IStorage>();
             cs.Retrieve(version.VersionKey, path.Path, path.Document);
+
+            UpdateDocList();
+        }
+
+        private void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
+        {
+            var path = docList.SelectedItem as DocPath;
+            var version = verList.SelectedItem as DocVersion;
+
+            Console.WriteLine(path.Path);
+            Console.WriteLine(version.VersionKey);
+
+            // initialise s3 download of version.versionkey
+            var cs = KernelFactory.Instance.Get<IStorage>();
+
+            foreach (var p in path.Document.DocPaths)
+            {
+                cs.Retrieve(version.VersionKey, p.Path, p.Document);   
+            }        
 
             UpdateDocList();
         }
