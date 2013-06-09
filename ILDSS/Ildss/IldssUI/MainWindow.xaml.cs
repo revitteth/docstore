@@ -35,10 +35,8 @@ namespace IldssUI
         public MainWindow()
         {
             InitializeComponent();
-            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
-            //verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.ToList();
-
-                this.Hide();
+            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
+            this.Hide();
             Task.Run(() =>
             {
                 KernelFactory.Instance.Get<IEventManager>("Index");
@@ -97,11 +95,14 @@ namespace IldssUI
 
         private void docList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var path = e.AddedItems[0] as DocPath;
-            Console.WriteLine(path);
-            verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
-                Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
-                OrderByDescending(k => k.DocEventTime).ToList();
+            if (e.AddedItems.Count != 0)
+            {
+                var path = e.AddedItems[0] as DocPath;
+                Console.WriteLine(path);
+                verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
+                    Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
+                    OrderByDescending(k => k.DocEventTime).ToList();
+            }
         }
 
         private void verList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -122,17 +123,20 @@ namespace IldssUI
 
         private void txtSearch_Changed(object sender, TextChangedEventArgs e)
         {
+            docList.SelectedItem = null;
+            verList.SelectedItem = null;
+            verList.ItemsSource = null;
+
             if (txtSearch.Text.Count() > 2)
             {
                 // search the db
-                var paths = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Path.Contains(txtSearch.Text)).ToList();
+                var paths = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Path.Contains(txtSearch.Text) && i.Document.Status == Enums.DocStatus.Archived).ToList();
                 docList.ItemsSource = paths;
             }
             else
             {
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Where(i => i.Document.Status == Enums.DocStatus.Archived).ToList();
             }
         }
-
     }
 }

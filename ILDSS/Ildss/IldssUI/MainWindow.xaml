@@ -62,10 +62,12 @@
             </TabItem>
             <TabItem Header="Retrieve" x:Name="tabRetrieve">
                 <Grid Background="White" Margin="0,0,0,-125">
-                    <ListBox Name="docList" HorizontalAlignment="Left" Height="187" Margin="10,144,0,0" VerticalAlignment="Top" Width="668" SelectionChanged="docList_SelectionChanged"/>
-                    <ListBox Name="verList" HorizontalAlignment="Left" Height="105" Margin="10,336,0,0" VerticalAlignment="Top" Width="368" SelectionChanged="verList_SelectionChanged" />
-                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="577,416,0,0" VerticalAlignment="Top" Width="75" Click="btnRetrieve_Click"/>
-                    <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="57" Margin="40,31,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="596" FontSize="36" TextChanged="txtSearch_Changed"/>
+                    <ListBox Name="docList" HorizontalAlignment="Left" Height="190" Margin="10,120,0,0" VerticalAlignment="Top" Width="660" SelectionChanged="docList_SelectionChanged"/>
+                    <ListBox Name="verList" HorizontalAlignment="Left" Height="100" Margin="10,330,0,0" VerticalAlignment="Top" Width="440" SelectionChanged="verList_SelectionChanged" />
+                    <Button x:Name="btnRetrieve" Content="Retrieve" HorizontalAlignment="Left" Margin="570,415,0,0" VerticalAlignment="Top" Width="75" Click="btnRetrieve_Click"/>
+                    <TextBox x:Name="txtSearch" Controls:TextboxHelper.Watermark="Search..." HorizontalAlignment="Left" Height="60" Margin="10,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="640" FontSize="38" TextChanged="txtSearch_Changed"/>
+                    <Label Content="Files" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                    <Label Content="Versions" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" x:Name="tabSettings">
