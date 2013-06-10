@@ -38,7 +38,10 @@ namespace CloudInterface
 
                 fileTransferUtility.Upload(uploadRequest);
             }
-
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(e.Message);   
+            }
             catch (AmazonS3Exception e)
             {
                 Console.WriteLine(e.Message + e.InnerException);
@@ -51,10 +54,10 @@ namespace CloudInterface
             //Console.WriteLine("{0}/{1} " +  e.TransferredBytes + " " + e.TotalBytes);
         }
 
-        public static Task UploadAsync(List<System.Tuple<string,string, DateTime>> files, IProgress<int> progress, string existingBucketName)
+        public static void UploadAsync(List<System.Tuple<string,string, DateTime>> files, IProgress<int> progress, string existingBucketName)
         {
-            return Task.Run(() =>
-                {
+            //return Task.Run(() =>
+            //    {
                     int uploaded = 0;                   
                     foreach (var file in files)
                     {
@@ -62,7 +65,7 @@ namespace CloudInterface
                         uploaded++;
                         progress.Report(uploaded);
                     }
-                });
+          //      });
         }
     }
 }

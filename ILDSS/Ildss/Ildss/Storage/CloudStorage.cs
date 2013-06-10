@@ -20,18 +20,20 @@ namespace Ildss.Storage
             manager.CreateBucketIfNotExists(Settings.Default.S3BucketName);
         }
 
-        public async void StoreIncrAsync()
+        public Task StoreIncrAsync()
         {
             // get list of files which need backing up
             // upload files
+            return Task.Run(() =>
+                {
+                    var reader = KernelFactory.Instance.Get<IReader>();
+                    var documents = reader.GetFilesForIncrementalBackup();
+                    Upload.UploadAsync(documents, new Progress<int>(), Settings.Default.S3BucketName);
 
-            var reader = KernelFactory.Instance.Get<IReader>();
-            var documents = reader.GetFilesForIncrementalBackup();
-            await Upload.UploadAsync(documents, new Progress<int>(), Settings.Default.S3BucketName);
-
-            // update database using StatusChanger - set status to current
-            var versionManager = KernelFactory.Instance.Get<IVersionManager>();
-            versionManager.AddVersion(Enums.DocStatus.Current, documents);
+                    // update database using StatusChanger - set status to current
+                    var versionManager = KernelFactory.Instance.Get<IVersionManager>();
+                    versionManager.AddVersion(Enums.DocStatus.Current, documents);
+                });
         }
 
         public void Retrieve(string key, string dest, Document doc)

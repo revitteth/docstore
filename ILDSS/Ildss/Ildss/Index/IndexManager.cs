@@ -344,6 +344,17 @@ namespace Ildss.Index
         public void MaintainDocuments()
         {
             // don't remove any paths - these are required for restoring documents
+            foreach (var p in _fic.DocPaths)
+            {
+                if (p.Document.Status == Enums.DocStatus.Indexed)
+                {
+                    if (!File.Exists(p.Path))
+                    {
+                        _fic.DocPaths.Remove(p);
+                    }
+                }
+            }
+            _fic.SaveChanges();
 
             // Remove pathless documents (or update hashes if null hash but paths)
             foreach (var docu in _fic.Documents)
@@ -352,6 +363,13 @@ namespace Ildss.Index
                 {
                     Logger.Write("NULL Hash - repairing");
                     docu.DocumentHash = KernelFactory.Instance.Get<IHash>().HashFile(docu.DocPaths.FirstOrDefault().Path);
+                }
+                if (docu.Status == Enums.DocStatus.Indexed)
+                {
+                    if (docu.DocPaths.Count() == 0)
+                    {
+                        _fic.Documents.Remove(docu);
+                    }
                 }
             }
 

@@ -9,7 +9,7 @@ namespace Ildss.Storage
 {
     public interface IStorage
     {
-        void StoreIncrAsync();
+        Task StoreIncrAsync();
         void Retrieve(string key, string dest, Document doc);
         void RemoveUnusedDocumentsAsync();
     }

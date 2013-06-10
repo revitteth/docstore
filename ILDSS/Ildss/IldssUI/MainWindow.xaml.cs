@@ -74,11 +74,7 @@ namespace IldssUI
         private async void btnS3_Click(object sender, RoutedEventArgs e)
         {
             btnS3.IsEnabled = false;
-            await Task.Run(() =>
-                {
-                    // need an index here - also ensure all files closed or make not as upload will fail
-                    KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
-                });
+            await KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
             btnS3.IsEnabled = true;
         }
 
@@ -92,14 +88,14 @@ namespace IldssUI
             btnIntelligence.IsEnabled = true;
         }
 
-        private void docList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void docList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             btnRetrieve.IsEnabled = false;
             btnDelete.IsEnabled = false;
             if (e.AddedItems.Count != 0)
             {
                 var path = e.AddedItems[0] as DocPath;
-                UpdateVersionList(path);
+                UpdateVersionListAsync(path);
             }
         }
 
@@ -121,7 +117,7 @@ namespace IldssUI
             }
         }
 
-        private void btnRetrieve_Click(object sender, RoutedEventArgs e)
+        private async void btnRetrieve_Click(object sender, RoutedEventArgs e)
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
@@ -130,10 +126,10 @@ namespace IldssUI
             var cs = KernelFactory.Instance.Get<IStorage>();
             cs.Retrieve(version.VersionKey, path.Path, path.Document);
 
-            UpdateDocList();
+            UpdateDocListAsync();
         }
 
-        private void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
+        private async void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
@@ -146,21 +142,21 @@ namespace IldssUI
                 cs.Retrieve(version.VersionKey, p.Path, p.Document);   
             }        
 
-            UpdateDocList();
+            UpdateDocListAsync();
         }
 
-        private void txtSearch_Changed(object sender, TextChangedEventArgs e)
+        private async void txtSearch_Changed(object sender, TextChangedEventArgs e)
         {
             verList.ItemsSource = null;
 
             if (txtSearch.Text.Count() > 2)
             {
                 // search the db
-                UpdateDocList(txtSearch.Text);
+                UpdateDocListAsync(txtSearch.Text);
             }
             else
             {
-                UpdateDocList();
+                UpdateDocListAsync();
             }
         }
 
@@ -178,60 +174,51 @@ namespace IldssUI
             } 
         }
 
-        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (!tabRetrieve.IsSelected)
+            await Task.Run(() =>
+                {
+                    this.Dispatcher.Invoke((Action)(() =>
+                        {
+                    if (!tabRetrieve.IsSelected)
+                    {
+                        UpdateDocListAsync();
+                    }
+                    if (tabDashboard.IsSelected)
+                    {
+                        CalculateUsage();
+                    }
+                            }));
+                });
+        }
+
+        private void UpdateDocListAsync()
+        {
+            this.Dispatcher.Invoke((Action)(() =>
             {
-                UpdateDocList();
-            }
-            if (tabDashboard.IsSelected)
-            {                
-                if (KernelFactory.Instance.Get<IFileIndexContext>().Documents.Any(i => i.Status == Enums.DocStatus.Current | i.Status == Enums.DocStatus.Indexed))
-                {
-                    long totalSize = 0;
-                    foreach (var doc in KernelFactory.Instance.Get<IFileIndexContext>().Documents.Where(i => i.Status == Enums.DocStatus.Current | i.Status == Enums.DocStatus.Indexed))
-                    {
-                        totalSize += doc.Size * doc.DocPaths.Count();
-                    }
-                    txtblkUsage.Text = "Local Disk Space Used: " + (totalSize / (1024 * 1024)).ToString() + " MB";
-                } 
-                else
-                {
-                    txtblkUsage.Text = "Local Disk Space Used: 0 MB";
-                }
-                if(KernelFactory.Instance.Get<IFileIndexContext>().Documents.Any(i => i.Status == Enums.DocStatus.Archived))
-                {
-                    long totalSize = 0;
-                    foreach (var doc in KernelFactory.Instance.Get<IFileIndexContext>().Documents.Where(i => i.Status == Enums.DocStatus.Archived | i.Status == Enums.DocStatus.Current))
-                    {
-                        totalSize += doc.Size * doc.DocVersions.Count();
-                    }
-                    txtblkCloudUsage.Text = "Cloud Space Used: " +  (totalSize / (1024 * 1024)).ToString() + " MB";
-                }
-                else
-                {
-                    txtblkCloudUsage.Text = "Cloud Space Used: 0 MB";    
-                }
-                
-            }
+                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Take(20).ToList();
+            }));
         }
 
-        private void UpdateDocList()
-        {
-            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
-        }
-
-        private void UpdateDocList(string query)
+        private void UpdateDocListAsync(string query)
         {
             docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
-                       Where(i => i.Path.Contains(txtSearch.Text)).ToList();
+                        Where(i => i.Path.Contains(txtSearch.Text)).Take(20).ToList();
         }
 
-        private void UpdateVersionList(DocPath path)
+        private void UpdateVersionListAsync(DocPath path)
         {
             verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
                                 Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
-                                OrderByDescending(k => k.DocEventTime).ToList();
+                                OrderByDescending(k => k.DocEventTime).Take(20).ToList();
+        }
+
+        private void CalculateUsage()
+        {
+            this.Dispatcher.Invoke((Action)(() =>
+                {
+
+                }));
         }
     }
 }
