@@ -226,3 +226,4 @@ TestDir/*
 StorageDir/*
 log.txt
 output.csv
+Settings.*

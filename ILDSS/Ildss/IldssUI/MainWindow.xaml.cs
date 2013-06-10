@@ -162,7 +162,7 @@ namespace IldssUI
                 // search the db
                 UpdateDocListAsync(txtSearch.Text);
             }
-            else
+            else if (txtSearch.Text.Count() == 0)
             {
                 UpdateDocListAsync();
             }
@@ -233,7 +233,10 @@ namespace IldssUI
         {
             var item = sender as ListView;
             var path = item.SelectedItem as DocPath;
-            Process.Start(path.Path);
+            if (path.Document.Status != Enums.DocStatus.Archived)
+            {
+                Process.Start(path.Path);
+            }
         }
 
         private void btnOpenLocation_Click(object sender, RoutedEventArgs e)
