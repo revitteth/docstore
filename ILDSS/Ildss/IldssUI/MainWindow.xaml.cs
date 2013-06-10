@@ -23,6 +23,7 @@ using Ildss.Models;
 using Ildss.Storage;
 using System.Drawing;
 using CloudInterface;
+using System.Diagnostics;
 
 namespace IldssUI
 {
@@ -92,9 +93,16 @@ namespace IldssUI
         {
             btnRetrieve.IsEnabled = false;
             btnDelete.IsEnabled = false;
-            if (e.AddedItems.Count != 0)
+            btnOpenLocation.IsEnabled = false;
+
+            var path = docList.SelectedItem as DocPath;
+            if (path != null)
             {
-                var path = e.AddedItems[0] as DocPath;
+                if (path.Document.Status == Enums.DocStatus.Current | path.Document.Status == Enums.DocStatus.Indexed)
+                {
+                    btnOpenLocation.IsEnabled = true;
+                }
+
                 UpdateVersionListAsync(path);
             }
         }
@@ -129,7 +137,7 @@ namespace IldssUI
             UpdateDocListAsync();
         }
 
-        private async void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
+        private void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
@@ -145,7 +153,7 @@ namespace IldssUI
             UpdateDocListAsync();
         }
 
-        private async void txtSearch_Changed(object sender, TextChangedEventArgs e)
+        private void txtSearch_Changed(object sender, TextChangedEventArgs e)
         {
             verList.ItemsSource = null;
 
@@ -219,6 +227,19 @@ namespace IldssUI
                 {
 
                 }));
+        }
+
+        private void docList_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListView;
+            var path = item.SelectedItem as DocPath;
+            Process.Start(path.Path);
+        }
+
+        private void btnOpenLocation_Click(object sender, RoutedEventArgs e)
+        {
+            var path = docList.SelectedItem as DocPath;
+            Process.Start("Explorer", string.Format("/Select, {0}", path.Path));
         }
     }
 }
