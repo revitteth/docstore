@@ -77,7 +77,7 @@ namespace Ildss.Index
                 Logger.Write("Document " + doc.DocPaths.First().Path);
                 // Size constraint is not met - search for documents older than a certain age to delete
                 // find most recent event - if within last x then ignore else add document to list
-                if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.TargetDocMaxAge)))
+                if (doc.DocEvents.Any(i => i.Time > (now - Settings.Default.MaxDormancy)))
                 {
                     // document has been used recently so ignore it
                     Logger.Write("Used recently");

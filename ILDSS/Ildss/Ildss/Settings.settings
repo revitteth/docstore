@@ -17,11 +17,11 @@
     <Setting Name="TargetDiskUtil" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">54000</Value>
     </Setting>
-    <Setting Name="TargetDocMaxAge" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:05:00</Value>
+    <Setting Name="MaxDormancy" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">100.00:00:00</Value>
     </Setting>
     <Setting Name="IndexInterval" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:10:00</Value>
+      <Value Profile="(Default)">00:00:30</Value>
     </Setting>
     <Setting Name="IgnoredExtensions" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;

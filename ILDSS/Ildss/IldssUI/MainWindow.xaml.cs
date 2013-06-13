@@ -109,18 +109,14 @@ namespace IldssUI
 
         private void verList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnRetrieve.IsEnabled = false;
-            btnRetrieveAll.IsEnabled = false;
-            btnDelete.IsEnabled = false;
+            DisableButtons();
 
             if (e.AddedItems.Count != 0)
             {
                 var version = e.AddedItems[0] as DocVersion;
                 if (version.Document.Status == Enums.DocStatus.Archived | (version.Document.Status == Enums.DocStatus.Current))
                 {
-                    btnRetrieve.IsEnabled = true;
-                    btnRetrieveAll.IsEnabled = true;
-                    btnDelete.IsEnabled = true;
+                    EnableButtons();
                 }
             }
         }
@@ -130,27 +126,39 @@ namespace IldssUI
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
 
+            DisableButtons();
+
             // initialise s3 download of version.versionkey
             var cs = KernelFactory.Instance.Get<IStorage>();
-            cs.Retrieve(version.VersionKey, path.Path, path.Document);
+            await Task.Run(() =>
+                {
+                    cs.Retrieve(version.VersionKey, path.Path, path.Document);
+                });
 
             UpdateDocListAsync();
+            EnableButtons();
         }
 
-        private void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
+        private async void btnRetrieveAll_Click(object sender, RoutedEventArgs e)
         {
             var path = docList.SelectedItem as DocPath;
             var version = verList.SelectedItem as DocVersion;
 
+
+            DisableButtons();
+
             // initialise s3 download of version.versionkey
             var cs = KernelFactory.Instance.Get<IStorage>();
-
-            foreach (var p in path.Document.DocPaths)
+            await Task.Run(() =>
             {
-                cs.Retrieve(version.VersionKey, p.Path, p.Document);   
-            }        
+                foreach (var p in path.Document.DocPaths)
+                {
+                    cs.Retrieve(version.VersionKey, p.Path, p.Document);
+                }  
+            });
 
             UpdateDocListAsync();
+            EnableButtons();
         }
 
         private void txtSearch_Changed(object sender, TextChangedEventArgs e)
@@ -188,15 +196,17 @@ namespace IldssUI
                 {
                     this.Dispatcher.Invoke((Action)(() =>
                         {
-                    if (!tabRetrieve.IsSelected)
-                    {
-                        UpdateDocListAsync();
-                    }
-                    if (tabDashboard.IsSelected)
-                    {
-                        CalculateUsage();
-                    }
-                            }));
+                            if (!tabRetrieve.IsSelected)
+                            {
+                                UpdateDocListAsync();
+                            }
+                            if (tabDashboard.IsSelected)
+                            {
+                                CalculateUsage();
+                            }
+
+                            txtSearch.Clear();
+                        }));
                 });
         }
 
@@ -240,6 +250,20 @@ namespace IldssUI
         {
             var path = docList.SelectedItem as DocPath;
             Process.Start("Explorer", string.Format("/Select, {0}", path.Path));
+        }
+
+        private void DisableButtons()
+        {
+            btnRetrieve.IsEnabled = false;
+            btnRetrieveAll.IsEnabled = false;
+            btnDelete.IsEnabled = false;                                                               
+        }
+
+        private void EnableButtons()
+        {
+            btnRetrieve.IsEnabled = true;
+            btnRetrieveAll.IsEnabled = true;
+            btnDelete.IsEnabled = true;
         }
     }
 }

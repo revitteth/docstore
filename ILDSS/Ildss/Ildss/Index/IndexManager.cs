@@ -334,6 +334,27 @@ namespace Ildss.Index
                     }
                 }
 
+                // ADJUST TARGET MAX AGE
+                if (e.Type != Enums.EventType.Create)
+                {
+                    if (_fic.Documents.Any(i => i.DocumentId == e.DocumentId))
+                    {
+                        var doc = _fic.Documents.First(i => i.DocumentId == e.DocumentId);
+                        var count = doc.DocEvents.Count();
+                        var age = (doc.DocEvents.OrderBy(i => i.Time).First().Time - doc.DocEvents.OrderBy(i => i.Time).Last().Time).TotalDays;
+                        var events = _fic.DocEvents.Count();
+
+                        var dormancy = count / age;
+                        if (dormancy != Settings.Default.MaxDormancy.TotalDays)
+                        {
+                            var ave = (dormancy + events * Settings.Default.MaxDormancy.TotalDays) / (2 * events);
+                            Settings.Default.MaxDormancy = TimeSpan.FromDays(ave);
+                            Settings.Default.Save();
+                            Logger.Write("Adjusted maxdormancy: " + Settings.Default.MaxDormancy.ToString());
+                        }
+                    }
+                }
+
                 RestoreFileTimes(e);
                 _fic.SaveChanges();
             }
