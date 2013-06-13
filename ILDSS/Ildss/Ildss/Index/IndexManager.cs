@@ -334,27 +334,6 @@ namespace Ildss.Index
                     }
                 }
 
-                // ADJUST TARGET MAX AGE
-                if (e.Type != Enums.EventType.Create)
-                {
-                    if (_fic.Documents.Any(i => i.DocumentId == e.DocumentId))
-                    {
-                        var doc = _fic.Documents.First(i => i.DocumentId == e.DocumentId);
-                        var count = doc.DocEvents.Count();
-                        var age = (doc.DocEvents.OrderBy(i => i.Time).First().Time - doc.DocEvents.OrderBy(i => i.Time).Last().Time).TotalDays;
-                        var events = _fic.DocEvents.Count();
-
-                        var dormancy = count / age;
-                        if (dormancy != Settings.Default.MaxDormancy.TotalDays)
-                        {
-                            var ave = (dormancy + events * Settings.Default.MaxDormancy.TotalDays) / (2 * events);
-                            Settings.Default.MaxDormancy = TimeSpan.FromDays(ave);
-                            Settings.Default.Save();
-                            Logger.Write("Adjusted maxdormancy: " + Settings.Default.MaxDormancy.ToString());
-                        }
-                    }
-                }
-
                 RestoreFileTimes(e);
                 _fic.SaveChanges();
             }
@@ -377,6 +356,9 @@ namespace Ildss.Index
             }
             _fic.SaveChanges();
 
+            TimeSpan span = new TimeSpan();
+            double count = 0;
+
             // Remove pathless documents (or update hashes if null hash but paths)
             foreach (var docu in _fic.Documents)
             {
@@ -391,6 +373,28 @@ namespace Ildss.Index
                     {
                         _fic.Documents.Remove(docu);
                     }
+                }
+
+                if (docu.DocEvents.Where(i => i.Type == Enums.EventType.Read).Count() > 1 || docu.DocEvents.Where(i => i.Type == Enums.EventType.Write).Count() > 1)
+                {
+                    Logger.Write("more than one read/write");
+                    Logger.Write(docu.DocEvents.OrderByDescending(i => i.Time).First().Time.ToString());
+                    Logger.Write(docu.DocEvents.OrderBy(i => i.Time).First().Time.ToString());
+                    span += docu.DocEvents.OrderByDescending(i => i.Time).First().Time - docu.DocEvents.OrderBy(i => i.Time).First().Time;
+                    count++;
+                }
+
+            }
+
+            if (count > 0)
+            {
+                var newDormancy = span.TotalDays / count;
+                Logger.Write("New MaxDormancy: " + newDormancy);
+                if (newDormancy > Settings.Default.MinMaxDormancy.TotalDays)
+                {
+                    Settings.Default.MaxDormancy = TimeSpan.FromDays(newDormancy);
+                    Settings.Default.Save();
+                    Logger.Write("New MaxDormancy: " + newDormancy);
                 }
             }
 

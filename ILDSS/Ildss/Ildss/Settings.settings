@@ -34,5 +34,8 @@
   &lt;string&gt;.ildss &lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
+    <Setting Name="MinMaxDormancy" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">10.00:00:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

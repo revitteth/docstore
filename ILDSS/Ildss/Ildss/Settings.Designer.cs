@@ -126,5 +126,17 @@ namespace Ildss {
                 this["IgnoredExtensions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10.00:00:00")]
+        public global::System.TimeSpan MinMaxDormancy {
+            get {
+                return ((global::System.TimeSpan)(this["MinMaxDormancy"]));
+            }
+            set {
+                this["MinMaxDormancy"] = value;
+            }
+        }
     }
 }
