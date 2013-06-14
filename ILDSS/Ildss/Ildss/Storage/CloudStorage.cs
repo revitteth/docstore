@@ -17,7 +17,7 @@ namespace Ildss.Storage
             // create bucket if it doesn't exist & set policies
             // read bucket name from settings
             var manager = KernelFactory.Instance.Get<ICloudManager>();
-            manager.CreateBucketIfNotExists(Settings.Default.S3BucketName);
+            manager.CreateBucketIfNotExists(Properties.Settings.Default.S3BucketName);
         }
 
         public Task StoreIncrAsync()
@@ -28,7 +28,7 @@ namespace Ildss.Storage
                 {
                     var reader = KernelFactory.Instance.Get<IReader>();
                     var documents = reader.GetFilesForIncrementalBackup();
-                    Upload.UploadAsync(documents, new Progress<int>(), Settings.Default.S3BucketName);
+                    Upload.UploadAsync(documents, new Progress<int>(), Properties.Settings.Default.S3BucketName);
 
                     // update database using StatusChanger - set status to current
                     var versionManager = KernelFactory.Instance.Get<IVersionManager>();
@@ -38,7 +38,7 @@ namespace Ildss.Storage
 
         public void Retrieve(string key, string dest, Document doc)
         {
-            Download.DownloadFile(key, Settings.Default.S3BucketName, dest);
+            Download.DownloadFile(key, Properties.Settings.Default.S3BucketName, dest);
             var vm = KernelFactory.Instance.Get<IVersionManager>();
             vm.UpdateStatus(Enums.DocStatus.Current, doc);
         }

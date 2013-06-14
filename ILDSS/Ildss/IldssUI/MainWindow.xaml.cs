@@ -24,6 +24,7 @@ using Ildss.Storage;
 using System.Drawing;
 using CloudInterface;
 using System.Diagnostics;
+using Ildss.Properties;
 
 namespace IldssUI
 {
@@ -40,7 +41,7 @@ namespace IldssUI
             Task.Run(() =>
             {
                 KernelFactory.Instance.Get<IEventManager>("Index");
-                KernelFactory.Instance.Get<IMonitor>().Monitor(Settings.Default.WorkingDir);
+                KernelFactory.Instance.Get<IMonitor>().Monitor();
             });
 
             System.Windows.Forms.NotifyIcon ni = new System.Windows.Forms.NotifyIcon();

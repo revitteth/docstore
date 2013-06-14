@@ -19,13 +19,14 @@ namespace Ildss.Index
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public class DirectoryMonitor : IMonitor
     {
-        private List<string> _ignoredFiles = Settings.Default.IgnoredExtensions.Cast<string>().ToList();
+        private List<string> _ignoredFiles = Properties.Settings.Default.IgnoredExtensions.Cast<string>().ToList();
         private string LastChanged { get; set; }
         private string LastCreated { get; set; }
 
-        public void Monitor (string path)
+        public void Monitor ()
         {
             Logger.Write("Directory Monitor Started");
+            var path = Properties.Settings.Default.WorkingDir;
 
             var fsw = new FileSystemWatcher(path);
             fsw.IncludeSubdirectories = true;

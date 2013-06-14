@@ -20,7 +20,7 @@ namespace Ildss
             Logger.Write("Exporting CSV!");
 
             // open CSV
-            StreamWriter file = new StreamWriter(Settings.Default.StorageDir + @"\output.csv", false);
+            StreamWriter file = new StreamWriter(Properties.Settings.Default.StorageDir + @"\output.csv", false);
 
             string line = "";
 

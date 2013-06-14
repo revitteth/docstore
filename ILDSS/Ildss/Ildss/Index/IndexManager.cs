@@ -25,9 +25,9 @@ namespace Ildss.Index
         {
             _fic = KernelFactory.Instance.Get<IFileIndexContext>();
             IndexRequired = true;
-            Logger.Write("Started Indexer with Interval " + Settings.Default.IndexInterval.ToString("c"));
+            Logger.Write("Started Indexer with Interval " + Properties.Settings.Default.IndexInterval.ToString("c"));
             IntervalIndex(null, null);
-            _indexTimer.Interval = Settings.Default.IndexInterval.TotalMilliseconds;
+            _indexTimer.Interval = Properties.Settings.Default.IndexInterval.TotalMilliseconds;
             _indexTimer.Start();
             _indexTimer.Elapsed += new ElapsedEventHandler(IntervalIndex);
             GC.KeepAlive(_indexTimer);
@@ -40,7 +40,7 @@ namespace Ildss.Index
 
         public void IntervalIndex(object source, ElapsedEventArgs e)
         {
-            _indexTimer.Interval = Settings.Default.IndexInterval.TotalMilliseconds;
+            _indexTimer.Interval = Properties.Settings.Default.IndexInterval.TotalMilliseconds;
             _indexTimer.Enabled = false;
             try
             {
@@ -51,7 +51,7 @@ namespace Ildss.Index
 
                     // all based on path now - renaming is handled by the FSW
                     // go through directories comparing read/write times - if different add to events
-                    DirectoryTraverse(Settings.Default.WorkingDir);
+                    DirectoryTraverse(Properties.Settings.Default.WorkingDir);
 
 
                     WriteChangesToDB();
@@ -119,7 +119,7 @@ namespace Ildss.Index
             {
                 foreach (string file in GetFiles(dir))
                 {
-                    if (!Settings.Default.IgnoredExtensions.Cast<string>().ToList().Any(file.Contains))
+                    if (!Properties.Settings.Default.IgnoredExtensions.Cast<string>().ToList().Any(file.Contains))
                     {
                         try
                         {
@@ -356,7 +356,7 @@ namespace Ildss.Index
             }
             _fic.SaveChanges();
 
-            TimeSpan span = new TimeSpan();
+            TimeSpan total = new TimeSpan(0);
             double count = 0;
 
             // Remove pathless documents (or update hashes if null hash but paths)
@@ -375,25 +375,41 @@ namespace Ildss.Index
                     }
                 }
 
-                if (docu.DocEvents.Where(i => i.Type == Enums.EventType.Read).Count() > 1 || docu.DocEvents.Where(i => i.Type == Enums.EventType.Write).Count() > 1)
-                {
-                    Logger.Write("more than one read/write");
-                    Logger.Write(docu.DocEvents.OrderByDescending(i => i.Time).First().Time.ToString());
-                    Logger.Write(docu.DocEvents.OrderBy(i => i.Time).First().Time.ToString());
-                    span += docu.DocEvents.OrderByDescending(i => i.Time).First().Time - docu.DocEvents.OrderBy(i => i.Time).First().Time;
-                    count++;
-                }
 
+                try
+                {
+                    // all read/write events
+                    var rwEvents = docu.DocEvents.Where(i => i.Type == Enums.EventType.Write || i.Type == Enums.EventType.Read);
+                    
+                    // with distinct times
+                    var distinctEvents = rwEvents.GroupBy(i => i.Time.Date).Select(j => j.First());
+
+                    // inside the window
+                    var window = distinctEvents.Where(j => j.Time > DateTime.Now.Subtract(Properties.Settings.Default.IntelligenceWindow));
+
+                    Logger.Write("Window size: " + DateTime.Now.Subtract(Properties.Settings.Default.IntelligenceWindow).ToString());
+
+                    foreach (var ev in window)
+                    {
+                        Logger.Write(ev.Type.ToString() + " event in window " + ev.Time);
+                    }
+
+                    //Logger.Write("Count " + window.Count());
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(e.Message);
+                }
             }
 
-            if (count > 0)
+            if (count > 1)
             {
-                var newDormancy = span.TotalDays / count;
+                var newDormancy = total.TotalDays / count;
                 Logger.Write("New MaxDormancy: " + newDormancy);
-                if (newDormancy > Settings.Default.MinMaxDormancy.TotalDays)
+                if (newDormancy > Properties.Settings.Default.MinMaxDormancy.TotalDays)
                 {
-                    Settings.Default.MaxDormancy = TimeSpan.FromDays(newDormancy);
-                    Settings.Default.Save();
+                    Properties.Settings.Default.MaxDormancy = TimeSpan.FromDays(newDormancy);
+                    Properties.Settings.Default.Save();
                     Logger.Write("New MaxDormancy: " + newDormancy);
                 }
             }

@@ -14,8 +14,9 @@ namespace Ildss.Index
 {
     class DiscoMonitor : IMonitor
     {
-        public void Monitor(string path)
+        public void Monitor()
         {
+            var path = Properties.Settings.Default.WorkingDir;
             var fsw = new FileSystemWatcher(path);
             fsw.IncludeSubdirectories = true;
             fsw.EnableRaisingEvents = true;
