@@ -6,7 +6,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WorkingDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">E:\Documents\GitHub\docstore\TestDir</Value>
+      <Value Profile="(Default)">E:\Dropbox\Movies</Value>
     </Setting>
     <Setting Name="StorageDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">E:\Documents\GitHub\docstore\StorageDir</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">100.00:00:00</Value>
     </Setting>
     <Setting Name="IndexInterval" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:00:30</Value>
+      <Value Profile="(Default)">00:00:10</Value>
     </Setting>
     <Setting Name="IgnoredExtensions" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -38,7 +38,10 @@
       <Value Profile="(Default)">10.00:00:00</Value>
     </Setting>
     <Setting Name="IntelligenceWindow" Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">10.00:00:00</Value>
+      <Value Profile="(Default)">30.00:00:00</Value>
+    </Setting>
+    <Setting Name="WindowOffset" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:00:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

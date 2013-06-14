@@ -37,7 +37,7 @@ namespace Ildss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\TestDir")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Dropbox\\Movies")]
         public string WorkingDir {
             get {
                 return ((string)(this["WorkingDir"]));
@@ -97,7 +97,7 @@ namespace Ildss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:10")]
         public global::System.TimeSpan IndexInterval {
             get {
                 return ((global::System.TimeSpan)(this["IndexInterval"]));
@@ -141,13 +141,25 @@ namespace Ildss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10.00:00:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("30.00:00:00")]
         public global::System.TimeSpan IntelligenceWindow {
             get {
                 return ((global::System.TimeSpan)(this["IntelligenceWindow"]));
             }
             set {
                 this["IntelligenceWindow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan WindowOffset {
+            get {
+                return ((global::System.TimeSpan)(this["WindowOffset"]));
+            }
+            set {
+                this["WindowOffset"] = value;
             }
         }
     }

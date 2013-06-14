@@ -356,8 +356,8 @@ namespace Ildss.Index
             }
             _fic.SaveChanges();
 
-            TimeSpan total = new TimeSpan(0);
             double count = 0;
+            double average = 0;
 
             // Remove pathless documents (or update hashes if null hash but paths)
             foreach (var docu in _fic.Documents)
@@ -376,25 +376,29 @@ namespace Ildss.Index
                 }
 
 
+                // INTELLIGENCE LOGIC
                 try
                 {
+                    var iWindow = Properties.Settings.Default.IntelligenceWindow;
+                    var wOffset = Properties.Settings.Default.WindowOffset;
+
                     // all read/write events
                     var rwEvents = docu.DocEvents.Where(i => i.Type == Enums.EventType.Write || i.Type == Enums.EventType.Read);
-                    
-                    // with distinct times
-                    var distinctEvents = rwEvents.GroupBy(i => i.Time.Date).Select(j => j.First());
 
-                    // inside the window
-                    var window = distinctEvents.Where(j => j.Time > DateTime.Now.Subtract(Properties.Settings.Default.IntelligenceWindow));
+                    // with distinct times - remove times which fall in the same minute
+                    var distinctEvents = rwEvents.GroupBy(i => i.Time.Minute).Select(j => j.First());
 
-                    Logger.Write("Window size: " + DateTime.Now.Subtract(Properties.Settings.Default.IntelligenceWindow).ToString());
+                    // inside the window (window extends from now - offset, backwards in time)
+                    var window = distinctEvents.Where(j => j.Time > DateTime.Now.Subtract(wOffset).Subtract(iWindow) && j.Time < DateTime.Now.Subtract(wOffset));
 
-                    foreach (var ev in window)
+                    // check that events happened within the window
+                    if (window.Count() > 0)
                     {
-                        Logger.Write(ev.Type.ToString() + " event in window " + ev.Time);
+                        // calculate average usage of this document inside the window
+                        average += iWindow.TotalDays / window.Count();
+                        // increment count for overall average
+                        count++;
                     }
-
-                    //Logger.Write("Count " + window.Count());
                 }
                 catch (Exception e)
                 {
@@ -402,15 +406,14 @@ namespace Ildss.Index
                 }
             }
 
-            if (count > 1)
+            if (count > 0)
             {
-                var newDormancy = total.TotalDays / count;
-                Logger.Write("New MaxDormancy: " + newDormancy);
+                var newDormancy = average / count;
                 if (newDormancy > Properties.Settings.Default.MinMaxDormancy.TotalDays)
                 {
                     Properties.Settings.Default.MaxDormancy = TimeSpan.FromDays(newDormancy);
                     Properties.Settings.Default.Save();
-                    Logger.Write("New MaxDormancy: " + newDormancy);
+                    Logger.Write("New MaxDormancy Set: " + newDormancy);
                 }
             }
 
