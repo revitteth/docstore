@@ -103,7 +103,6 @@ namespace IldssUI
                 {
                     btnOpenLocation.IsEnabled = true;
                 }
-
                 UpdateVersionListAsync(path);
             }
         }
@@ -193,43 +192,33 @@ namespace IldssUI
 
         private async void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await Task.Run(() =>
-                {
-                    this.Dispatcher.Invoke((Action)(() =>
-                        {
-                            if (!tabRetrieve.IsSelected)
-                            {
-                                UpdateDocListAsync();
-                            }
-                            if (tabDashboard.IsSelected)
-                            {
-                                CalculateUsage();
-                            }
-
-                            txtSearch.Clear();
-                        }));
-                });
+            if (!tabRetrieve.IsSelected)
+            {
+                UpdateDocListAsync();
+                txtSearch.Clear();
+            }
+            if (tabDashboard.IsSelected)
+            {
+                CalculateUsage();
+            }
         }
 
         private void UpdateDocListAsync()
         {
-            this.Dispatcher.Invoke((Action)(() =>
-            {
-                docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.Take(20).ToList();
-            }));
+            docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.ToList();
         }
 
         private void UpdateDocListAsync(string query)
         {
             docList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocPaths.
-                        Where(i => i.Path.Contains(txtSearch.Text)).Take(20).ToList();
+                        Where(i => i.Path.Contains(txtSearch.Text)).ToList();
         }
 
         private void UpdateVersionListAsync(DocPath path)
         {
             verList.ItemsSource = KernelFactory.Instance.Get<IFileIndexContext>().DocVersions.
                                 Where(i => i.Document.DocPaths.Any(j => j.Path == path.Path)).
-                                OrderByDescending(k => k.DocEventTime).Take(20).ToList();
+                                OrderByDescending(k => k.DocEventTime).ToList();
         }
 
         private void CalculateUsage()

@@ -6,7 +6,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="WorkingDir" Type="System.String" Scope="User">
-      <Value Profile="(Default)">E:\Dropbox\Movies</Value>
+      <Value Profile="(Default)">E:\Documents\GitHub\docstore\TestDir</Value>
     </Setting>
     <Setting Name="StorageDir" Type="System.String" Scope="User">
       <Value Profile="(Default)">E:\Documents\GitHub\docstore\StorageDir</Value>
@@ -42,6 +42,12 @@
     </Setting>
     <Setting Name="WindowOffset" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
+    </Setting>
+    <Setting Name="AutoUpload" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AutoRemove" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

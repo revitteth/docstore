@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Timers;
 
 using Log;
+using Ildss.Storage;
 
 namespace Ildss.Index
 {
@@ -59,6 +60,21 @@ namespace Ildss.Index
                     MaintainDocuments();
 
                     Logger.Write("Finished Indexing");
+
+                    if (Properties.Settings.Default.AutoUpload)
+                    {
+
+                        KernelFactory.Instance.Get<IStorage>("Cloud").StoreIncrAsync();
+
+                        Logger.Write("Automatically Uploaded Files to S3");
+                    }
+
+                    if (Properties.Settings.Default.AutoRemove)
+                    {
+                        KernelFactory.Instance.Get<IStorage>("Cloud").RemoveUnusedDocumentsAsync();
+
+                        Logger.Write("Automatically Removed Unused Files");
+                    }
 
                     // TODO
                     // 1. delete documents with no paths DONE. -> convert this to ARCHIVING

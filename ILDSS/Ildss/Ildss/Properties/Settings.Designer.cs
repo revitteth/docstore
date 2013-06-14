@@ -37,7 +37,7 @@ namespace Ildss.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Dropbox\\Movies")]
+        [global::System.Configuration.DefaultSettingValueAttribute("E:\\Documents\\GitHub\\docstore\\TestDir")]
         public string WorkingDir {
             get {
                 return ((string)(this["WorkingDir"]));
@@ -160,6 +160,30 @@ namespace Ildss.Properties {
             }
             set {
                 this["WindowOffset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoUpload {
+            get {
+                return ((bool)(this["AutoUpload"]));
+            }
+            set {
+                this["AutoUpload"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoRemove {
+            get {
+                return ((bool)(this["AutoRemove"]));
+            }
+            set {
+                this["AutoRemove"] = value;
             }
         }
     }
