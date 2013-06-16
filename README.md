@@ -1,4 +1,4 @@
-Intelligent Legal Document Storage Solution
+Intelligent Legal Document Storage System
 ========
 
 MEng Final Year Project
